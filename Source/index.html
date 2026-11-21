@@ -57,6 +57,26 @@ h1,h2,h3{margin:0;font-weight:200;text-wrap:balance}
 .ghost.fill:hover{background:var(--gold-2);border-color:var(--gold-2)}
 .lang{min-width:44px;justify-content:center}
 @media (max-width:900px){.nav nav{display:none}.nav .cta{display:none}.lang{margin-inline-start:auto}}
+/* side menu: every section of the page, opened from the bar on any screen size */
+.menu{position:fixed;top:6px;inset-inline-end:var(--gut);z-index:60;padding:4px 12px;font-size:.74rem;line-height:1.5;background:rgba(11,11,12,.55);backdrop-filter:blur(8px)}
+.nav{padding-inline-end:calc(var(--gut) + 104px)}
+.menu i{display:inline-block;width:16px;height:9px;border-block:1px solid currentColor;position:relative}
+.menu i::after{content:"";position:absolute;inset-inline:0;top:3px;height:1px;background:currentColor}
+@media (max-width:520px){.menu span{display:none}.menu{min-width:42px;min-height:34px;justify-content:center;padding:6px 10px}.nav{padding-inline-end:calc(var(--gut) + 52px)}}
+.scrim{position:fixed;inset:0;z-index:70;background:rgba(5,5,6,.6);backdrop-filter:blur(3px)}
+.drawer{position:fixed;inset-block:0;inset-inline-end:0;z-index:80;width:min(380px,88vw);background:var(--char);border-inline-start:1px solid var(--line);display:flex;flex-direction:column;padding:10px 22px 24px;transform:translateX(100%);visibility:hidden;transition:transform .45s cubic-bezier(.2,.7,.2,1),visibility .45s;overflow-y:auto}
+html[dir="rtl"] .drawer{transform:translateX(-100%)}
+html[dir] .drawer.open{transform:none;visibility:visible}
+.dtop{display:flex;justify-content:space-between;align-items:center;gap:12px;padding-bottom:10px;border-bottom:1px solid var(--line)}
+.dx{width:40px;height:40px;justify-content:center;padding:0;font-size:1.3rem}
+.dlinks{display:grid;margin:6px 0 20px}
+.dlinks a{display:grid;grid-template-columns:38px 1fr;align-items:baseline;padding:10px 0;border-bottom:1px solid var(--line);text-decoration:none;font-size:1rem;color:rgba(238,233,225,.86)}
+.dlinks a b{font-family:var(--f-en);font-weight:300;font-size:.72rem;letter-spacing:.12em;color:var(--gold)}
+.dlinks a:hover,.dlinks a:focus-visible{color:var(--bone)}
+.dfoot{margin-top:auto;display:grid;gap:10px}
+.dfoot .ghost{justify-content:center}
+.dfoot small{color:var(--mute);text-align:center;font-size:.78rem}
+.dfoot small a{color:var(--mute)}
 
 .badge{position:absolute;top:50px;inset-inline-end:var(--gut);z-index:4;font-size:.68rem;color:rgba(238,233,225,.66);border:1px solid rgba(238,233,225,.22);padding:4px 10px;font-family:var(--f-en);letter-spacing:.12em;background:rgba(11,11,12,.25)}
 html[lang="ar"] .badge{font-family:var(--f-body);letter-spacing:0}
@@ -404,6 +424,32 @@ html[lang="ar"] .fgrid h4{font-family:var(--f-body);letter-spacing:.06em}
   <a class="ghost cta" href="#quote"><span data-lang="ar">اطلب عرض سعر</span><span data-lang="en">Request a quote</span> →</a>
   <button class="ghost lang" id="langBtn" type="button">EN</button>
 </header>
+<!-- the menu button stays on screen even while the bar slides away -->
+<button class="ghost menu" id="menuBtn" type="button" aria-expanded="false" aria-controls="drawer"><i aria-hidden="true"></i><span data-lang="ar">القائمة</span><span data-lang="en">Menu</span></button>
+<div class="scrim" id="scrim" hidden></div>
+<aside class="drawer" id="drawer" aria-label="القائمة / Menu" inert>
+  <div class="dtop"><a class="brand" href="#top"><img src="assets/logo.webp" alt="" width="30" height="30"><b>JEC</b><small>ALJALLAD CONTRACTING</small></a><button class="ghost dx" id="drawerClose" type="button" aria-label="Close">×</button></div>
+  <nav class="dlinks" aria-label="sections">
+    <a href="#top"><b>00</b><span data-lang="ar">الرئيسية</span><span data-lang="en">Home</span></a>
+    <a href="#filmSec"><b>01</b><span data-lang="ar">كيف نبني</span><span data-lang="en">How we build</span></a>
+    <a href="#who"><b>02</b><span data-lang="ar">من نحن</span><span data-lang="en">Who we are</span></a>
+    <a href="#process"><b>03</b><span data-lang="ar">مراحل العمل</span><span data-lang="en">Our process</span></a>
+    <a href="#fin"><b>04</b><span data-lang="ar">التشطيب الداخلي</span><span data-lang="en">Interior finishing</span></a>
+    <a href="#reveal"><b>05</b><span data-lang="ar">ما خلف السقف</span><span data-lang="en">Behind the ceiling</span></a>
+    <a href="#ba"><b>06</b><span data-lang="ar">قبل وبعد</span><span data-lang="en">Before / after</span></a>
+    <a href="#trades"><b>07</b><span data-lang="ar">أعمال التشطيب والترميم</span><span data-lang="en">Finishing &amp; renovation</span></a>
+    <a href="#sectors"><b>08</b><span data-lang="ar">القطاعات</span><span data-lang="en">Sectors</span></a>
+    <a href="#projects"><b>09</b><span data-lang="ar">المشاريع</span><span data-lang="en">Projects</span></a>
+    <a href="#services"><b>10</b><span data-lang="ar">الخدمات</span><span data-lang="en">Services</span></a>
+    <a href="#quote"><b>11</b><span data-lang="ar">طلب عرض سعر</span><span data-lang="en">Request a quote</span></a>
+  </nav>
+  <div class="dfoot">
+    <a class="ghost fill" href="#quote"><svg aria-hidden="true"><use href="#i-wa"/></svg><span data-lang="ar">اطلب عرض سعر</span><span data-lang="en">Request a quote</span></a>
+    <a class="ghost" href="https://www.instagram.com/jallad.contracting/" target="_blank" rel="noopener"><svg aria-hidden="true"><use href="#i-ig"/></svg><span dir="ltr">@jallad.contracting</span></a>
+    <button class="ghost" id="drawerLang" type="button">English</button>
+    <small><a href="#privacy"><span data-lang="ar">سياسة الخصوصية</span><span data-lang="en">Privacy Policy</span></a> · <a href="#terms"><span data-lang="ar">الشروط والأحكام</span><span data-lang="en">Terms</span></a></small>
+  </div>
+</aside>
 
 <main id="top">
 <!-- 00 · hero: dusk shot of the finished building (Blender render → Higgsfield photoreal pass → Higgsfield video) -->
@@ -411,7 +457,6 @@ html[lang="ar"] .fgrid h4{font-family:var(--f-body);letter-spacing:.06em}
   <img class="poster" id="heroPoster" src="media/hero_poster.webp" alt="">
   <video id="heroVid" muted playsinline loop preload="metadata" aria-hidden="true"></video>
   <div class="veil"></div>
-  <span class="badge"><span data-lang="ar">تصوّر معماري · Blender + Higgsfield AI</span><span data-lang="en">Architectural visualization · Blender + Higgsfield AI</span></span>
   <div class="copy">
     <span class="kick"><span data-lang="ar">JEC | الجلاد للمقاولات</span><span data-lang="en">JEC | AlJallad Contracting</span></span>
     <h1 class="disp"><span data-lang="ar">نبني ما يدوم.</span><span data-lang="en">We build what lasts.</span></h1>
@@ -431,7 +476,6 @@ html[lang="ar"] .fgrid h4{font-family:var(--f-body);letter-spacing:.06em}
     <div class="vwrap" id="filmV" aria-hidden="true" hidden></div>
     <div class="veil"></div>
     <span class="dbg" id="dbg"></span>
-    <span class="badge"><span data-lang="ar">تصوّر معماري بالذكاء الاصطناعي — ليس مشروعاً منفّذاً</span><span data-lang="en">AI architectural visualization — not a completed project</span></span>
     <div id="caps"></div>
     <div class="hud"><span class="num" id="fnum">001</span><div class="track" id="track"><u id="fbuf"></u><i id="ftrack"></i></div><span class="phase" id="phase"></span></div>
     <div class="loader" id="loader"><div><span>JEC</span><b><i id="lbar"></i></b></div></div>
@@ -465,7 +509,7 @@ html[lang="ar"] .fgrid h4{font-family:var(--f-body);letter-spacing:.06em}
     <div class="proc">
       <ol class="plist" id="skList"></ol>
       <div class="pside">
-        <figure><img src="renders/frame.webp" alt="" loading="lazy" width="1600" height="905"><figcaption><span data-lang="ar">تصوّر معماري بالذكاء الاصطناعي</span><span data-lang="en">AI architectural visualization</span></figcaption></figure>
+        <figure><img src="renders/frame.webp" alt="" loading="lazy" width="1600" height="905"></figure>
         <div><span class="kick"><span data-lang="ar">أعمال تشطيبات خارجية</span><span data-lang="en">Exterior finishing</span></span><ol class="flist" id="fnList"></ol></div>
       </div>
     </div>
@@ -478,7 +522,6 @@ html[lang="ar"] .fgrid h4{font-family:var(--f-body);letter-spacing:.06em}
     <canvas id="finCv" role="img" aria-label="The same room from one fixed camera: raw concrete, blockwork partitions, services, plaster, suspended ceiling, floor and wall finishes, paint doors and lighting, cleaning, then furniture"></canvas>
     <div class="vwrap" id="finV" aria-hidden="true" hidden></div>
     <div class="shade-r"></div>
-    <span class="badge"><span data-lang="ar">تصوّر معماري بالذكاء الاصطناعي</span><span data-lang="en">AI architectural visualization</span></span>
     <div class="side">
       <span class="kick"><span data-lang="ar">من العظم إلى السكن</span><span data-lang="en">From shell to home</span></span>
       <h2 class="disp"><span data-lang="ar">الغرفة نفسها.<br>تسع مراحل.</span><span data-lang="en">The same room.<br>Nine stages.</span></h2>
@@ -497,7 +540,6 @@ html[lang="ar"] .fgrid h4{font-family:var(--f-body);letter-spacing:.06em}
     <span class="ring" id="ring"></span>
     <i class="wline" id="wline" aria-hidden="true"></i>
     <div class="shade-b"></div>
-    <span class="badge"><span data-lang="ar">ما فوق السقف: من النموذج الهندسي ثلاثي الأبعاد</span><span data-lang="en">Above the ceiling: from the 3D engineering model</span></span>
     <div class="side side-b">
       <span class="kick"><span data-lang="ar">الأنظمة المخفية</span><span data-lang="en">The hidden systems</span></span>
       <h2 class="disp"><span data-lang="ar">ما خلف السقف.</span><span data-lang="en">Behind the ceiling.</span></h2>
@@ -509,7 +551,7 @@ html[lang="ar"] .fgrid h4{font-family:var(--f-body);letter-spacing:.06em}
   </div>
 </section>
 
-<section class="ba">
+<section class="ba" id="ba">
   <div class="head">
     <div><span class="kick"><span data-lang="ar">قارن</span><span data-lang="en">Compare</span></span><h2 class="disp" style="margin-top:12px"><span data-lang="ar">قبل وبعد.</span><span data-lang="en">Before / After.</span></h2></div>
     <p><span data-lang="ar">اسحب الخط لترى الهيكل الخام والمساحة المكتملة من نفس النقطة.</span><span data-lang="en">Drag the line to compare the raw structure and the finished space from the same point.</span></p>
@@ -569,7 +611,6 @@ html[lang="ar"] .fgrid h4{font-family:var(--f-body);letter-spacing:.06em}
     </div>
     <div class="filters" id="filters" role="group" aria-label="filter"></div>
     <div class="grid" id="grid"></div>
-    <p class="pnote"><span data-lang="ar">المبنى في الأفلام أعلى الصفحة تصوّر معماري صُمّم لهذا الموقع بالنمذجة ثلاثية الأبعاد والذكاء الاصطناعي، وليس مشروعًا منفّذًا. المشاريع في هذا القسم حقيقية كما نُشرت على حساب الشركة.</span><span data-lang="en">The building in the films above is an architectural visualization made for this website with 3D modelling and AI, not a completed project. The projects in this section are real, as published on the company’s account.</span></p>
   </div>
 </section>
 
@@ -641,10 +682,8 @@ html[lang="ar"] .fgrid h4{font-family:var(--f-body);letter-spacing:.06em}
     <span class="kick"><span data-lang="ar">ابدأ مشروعك</span><span data-lang="en">Start a project</span></span>
     <h2 class="disp"><span data-lang="ar">نبني ما يدوم.</span><span data-lang="en">We build what lasts.</span></h2>
     <p><span data-lang="ar">أرسل لنا فكرتك أو مخططاتك، ونعود إليك بخطة تنفيذ وعرض سعر مكتوب.</span><span data-lang="en">Send us your idea or drawings, and we come back with a build plan and a written quote.</span></p>
-    <div class="row"><a class="ghost fill" href="#quote"><svg aria-hidden="true"><use href="#i-wa"/></svg><span data-lang="ar">ابدأ طلب التسعير</span><span data-lang="en">Start a quote</span></a><a class="ghost" href="https://www.instagram.com/jallad.contracting/" target="_blank" rel="noopener"><svg aria-hidden="true"><use href="#i-ig"/></svg>@jallad.contracting</a></div>
-    <p class="poc"><span data-lang="ar">نسخة تجريبية للموافقة — المبنى المعروض تصوّر معماري، وليس مشروعاً منفّذاً.</span><span data-lang="en">Proof of concept for approval — the building shown is an architectural visualization, not a completed project.</span></p>
+    <div class="row"><a class="ghost fill" href="#quote"><svg aria-hidden="true"><use href="#i-wa"/></svg><span data-lang="ar">ابدأ طلب التسعير</span><span data-lang="en">Start a quote</span></a><a class="ghost" href="https://www.instagram.com/jallad.contracting/" target="_blank" rel="noopener"><svg aria-hidden="true"><use href="#i-ig"/></svg><span dir="ltr">@jallad.contracting</span></a></div>
   </div>
-  <span class="credit"><span data-lang="ar">النموذج والكاميرات: Blender · الواقعية والحركة: Higgsfield AI، مولّدة من صور Blender لنفس المبنى</span><span data-lang="en">Model and cameras: Blender · Realism and motion: Higgsfield AI, generated from Blender renders of the same building</span></span>
 </section>
 </main>
 
@@ -811,8 +850,8 @@ const LEGAL = {
   notice(){
     const brands = [...new Set(PROJECTS.map(p => p.brand).filter(Boolean))].join("، ");
     return lang==="ar"
-      ? `أسماء المشاريع والعلامات التجارية الظاهرة في الموقع (${brands}) مملوكة لأصحابها، وتُعرض مرجعًا لأعمال نفّذتها الشركة ولا تعني شراكة أو تبعية. المبنى في الأفلام تصوّر معماري بالذكاء الاصطناعي، وليس مشروعًا منفّذًا.`
-      : `Project names and trademarks shown on this site (${brands.replace(/، /g,", ")}) belong to their owners. They are shown as references for work JEC carried out and imply no partnership or affiliation. The building in the films is an AI architectural visualization, not a completed project.`;
+      ? `أسماء المشاريع والعلامات التجارية الظاهرة في الموقع (${brands}) مملوكة لأصحابها، وتُعرض مرجعًا لأعمال نفّذتها الشركة ولا تعني شراكة أو تبعية.`
+      : `Project names and trademarks shown on this site (${brands.replace(/، /g,", ")}) belong to their owners. They are shown as references for work JEC carried out and imply no partnership or affiliation.`;
   },
   privacy:{
     title:{ar:"سياسة الخصوصية",en:"Privacy Policy"},
@@ -832,7 +871,7 @@ const LEGAL = {
     s:[
       [{ar:"الشركة",en:"The company"},{ar:"هذا الموقع لشركة JEC | الجلاد للمقاولات في عمّان، الأردن، ويعرّف بخدماتها في الإنشاءات والتشطيبات والترميم.",en:"This site belongs to JEC | AlJallad Contracting, Amman, Jordan, and presents its construction, finishing and renovation services."}],
       [{ar:"المشاريع والعلامات التجارية",en:"Projects & trademarks"},{ar:"__NOTICE__",en:"__NOTICE__"}],
-      [{ar:"الصور والأفلام",en:"Images & films"},{ar:"صور المشاريع من حساب الشركة على إنستغرام. المبنى الظاهر في الأفلام والصور المولّدة تصوّر معماري صُنع من نموذج ثلاثي الأبعاد بالذكاء الاصطناعي، وليس مشروعًا منفّذًا، وقد تختلف الألوان والتفاصيل عن الواقع. صور القطاعات توضيحية.",en:"Project images come from the company’s Instagram. The building in the films and the generated images is an architectural visualization made from a 3D model with AI, not a completed project; colours and details may differ from reality. Sector images are illustrative."}],
+      [{ar:"الصور والأفلام",en:"Images & films"},{ar:"صور المشاريع من حساب الشركة على إنستغرام. المبنى الظاهر في أفلام الموقع وصور القطاعات مشاهد توضيحية لطريقة العمل، وليست مشاريع منفّذة بعينها، وقد تختلف الألوان والتفاصيل عن الواقع.",en:"Project images come from the company’s Instagram. The building in the site’s films and the sector images are illustrative scenes of how we work, not specific completed projects; colours and details may differ from reality."}],
       [{ar:"الطلبات والتسعير",en:"Requests & pricing"},{ar:"ملخّص الحاسبة تقديري وغير ملزم، وأي طلب يُرسل هو طلب عرض سعر وليس عقدًا. السعر النهائي يُحدَّد بعرض مكتوب بالدينار الأردني بعد معاينة الموقع ودراسة المخططات.",en:"The estimator summary is indicative and non-binding; a request is a request for a quote, not a contract. The final price is set in a written quote in Jordanian dinars after a site visit and a review of the drawings."}],
       [{ar:"التنفيذ والدفعات",en:"Execution & payments"},{ar:"مدة التنفيذ وجدول الدفعات ونطاق الأعمال تُحدَّد في العقد المكتوب بين الشركة والعميل.",en:"Duration, payment schedule and scope of work are set in the written contract between the company and the client."}],
       [{ar:"الضمان",en:"Warranty"},{ar:"وفق ما ينص عليه العقد والقوانين الأردنية النافذة.",en:"As set out in the contract and applicable Jordanian law."}],
@@ -852,11 +891,28 @@ function applyLang(){
   document.documentElement.lang = lang; document.documentElement.dir = lang === "ar" ? "rtl" : "ltr";
   $("#langBtn").textContent = lang === "ar" ? "EN" : "ع";
   $("#langBtn").setAttribute("aria-label", lang === "ar" ? "Switch to English" : "التبديل إلى العربية");
+  $("#drawerLang").textContent = lang === "ar" ? "English" : "العربية";
+  $("#drawerClose").setAttribute("aria-label", lang === "ar" ? "إغلاق القائمة" : "Close menu");
   try { localStorage.setItem("jec-lang", lang); } catch(e){}
   renderCaps(); renderSystems(); renderSteps(); hudA(filmA.cur); setReveal(revP); stIdx = -1; hudI(filmI.cur);
   renderCompany();
 }
 $("#langBtn").addEventListener("click", () => { lang = lang === "ar" ? "en" : "ar"; applyLang(); });
+
+/* ---------------- side menu ---------------- */
+const drawer = $("#drawer"), scrim = $("#scrim"), menuBtn = $("#menuBtn");
+function setMenu(open){
+  drawer.classList.toggle("open", open); drawer.inert = !open; scrim.hidden = !open;
+  menuBtn.setAttribute("aria-expanded", String(open));
+  document.body.style.overflow = open ? "hidden" : "";
+  if (open){ $("#nav").classList.remove("hide"); setTimeout(() => drawer.querySelector(".dlinks a").focus({preventScroll:true}), 60); }
+}
+menuBtn.addEventListener("click", () => setMenu(!drawer.classList.contains("open")));
+$("#drawerClose").addEventListener("click", () => { setMenu(false); menuBtn.focus(); });
+scrim.addEventListener("click", () => setMenu(false));
+drawer.addEventListener("click", e => { if (e.target.closest("a")) setMenu(false); });
+addEventListener("keydown", e => { if (e.key === "Escape" && drawer.classList.contains("open")){ setMenu(false); menuBtn.focus(); } });
+$("#drawerLang").addEventListener("click", () => { lang = lang === "ar" ? "en" : "ar"; applyLang(); });
 
 /* ---------------- nav: slides away on the way down, returns on the way up ---------------- */
 (function(){
@@ -1138,7 +1194,7 @@ function renderProcess(){
 
 /* =========================  SECTIONS  ========================= */
 function renderSectors(){
-  $("#sectorCards").innerHTML = CATS.map((c,i) => `<a class="sector rv" href="#quote" data-cat="${c.id}"><img src="${c.img}" alt="" loading="lazy"><span class="ill">${lang==="ar"?"صورة توضيحية":"Illustrative image"}</span><span class="n">0${i+1}</span><h3 class="disp">${L({ar:c.ar,en:c.en})}</h3><p>${L({ar:c.dAr,en:c.dEn})}</p><span class="ghost go">${lang==="ar"?"احسب نطاق "+c.sAr:"Scope a "+c.sEn.toLowerCase()+" project"}</span></a>`).join("");
+  $("#sectorCards").innerHTML = CATS.map((c,i) => `<a class="sector rv" href="#quote" data-cat="${c.id}"><img src="${c.img}" alt="" loading="lazy"><span class="n">0${i+1}</span><h3 class="disp">${L({ar:c.ar,en:c.en})}</h3><p>${L({ar:c.dAr,en:c.dEn})}</p><span class="ghost go">${lang==="ar"?"احسب نطاق "+c.sAr:"Scope a "+c.sEn.toLowerCase()+" project"}</span></a>`).join("");
 }
 $("#sectorCards").addEventListener("click", e => { const a = e.target.closest("[data-cat]"); if (!a) return; est.cat = a.dataset.cat; est.sub = 0; renderEst(); });
 function renderTrades(){

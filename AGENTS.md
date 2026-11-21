@@ -52,8 +52,10 @@ the behaviours to keep, open requests, and the change log shared by Claude and C
 2. Keep the delivery layout and the hidden internal items (the script re-hides them).
 3. This is a proof of concept for the client's approval. Do not attach a domain, remove `noindex`, buy anything or contact the client
    unless Jafar asks. The client's existing website is separate and must not be overwritten.
-4. Truthfulness: the building is an AI architectural visualization (Blender model + Higgsfield AI). Keep every badge and note that
-   says so, in both languages. Never present it as a completed JEC project. No invented statistics, awards, years, clients or quotes.
+4. Truthfulness: the building is not a completed JEC project. Jafar decided (2026-11-21) to remove every on-page label that says it is
+   AI-made or a visualization (badges, captions, credits, "illustrative" chips). Do not add them back unless he asks. Still: never write
+   that JEC built this building or invent statistics, awards, years, clients or quotes. The Terms ("Images & films") keep one plain line
+   that the films' building and the sector images are illustrative scenes, not specific completed projects.
 5. The real-projects section (`PROJECTS` in index.html) lists 14 posts of @jallad.contracting with names and links exactly as published.
    Do not add, rename or invent projects. Brand names shown there feed the trademark notice in the footer and the Terms (`LEGAL.notice()`).
    The stats in "who we are" are counts of that real data (projects, sectors, steps, trades, services); never add invented figures.
@@ -61,7 +63,9 @@ the behaviours to keep, open requests, and the change log shared by Claude and C
    code does (estimator data goes nowhere except the WhatsApp/Instagram message the visitor sends; only the language key is stored).
    Update `LAST_UPDATED` when you change it. Jordan PDPL No. 24 of 2023. `CFG.WHATSAPP_NUMBER` stays empty until JEC gives a number
    (the button then opens WhatsApp's chat picker); `CFG.RATES` stays null unless JEC confirms JOD/m² ranges.
-6. Keep: Arabic RTL by default with the AR/EN toggle (localStorage key `jec-lang`, wrapped in try/catch; the old key `jec-poc-lang` is only read),
+6. Keep: the side menu (`#menuBtn` floats at the top corner and stays visible while the bar hides; `#drawer` lists every section,
+   the quote button, Instagram, language and the legal links; Escape, the backdrop and any link close it).
+   Arabic RTL by default with the AR/EN toggle (localStorage key `jec-lang`, wrapped in try/catch; the old key `jec-poc-lang` is only read),
    `prefers-reduced-motion` handling, the slim nav that hides on scroll down, the quote estimator and the Instagram DM link.
 7. Film player: desktop `VScrub` seeks H.264 clips frame by frame; phone `Scrub` draws WebP tiles (4 frames of 960×540 per tile).
    The `FILM` constant in index.html holds clip names, frame counts and stage boundaries. Change it together with the media.
