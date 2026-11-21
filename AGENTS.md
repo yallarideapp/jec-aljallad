@@ -91,10 +91,11 @@ the behaviours to keep, open requests, and the change log shared by Claude and C
 
 ## Media and 3D
 - Re-encode the film: `Production/higgsfield/README.md`. `venc.py` with `jobs_v5.json` reproduces `Source/v` and `Source/vi` byte for byte.
-- Entrance shot (Jafar, 2026-11-21): the olive tree whose planter stood in front of the door filled the screen as the camera walked
-  up. `Production/higgsfield/entrance.py` cuts that stretch and joins the approach to the clear door with a short forward whoosh
-  (`clips/w1t.mp4`, 103 frames; desktop `a09b` is 28 frames, `FILM.Ad` total 1021; the phone film keeps 350 frames).
-  Do not go back to `w1`.
+- Entrance shot (Jafar, 2026-11-21): in the source clip `w1` the video model grows two olive trees in planters in front of the
+  entrance while the camera walks up (from frame 42), and one of them later fills the screen. Jafar does not want them on screen.
+  `Production/higgsfield/entrance.py` keeps the approach only until just before they appear (frames 0-40), then a short forward
+  whoosh into the clear door (`clips/w1t.mp4`, 69 frames; desktop `a09a` 41 + `a09b` 28 frames, `FILM.Ad` total 987; the phone
+  film keeps 350 frames). Do not go back to `w1` or lengthen the approach past frame 40.
 - 3D: `Production/blender/JEC_MASTER.blend` (Blender 5.3, Cycles, texture paths relative to the .blend).
   The scripts find their own folder through `__file__`; inside Blender run
   `import sys; sys.path.insert(0, '<project>/Production/blender'); import jecmaster, jmcity`.
