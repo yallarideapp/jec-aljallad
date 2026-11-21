@@ -1,7 +1,7 @@
 # JEC | AlJallad Contracting — أين يوجد كل شيء
 
 ## GitHub و Cloudflare
-- الكود على GitHub في المستودع الخاص `yallarideapp/jec-aljallad`. Cloudflare يبني المجلد `Source` وينشره مع كل push. الخطوات في `Cloudflare-guide.md`.
+- الكود على GitHub في المستودع العام `yallarideapp/jec-aljallad`، وهذا المجلد نسخة منه. Cloudflare يبني المجلد `Source` وينشره مع كل push. الخطوات في `Cloudflare-guide.md`.
 - الملفات الكبيرة (Blender، الخامات، الريندرات، مقاطع الفيديو الأصلية، الأرشيف) تبقى في هذا المجلد على الماك فقط.
 
 ## الظاهر في المجلد

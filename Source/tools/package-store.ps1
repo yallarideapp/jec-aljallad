@@ -25,11 +25,11 @@ $Root     = [IO.Path]::GetFullPath([IO.Path]::Combine($PSScriptRoot, '..', '..')
 $RuntimeFiles   = @('index.html')                                         # relative to Source/
 $RuntimeDirs    = @('v', 'vi', 'tiles', 'media', 'renders', 'real')       # relative to Source/
 $DemoExtras     = @('server.cjs', 'START-DEMO.cmd', 'START-DEMO.command') # relative to Source/
-$RootFiles      = @('README-AR.md', 'Cloudflare-guide.md', 'START-DEMO.cmd', 'START-DEMO.command',
+$RootFiles      = @('README.md', 'README-AR.md', 'Cloudflare-guide.md', 'START-DEMO.cmd', 'START-DEMO.command',
                     'UPDATE-PACKAGE.cmd', 'UPDATE-PACKAGE.command', 'server.cjs', '.gitignore')
 $ClientDocs     = @('Documents/README-AR.md', 'Documents/SOURCES.md', 'Documents/IMAGE-ASSETS.md')
 $MediaOriginals = 'Documents/Media-originals'
-$Internal       = @('Source', 'Demo', 'Documents', 'Production', 'AGENTS.md', 'JEC-ALJALLAD-CONTEXT.md', 'README-AR.md',
+$Internal       = @('Source', 'Demo', 'Documents', 'Production', 'AGENTS.md', 'JEC-ALJALLAD-CONTEXT.md', 'README.md', 'README-AR.md',
                     'Cloudflare-guide.md', 'UPDATE-PACKAGE.cmd', 'UPDATE-PACKAGE.command', 'START-DEMO.cmd',
                     'START-DEMO.command', 'server.cjs', '.gitignore')
 $Stored         = @('.mp4', '.webm', '.webp', '.jpg', '.jpeg', '.png', '.zip', '.gz', '.woff2')   # already compressed

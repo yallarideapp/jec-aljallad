@@ -4,8 +4,12 @@ Read `JEC-ALJALLAD-CONTEXT.md` first (Arabic). It has the current status, what i
 the behaviours to keep, open requests, and the change log shared by Claude and ChatGPT.
 
 ## Where it lives
-- GitHub: private repo `yallarideapp/jec-aljallad`, branch `main`. Cloudflare builds `Source/` and deploys on every push to `main`
-  (Workers with static assets; settings in `Cloudflare-guide.md`). Fetch and rebase before editing: Jafar, ChatGPT and Claude all push here.
+- GitHub: **public** repo `yallarideapp/jec-aljallad` (Jafar's choice: anyone with the link can read it), branch `main`.
+  Cloudflare builds `Source/` and deploys on every push to `main` (Workers with static assets; settings in `Cloudflare-guide.md`).
+- The project folder on Jafar's Mac, `~/Documents/ChatGPT/JEC | AlJallad Contracting`, is a clone of this repo plus the heavy local-only files.
+  GitHub and that folder must always match: pull before you start, and after every change commit, push, and pull the folder.
+  Fetch and rebase before editing: Jafar, ChatGPT and Claude all push here.
+- Because the repo is public, never commit secrets, tokens, `.env` files, customer data, prices or agreements.
 - Commit as `yallarideapp <227899290+yallarideapp@users.noreply.github.com>`. No tool or assistant names in commits, code or guides.
 - The repo holds the site, agent files, guides, scripts and the photoreal stills. The heavy files (Blender scene, textures, renders,
   video clips, archives, QC sheets) stay in the project folder on Jafar's Mac and are listed in `.gitignore`.
