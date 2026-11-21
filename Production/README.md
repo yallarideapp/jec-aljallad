@@ -1,6 +1,6 @@
 # Production files (not part of any ZIP, mostly not on GitHub)
 
-The heavy files live only in the project folder on Jafar's Mac (`Desktop/JEC-AlJallad/Production`). GitHub holds the scripts.
+The heavy files live only in the project folder on Jafar's Mac (now `Documents/ChatGPT/JEC | AlJallad Contracting/Production`). GitHub holds the scripts.
 
 ## blender/
 - `JEC_MASTER.blend` — the master scene (Blender 5.3, Cycles, AgX): one building with exterior stages (`ext`) and interior stages (`int`),

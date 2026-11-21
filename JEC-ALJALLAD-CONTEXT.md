@@ -14,7 +14,7 @@
 ## أين يعيش المشروع
 - GitHub: المستودع الخاص `yallarideapp/jec-aljallad`، الفرع `main`. Cloudflare يبني المجلد `Source` وينشره مع كل push (الخطوات في `Cloudflare-guide.md`). قبل أي تعديل: fetch و rebase، لأن جعفر و ChatGPT و Claude كلهم يدفعون لنفس المستودع.
 - الـ commits باسم `yallarideapp <227899290+yallarideapp@users.noreply.github.com>`، وبدون أسماء أدوات أو مساعدين في الرسائل أو الكود أو الأدلة.
-- المجلد الكامل على الماك: `Desktop/JEC-AlJallad`. فيه كل ما في المستودع، وفوقه الملفات الكبيرة التي لا تُرفع على GitHub: ملف Blender والخامات والريندرات ومقاطع الفيديو الأصلية والأرشيف وصفحات المراجعة.
+- المجلد الكامل على الماك: حالياً `Documents/ChatGPT/JEC | AlJallad Contracting` (نُقل من سطح المكتب). فيه كل ما في المستودع، وفوقه الملفات الكبيرة التي لا تُرفع على GitHub: ملف Blender والخامات والريندرات ومقاطع الفيديو الأصلية والأرشيف وصفحات المراجعة.
 - الاستضافة: Cloudflare (Workers مع ملفات ثابتة)، وليس Hostinger. Cloudflare لم يُربط بعد: جعفر يربطه بنفسه.
 
 ## ترتيب الملفات
