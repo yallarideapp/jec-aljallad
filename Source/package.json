@@ -1,0 +1,14 @@
+{
+  "name": "jec-aljallad",
+  "private": true,
+  "description": "JEC | AlJallad Contracting website (static) on Cloudflare Workers",
+  "scripts": {
+    "build": "node tools/build-dist.mjs",
+    "dev": "node tools/build-dist.mjs && wrangler dev",
+    "deploy": "wrangler deploy",
+    "preview": "node server.cjs"
+  },
+  "devDependencies": {
+    "wrangler": "4.166.0"
+  }
+}

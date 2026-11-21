@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>JEC | AlJallad Contracting — Architectural Experience</title>
+<meta name="theme-color" content="#0B0B0C">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 64 64%27%3E%3Crect width=%2764%27 height=%2764%27 fill=%27%230B0B0C%27/%3E%3Ctext x=%2732%27 y=%2742%27 font-family=%27Arial%27 font-size=%2722%27 fill=%27%23E3CDA0%27 text-anchor=%27middle%27 letter-spacing=%272%27%3EJEC%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Alexandria:wght@200;300;400&family=IBM+Plex+Sans+Arabic:wght@300;400;500&family=Jost:wght@200;300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  /* charcoal studio, champagne accents, travertine neutrals */
+  --ink:#0B0B0C; --char:#141415; --char-2:#1C1C1E;
+  --bone:#EEE9E1; --mute:#A39E96; --line:rgba(238,233,225,.14);
+  --gold:#CDB27E; --gold-2:#E3CDA0;
+  --f-ar:"Alexandria","IBM Plex Sans Arabic",system-ui,sans-serif;
+  --f-en:"Jost","Helvetica Neue",Arial,sans-serif;
+  --f-body:"IBM Plex Sans Arabic","Jost",system-ui,sans-serif;
+  --gut:clamp(18px,4.5vw,72px);
+  /* layout idea: one building, one camera — it is built in front of you, then you walk in */
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--ink);color:var(--bone);font-family:var(--f-body);font-size:16px;line-height:1.7;overflow-x:hidden}
+img,video{display:block;max-width:100%}
+a{color:inherit}
+button{font:inherit;color:inherit}
+:focus-visible{outline:1px solid var(--gold-2);outline-offset:4px}
+html[lang="ar"] [data-lang="en"],html[lang="en"] [data-lang="ar"]{display:none!important}
+.disp{font-family:var(--f-ar);font-weight:200;line-height:1.15;letter-spacing:0}
+html[lang="en"] .disp{font-family:var(--f-en);font-weight:200;text-transform:uppercase;letter-spacing:.06em;line-height:1.02}
+.kick{font-family:var(--f-en);font-size:.72rem;letter-spacing:.28em;text-transform:uppercase;color:var(--gold)}
+html[lang="ar"] .kick{font-family:var(--f-body);letter-spacing:.08em;font-size:.78rem}
+h1,h2,h3{margin:0;font-weight:200;text-wrap:balance}
+.num{font-variant-numeric:tabular-nums;font-family:var(--f-en)}
+
+/* nav */
+/* slim bar: one line, no solid block; it slides away while scrolling down and returns when scrolling up */
+.nav{position:fixed;inset-inline:0;top:0;z-index:50;display:flex;align-items:center;gap:20px;padding:6px var(--gut);transition:transform .45s cubic-bezier(.2,.7,.2,1),background .4s;background:linear-gradient(180deg,rgba(11,11,12,.5),rgba(11,11,12,0))}
+.nav.solid{background:rgba(11,11,12,.58);backdrop-filter:blur(10px)}
+.nav.hide{transform:translateY(-105%)}
+.brand{display:flex;align-items:baseline;gap:10px;text-decoration:none;direction:ltr}
+.brand b{font-family:var(--f-en);font-weight:300;font-size:1.02rem;letter-spacing:.18em}
+.brand small{font-family:var(--f-en);font-size:.54rem;letter-spacing:.26em;color:rgba(238,233,225,.6)}
+.nav nav{display:flex;gap:24px;margin-inline-start:auto;font-size:.8rem}
+.nav .ghost{padding:4px 12px;font-size:.74rem;line-height:1.5}
+@media (max-width:520px){.brand small{display:none}}
+.nav nav a{text-decoration:none;color:rgba(238,233,225,.78)}
+.nav nav a:hover{color:var(--bone)}
+.ghost{border:1px solid rgba(238,233,225,.45);background:transparent;padding:10px 18px;font-size:.82rem;cursor:pointer;text-decoration:none;display:inline-flex;gap:10px;align-items:center;transition:background .3s,border-color .3s}
+.ghost:hover{background:rgba(238,233,225,.08);border-color:var(--gold-2)}
+.ghost.fill{background:var(--bone);color:var(--ink);border-color:var(--bone)}
+.ghost.fill:hover{background:var(--gold-2);border-color:var(--gold-2)}
+.lang{min-width:44px;justify-content:center}
+@media (max-width:900px){.nav nav{display:none}.nav .cta{display:none}.lang{margin-inline-start:auto}}
+
+.badge{position:absolute;top:50px;inset-inline-end:var(--gut);z-index:4;font-size:.68rem;color:rgba(238,233,225,.66);border:1px solid rgba(238,233,225,.22);padding:4px 10px;font-family:var(--f-en);letter-spacing:.12em;background:rgba(11,11,12,.25)}
+html[lang="ar"] .badge{font-family:var(--f-body);letter-spacing:0}
+
+/* 00 hero: Higgsfield shot generated from the Blender model, looping */
+.hero{position:relative;height:100vh;height:100svh;min-height:560px;overflow:hidden;background:#000}
+.hero video,.hero .poster{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.hero .poster,.end .poster{z-index:1;transition:opacity .9s}
+.hero .veil{z-index:2}
+.hero .veil{position:absolute;inset:0;pointer-events:none;background:linear-gradient(0deg,rgba(11,11,12,.86),rgba(11,11,12,.15) 46%,rgba(11,11,12,.35)),linear-gradient(90deg,rgba(11,11,12,.55),rgba(11,11,12,0) 55%)}
+html[dir="rtl"] .hero .veil{background:linear-gradient(0deg,rgba(11,11,12,.86),rgba(11,11,12,.15) 46%,rgba(11,11,12,.35)),linear-gradient(270deg,rgba(11,11,12,.55),rgba(11,11,12,0) 55%)}
+.hero .copy{position:absolute;inset-inline-start:var(--gut);bottom:clamp(70px,11vh,130px);max-width:min(760px,90vw);z-index:3}
+.hero h1{font-size:clamp(3rem,8vw,7.4rem);margin:14px 0 14px}
+html[lang="ar"] .hero h1{font-size:clamp(2.8rem,7vw,6.2rem)}
+.hero p{margin:0;color:rgba(238,233,225,.84);font-weight:300;max-width:46ch}
+.hero .row{display:flex;gap:12px;margin-top:30px;flex-wrap:wrap}
+.hero .down{position:absolute;inset-inline-end:var(--gut);bottom:40px;z-index:3;display:flex;align-items:center;gap:10px;font-family:var(--f-en);font-size:.7rem;letter-spacing:.2em;color:rgba(238,233,225,.6)}
+.scrollcue{display:flex;align-items:center;gap:10px}
+.scrollcue i,.hero .down i{width:1px;height:28px;background:linear-gradient(var(--gold-2),transparent);animation:cue 1.8s infinite}
+@keyframes cue{0%{transform:scaleY(.15);transform-origin:top}70%{transform:scaleY(1)}100%{opacity:0}}
+.hero .copy>*{opacity:0;transform:translateY(16px);animation:rise 1.2s cubic-bezier(.2,.7,.2,1) forwards}
+.hero .copy>*:nth-child(2){animation-delay:.15s}.hero .copy>*:nth-child(3){animation-delay:.3s}.hero .copy>*:nth-child(4){animation-delay:.45s}
+@keyframes rise{to{opacity:1;transform:none}}
+
+/* 01 film: construction (Higgsfield, anchored on Blender stages) → walk-in (Blender) on one canvas */
+.film{position:relative;height:1400vh}
+.film .stage{position:sticky;top:0;height:100vh;height:100svh;overflow:hidden;background:#000}
+.film canvas,.fin canvas{position:absolute;inset:0;width:100%;height:100%}
+/* desktop: one short video per shot, seeked on scroll; the poster shows until its video has a frame */
+.vwrap{position:absolute;inset:0;overflow:hidden;background:#0b0b0c}
+.vwrap img,.vwrap video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
+.vwrap video{opacity:0}
+.vwrap video.on{opacity:1}
+.vwrap.wait::after{content:"LOADING";position:absolute;inset-inline-end:var(--gut);top:92px;z-index:3;font:500 .62rem/1 var(--f-en);letter-spacing:.28em;color:rgba(238,233,225,.8);background:rgba(11,11,12,.5);padding:8px 12px;animation:pulse 1.2s ease-in-out infinite alternate}
+@keyframes pulse{from{opacity:.45}to{opacity:1}}
+.hud .track u{position:absolute;inset-block:0;inset-inline-start:0;width:0;background:rgba(238,233,225,.26);transition:width .4s}
+.dbg{position:absolute;inset-inline-start:var(--gut);top:92px;z-index:40;font:12px/1.5 ui-monospace,Menlo,monospace;color:#eee9e1;background:rgba(11,11,12,.7);padding:6px 10px;display:none;direction:ltr}
+.film .veil{position:absolute;inset:0;pointer-events:none;background:linear-gradient(0deg,rgba(11,11,12,.88),rgba(11,11,12,.5) 22%,rgba(11,11,12,0) 48%)}
+/* the camera moves and the building changes side from shot to shot, so captions live in the lower third, like subtitles */
+.cap{position:absolute;inset-inline-start:var(--gut);bottom:78px;transform:translateY(var(--ty,0px));max-width:min(680px,88vw);opacity:0;pointer-events:none}
+.cap h2{font-size:clamp(2.1rem,4.6vw,4.1rem);margin:12px 0 12px}
+html[lang="ar"] .cap h2{font-size:clamp(2rem,4.2vw,3.7rem)}
+.cap p{margin:0;color:rgba(238,233,225,.84);max-width:44ch;font-weight:300}
+.hud{position:absolute;inset-inline:var(--gut);bottom:28px;display:grid;grid-template-columns:auto 1fr auto;gap:20px;align-items:center;font-size:.72rem;color:rgba(238,233,225,.6);font-family:var(--f-en);letter-spacing:.14em}
+.track{height:1px;background:rgba(238,233,225,.2);position:relative}
+.track i{position:absolute;inset-block:0;inset-inline-start:0;width:0;background:var(--gold-2)}
+.track b{position:absolute;top:-3px;width:1px;height:7px;background:rgba(238,233,225,.45)}
+.phase{white-space:nowrap}
+html[lang="ar"] .phase{font-family:var(--f-body);letter-spacing:0;font-size:.78rem}
+.loader{position:absolute;inset:0;display:grid;place-items:center;background:var(--ink);z-index:5;transition:opacity .8s}
+.loader span{font-family:var(--f-en);letter-spacing:.4em;font-size:.72rem;color:var(--mute)}
+.loader b{display:block;width:180px;height:1px;background:rgba(238,233,225,.15);margin-top:14px;position:relative;overflow:hidden}
+.loader b i{position:absolute;inset:0;width:0;background:var(--gold-2);transition:width .2s}
+
+/* pinned studies (transformation, reveal) */
+.pin{position:relative}
+.pin .stage{position:sticky;top:0;height:100vh;height:100svh;overflow:hidden;background:#000}
+.layer{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.side{position:absolute;inset-inline-start:var(--gut);top:92px;max-width:min(420px,84vw);z-index:20}
+.side h2{font-size:clamp(2rem,4.2vw,3.6rem);margin:14px 0 14px}
+.side p{margin:0;color:rgba(238,233,225,.84);font-weight:300}
+
+.fin{height:1000vh}
+.steps{position:absolute;inset-inline-end:var(--gut);top:50%;transform:translateY(-50%);z-index:20;display:grid;gap:2px;list-style:none;margin:0;padding:14px 18px;background:rgba(11,11,12,.46);backdrop-filter:blur(8px);border:1px solid rgba(238,233,225,.1)}
+.steps li{display:grid;grid-template-columns:34px 1fr;gap:10px;align-items:center;padding:5px 0;color:rgba(238,233,225,.5);transition:color .4s;font-size:.88rem}
+.steps li b{font-family:var(--f-en);font-weight:300;font-size:.78rem;letter-spacing:.1em}
+.steps li.on{color:var(--bone)}
+.steps li.on b{color:var(--gold-2)}
+.steps li.done{color:rgba(238,233,225,.68)}
+.shade-r{position:absolute;inset:0;pointer-events:none;z-index:10;background:linear-gradient(270deg,rgba(11,11,12,.55),rgba(11,11,12,0) 30%),linear-gradient(90deg,rgba(11,11,12,.55),rgba(11,11,12,0) 30%)}
+
+.reveal{height:420vh}
+.reveal .xr{clip-path:inset(0 0 100% 0)}
+.lens{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;pointer-events:none;-webkit-mask-image:radial-gradient(circle var(--r,0px) at var(--mx,50%) var(--my,50%),#000 98%,transparent 100%);mask-image:radial-gradient(circle var(--r,0px) at var(--mx,50%) var(--my,50%),#000 98%,transparent 100%)}
+.ring{position:absolute;width:calc(var(--r,0px)*2);height:calc(var(--r,0px)*2);border:1px solid rgba(227,205,160,.8);border-radius:50%;transform:translate(-50%,-50%);pointer-events:none;opacity:0;left:var(--mx);top:var(--my)}
+.side-b{top:auto;bottom:54px;max-width:min(640px,88vw)}
+.shade-b{position:absolute;inset:0;pointer-events:none;background:linear-gradient(0deg,rgba(11,11,12,.86),rgba(11,11,12,.35) 34%,rgba(11,11,12,0) 56%)}
+.tag{position:absolute;z-index:3;display:flex;align-items:center;gap:10px;transform:translate(-6px,-50%);opacity:0;transition:opacity .5s;font-size:.78rem;white-space:nowrap;direction:ltr}
+.tag i{width:9px;height:9px;border-radius:50%;flex:none;box-shadow:0 0 0 4px rgba(227,205,160,.22)}
+.tag span{background:rgba(11,11,12,.74);backdrop-filter:blur(6px);border:1px solid rgba(227,205,160,.35);padding:4px 10px}
+html[lang="ar"] .tag span{direction:rtl}
+.tag.on{opacity:1}
+.tag.flip{flex-direction:row-reverse;transform:translate(calc(-100% + 6px),-50%)}
+.wline{position:absolute;left:0;right:0;height:1px;top:0;opacity:0;pointer-events:none;background:linear-gradient(90deg,transparent,rgba(227,205,160,.95) 20%,rgba(227,205,160,.95) 80%,transparent);box-shadow:0 0 18px 2px rgba(227,205,160,.45);transition:opacity .3s}
+.legend{display:grid;grid-template-columns:1fr 1fr;gap:8px 22px;font-size:.8rem;margin-top:22px}
+.legend div{display:flex;gap:10px;align-items:center;opacity:.35;transition:opacity .4s}
+.legend div.on{opacity:1}
+.legend b{width:22px;height:2px;background:var(--c);flex:none}
+.hint{position:absolute;inset-inline-end:var(--gut);bottom:30px;font-size:.74rem;color:rgba(238,233,225,.7);z-index:21;border-bottom:1px solid rgba(227,205,160,.4);padding-bottom:4px}
+@media (hover:none){.hint{display:none}}
+
+@media (max-width:820px){
+  .steps{top:auto;bottom:24px;transform:none;grid-auto-flow:column;gap:12px;inset-inline:var(--gut);overflow-x:auto;padding:6px 10px}
+  .steps li{grid-template-columns:auto;font-size:.72rem;white-space:nowrap}.steps li span{display:none}.steps li.on span{display:inline}
+  .side{top:84px}.side p{font-size:.92rem}
+  .side-b{top:auto;bottom:22px}.side-b p{display:none}.side-b h2{font-size:1.9rem;margin:8px 0 0}
+  .legend{gap:6px 14px;font-size:.72rem;margin-top:14px}
+  .shade-r{background:linear-gradient(180deg,rgba(11,11,12,.8),rgba(11,11,12,0) 48%),linear-gradient(0deg,rgba(11,11,12,.7),rgba(11,11,12,0) 22%)}
+}
+
+/* before / after */
+.ba{position:relative;padding:clamp(80px,10vw,140px) var(--gut);background:var(--char)}
+.ba .head{display:flex;justify-content:space-between;gap:24px;align-items:end;flex-wrap:wrap;margin-bottom:34px}
+.ba h2{font-size:clamp(2rem,4.2vw,3.6rem)}
+.ba p{color:var(--mute);max-width:46ch;margin:0}
+.cmp{position:relative;aspect-ratio:16/9;overflow:hidden;--p:50%;user-select:none;touch-action:pan-y;cursor:ew-resize;direction:ltr}
+.cmp img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.cmp .after{clip-path:inset(0 0 0 var(--p))}
+.cmp .bar{position:absolute;top:0;bottom:0;left:var(--p);width:1px;background:var(--gold-2)}
+.cmp .knob{position:absolute;top:50%;left:var(--p);width:52px;height:52px;border-radius:50%;transform:translate(-50%,-50%);border:1px solid var(--gold-2);background:rgba(11,11,12,.55);backdrop-filter:blur(6px);display:grid;place-items:center;font-family:var(--f-en);font-size:.9rem}
+.cmp .lb{position:absolute;bottom:16px;font-family:var(--f-en);font-size:.7rem;letter-spacing:.2em;background:rgba(11,11,12,.6);padding:4px 10px}
+.cmp .lb.l{left:16px}.cmp .lb.r{right:16px}
+.cmp input{position:absolute;inset:0;opacity:0;cursor:ew-resize;width:100%;height:100%;margin:0}
+
+/* real projects */
+.real{padding:clamp(90px,11vw,160px) 0 clamp(70px,9vw,120px);background:var(--ink);border-top:1px solid var(--line)}
+.real .head{padding:0 var(--gut);display:grid;grid-template-columns:1.1fr .9fr;gap:40px;align-items:end;margin-bottom:44px}
+.real h2{font-size:clamp(2.2rem,4.8vw,4rem);margin-top:14px}
+.real p{margin:0;color:var(--mute)}
+.note{margin-top:14px;font-size:.82rem;color:rgba(238,233,225,.6);border-inline-start:1px solid var(--gold);padding-inline-start:12px}
+.strip{display:flex;gap:16px;overflow-x:auto;padding:0 var(--gut) 18px;scroll-snap-type:x mandatory;scrollbar-width:thin}
+.card{flex:0 0 clamp(240px,24vw,340px);scroll-snap-align:start;text-decoration:none}
+.card .im{aspect-ratio:3/4;overflow:hidden;background:var(--char)}
+.card img{width:100%;height:100%;object-fit:cover;transition:transform 1s cubic-bezier(.2,.7,.2,1)}
+.card:hover img{transform:scale(1.05)}
+.card b{display:block;font-weight:400;margin-top:12px;font-size:.98rem}
+.card span{font-size:.76rem;color:var(--gold)}
+@media (max-width:820px){.real .head{grid-template-columns:1fr}}
+
+/* end: day-to-dusk shot of the finished building */
+.end{position:relative;min-height:100vh;min-height:100svh;display:grid;place-items:center;text-align:center;overflow:hidden;background:#000;border-top:1px solid var(--line)}
+.end video,.end .poster{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.end .veil{position:absolute;inset:0;z-index:1;background:radial-gradient(ellipse at center,rgba(11,11,12,.66),rgba(11,11,12,.35) 70%),linear-gradient(0deg,rgba(11,11,12,.75),rgba(11,11,12,0) 40%)}
+.end .copy{position:relative;z-index:2;padding:0 var(--gut)}
+.end h2{font-size:clamp(2.4rem,5.4vw,4.8rem);margin-top:14px}
+.end p{color:rgba(238,233,225,.82);max-width:52ch;margin:16px auto 28px}
+.kb{animation:kb 26s ease-in-out infinite alternate}
+@keyframes kb{from{transform:scale(1)}to{transform:scale(1.07)}}
+.poc{font-size:.76rem;color:rgba(238,233,225,.62);margin-top:40px!important}
+.credit{position:absolute;bottom:18px;inset-inline:var(--gut);z-index:2;font-size:.7rem;color:rgba(238,233,225,.55);text-align:center}
+
+@media (max-width:820px){
+  .cap{max-width:none;inset-inline-end:var(--gut)}
+  .cap p{font-size:.92rem}
+  .film .veil{background:linear-gradient(0deg,rgba(11,11,12,.9),rgba(11,11,12,.55) 34%,rgba(11,11,12,0) 60%)}
+  .badge{top:50px;font-size:.6rem}
+  .cmp{aspect-ratio:4/5}
+  .hud{grid-template-columns:auto 1fr}.hud .phase{display:none}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}.hero .copy>*{opacity:1;transform:none}}
+</style>
+</head>
+<body>
+<header class="nav" id="nav">
+  <a class="brand" href="#top" aria-label="JEC | AlJallad Contracting"><b>JEC</b><small>ALJALLAD CONTRACTING</small></a>
+  <nav aria-label="main">
+    <a href="#filmSec"><span data-lang="ar">كيف نبني</span><span data-lang="en">How we build</span></a>
+    <a href="#fin"><span data-lang="ar">التشطيب</span><span data-lang="en">Finishing</span></a>
+    <a href="#reveal"><span data-lang="ar">الأنظمة</span><span data-lang="en">Systems</span></a>
+    <a href="#real"><span data-lang="ar">المشاريع</span><span data-lang="en">Projects</span></a>
+  </nav>
+  <a class="ghost cta" href="#end"><span data-lang="ar">ابدأ مشروعك</span><span data-lang="en">Start a project</span> →</a>
+  <button class="ghost lang" id="langBtn" type="button">EN</button>
+</header>
+
+<main id="top">
+<!-- 00 · hero: dusk shot of the finished building (Blender render → Higgsfield photoreal pass → Higgsfield video) -->
+<section class="hero" id="hero" aria-label="JEC | AlJallad Contracting">
+  <img class="poster" id="heroPoster" src="media/hero_poster.webp" alt="">
+  <video id="heroVid" muted playsinline loop preload="metadata" aria-hidden="true"></video>
+  <div class="veil"></div>
+  <span class="badge"><span data-lang="ar">تصوّر معماري · Blender + Higgsfield AI</span><span data-lang="en">Architectural visualization · Blender + Higgsfield AI</span></span>
+  <div class="copy">
+    <span class="kick"><span data-lang="ar">JEC | الجلاد للمقاولات</span><span data-lang="en">JEC | AlJallad Contracting</span></span>
+    <h1 class="disp"><span data-lang="ar">نبني ما يدوم.</span><span data-lang="en">We build what lasts.</span></h1>
+    <p><span data-lang="ar">تميّز هندسي، مبنيّ على الثقة. شاهد مبنى واحداً يُبنى أمامك وسط المدينة، من أرض فارغة إلى مساحة جاهزة للسكن.</span><span data-lang="en">Engineering excellence, built on trust. Watch one building rise in the middle of the city, from an empty plot to a space ready to live in.</span></p>
+    <div class="row">
+      <a class="ghost fill" href="#filmSec"><span data-lang="ar">شاهد كيف نبني</span><span data-lang="en">See how we build</span> ↓</a>
+      <a class="ghost" href="#real"><span data-lang="ar">مشاريعنا الحقيقية</span><span data-lang="en">Our real projects</span> →</a>
+    </div>
+  </div>
+  <span class="down"><i></i>SCROLL</span>
+</section>
+
+<!-- 01 · construction film: every shot starts and ends on a Blender render of the same model; Higgsfield adds realism and motion -->
+<section class="film" id="filmSec" aria-label="Construction film">
+  <div class="stage">
+    <canvas id="film" role="img" aria-label="On a city plot the ground is excavated, foundations are poured, columns and slabs rise floor by floor, the stone facade and glazing are installed, the finished building stands on its street, then the camera walks through the entrance into the lobby"></canvas>
+    <div class="vwrap" id="filmV" aria-hidden="true" hidden></div>
+    <div class="veil"></div>
+    <span class="dbg" id="dbg"></span>
+    <span class="badge"><span data-lang="ar">تصوّر معماري بالذكاء الاصطناعي — ليس مشروعاً منفّذاً</span><span data-lang="en">AI architectural visualization — not a completed project</span></span>
+    <div id="caps"></div>
+    <div class="hud"><span class="num" id="fnum">001</span><div class="track" id="track"><u id="fbuf"></u><i id="ftrack"></i></div><span class="phase" id="phase"></span></div>
+    <div class="loader" id="loader"><div><span>JEC</span><b><i id="lbar"></i></b></div></div>
+  </div>
+</section>
+
+<!-- 02 · finishing film: one room, one fixed camera, nine site stages -->
+<section class="pin fin" id="fin" aria-label="From raw structure to finished interior">
+  <div class="stage">
+    <canvas id="finCv" role="img" aria-label="The same room from one fixed camera: raw concrete, blockwork partitions, services, plaster, suspended ceiling, floor and wall finishes, paint doors and lighting, cleaning, then furniture"></canvas>
+    <div class="vwrap" id="finV" aria-hidden="true" hidden></div>
+    <div class="shade-r"></div>
+    <span class="badge"><span data-lang="ar">تصوّر معماري بالذكاء الاصطناعي</span><span data-lang="en">AI architectural visualization</span></span>
+    <div class="side">
+      <span class="kick"><span data-lang="ar">من العظم إلى السكن</span><span data-lang="en">From shell to home</span></span>
+      <h2 class="disp"><span data-lang="ar">الغرفة نفسها.<br>تسع مراحل.</span><span data-lang="en">The same room.<br>Nine stages.</span></h2>
+      <p id="stageText"></p>
+    </div>
+    <ol class="steps" id="steps"></ol>
+  </div>
+</section>
+
+<!-- 03 · the finished room with the suspended ceiling lifted (Blender model view, same camera) -->
+<section class="pin reveal" id="reveal" aria-label="Hidden systems">
+  <div class="stage" id="revStage">
+    <img class="layer" src="renders/p9.webp" alt="Finished, furnished living room">
+    <img class="layer xr" id="xr" src="renders/x10.webp" alt="Same room with the suspended ceiling removed, showing ductwork, sprinkler pipes, chilled-water pipes, the fan-coil unit and drainage" loading="lazy">
+    <img class="lens" id="lens" src="renders/x10.webp" alt="" loading="lazy">
+    <span class="ring" id="ring"></span>
+    <i class="wline" id="wline" aria-hidden="true"></i>
+    <div class="shade-b"></div>
+    <span class="badge"><span data-lang="ar">ما فوق السقف: من النموذج الهندسي ثلاثي الأبعاد</span><span data-lang="en">Above the ceiling: from the 3D engineering model</span></span>
+    <div class="side side-b">
+      <span class="kick"><span data-lang="ar">الأنظمة المخفية</span><span data-lang="en">The hidden systems</span></span>
+      <h2 class="disp"><span data-lang="ar">ما خلف السقف.</span><span data-lang="en">Behind the ceiling.</span></h2>
+      <p><span data-lang="ar">نفس الغرفة ونفس الكاميرا. نرفع السقف المعلّق لنكشف ما نُنفّذه قبل التشطيب.</span><span data-lang="en">Same room, same camera. We lift the suspended ceiling to show what we install before the finishes.</span></p>
+      <div class="legend" id="legend"></div>
+    </div>
+    <span class="hint" id="hint"><span data-lang="ar">حرّك المؤشر لترى ما خلف التشطيب</span><span data-lang="en">Move your cursor to look behind the finish</span></span>
+    <div id="tags"></div>
+  </div>
+</section>
+
+<section class="ba">
+  <div class="head">
+    <div><span class="kick"><span data-lang="ar">قارن</span><span data-lang="en">Compare</span></span><h2 class="disp" style="margin-top:12px"><span data-lang="ar">قبل وبعد.</span><span data-lang="en">Before / After.</span></h2></div>
+    <p><span data-lang="ar">اسحب الخط لترى الهيكل الخام والمساحة المكتملة من نفس النقطة.</span><span data-lang="en">Drag the line to compare the raw structure and the finished space from the same point.</span></p>
+  </div>
+  <div class="cmp" id="cmp">
+    <img src="renders/p1.webp" alt="Raw structure" loading="lazy">
+    <img class="after" src="renders/p9.webp" alt="Finished space" loading="lazy">
+    <span class="bar"></span><span class="knob">↔</span>
+    <span class="lb l">RAW</span><span class="lb r">FINISHED</span>
+    <input type="range" min="0" max="100" value="50" id="cmpIn" aria-label="Before and after position">
+  </div>
+</section>
+
+<!-- 04 · real work -->
+<section class="real" id="real">
+  <div class="head">
+    <div><span class="kick"><span data-lang="ar">مشاريع حقيقية</span><span data-lang="en">Real JEC projects</span></span>
+    <h2 class="disp"><span data-lang="ar">ومن أرض الواقع.</span><span data-lang="en">And on real sites.</span></h2></div>
+    <div><p><span data-lang="ar">صور من مشاريع نفّذتها JEC أو تنفّذها الآن، كما نُشرت على حسابها في إنستغرام.</span><span data-lang="en">Photographs of projects JEC has delivered or is delivering, as published on its Instagram.</span></p>
+    <p class="note"><span data-lang="ar">المبنى في الأعلى تصوّر معماري صُمّم لهذا الموقع بالنمذجة ثلاثية الأبعاد والذكاء الاصطناعي، وليس مشروعًا منفّذًا.</span><span data-lang="en">The building above is an architectural visualization made for this website with 3D modelling and AI, not a completed project.</span></p></div>
+  </div>
+  <div class="strip" id="strip"></div>
+</section>
+
+<section class="end" id="end">
+  <img class="poster" id="endPoster" src="media/end_poster.webp" alt="">
+  <video id="endVid" muted playsinline preload="none" aria-hidden="true"></video>
+  <div class="veil"></div>
+  <div class="copy">
+    <span class="kick"><span data-lang="ar">ابدأ مشروعك</span><span data-lang="en">Start a project</span></span>
+    <h2 class="disp"><span data-lang="ar">نبني ما يدوم.</span><span data-lang="en">We build what lasts.</span></h2>
+    <p><span data-lang="ar">راسلنا على إنستغرام لطلب عرض سعر أو زيارة موقع.</span><span data-lang="en">Message us on Instagram for a quote or a site visit.</span></p>
+    <a class="ghost fill" href="https://ig.me/m/jallad.contracting" target="_blank" rel="noopener">@jallad.contracting →</a>
+    <p class="poc"><span data-lang="ar">نسخة تجريبية للموافقة — المبنى المعروض تصوّر معماري، وليس مشروعاً منفّذاً.</span><span data-lang="en">Proof of concept for approval — the building shown is an architectural visualization, not a completed project.</span></p>
+  </div>
+  <span class="credit"><span data-lang="ar">النموذج والكاميرات: Blender · الواقعية والحركة: Higgsfield AI، مولّدة من صور Blender لنفس المبنى</span><span data-lang="en">Model and cameras: Blender · Realism and motion: Higgsfield AI, generated from Blender renders of the same building</span></span>
+</section>
+</main>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script>
+const $ = s => document.querySelector(s);
+const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+const small = matchMedia("(max-width: 820px)").matches;
+let lang = "ar"; try { const s = localStorage.getItem("jec-poc-lang"); if (s) lang = s; } catch(e){}
+const L = o => o[lang];
+
+/* ---------------- data ---------------- */
+/* A = construction film, I = interior finishing film.
+   Desktop (Ad, Id): every frame Higgsfield produced, 30 per second of source, as short H.264 clips (1920×1080, at most 90 frames each); the clip under the scroll position is seeked while you scroll.
+   Phone (Am, Im): every third frame as 960×540 WebP tiles, cross-faded between frames.
+   seg = last frame of each shot; anchors = frame of each interior stage. */
+const FILM = /*FILM*/{ Ad:{ total: 1068, seg:[150,300,390,480,498,648,738,828,978,1068], clips:[{f:"a01a",n:75},{f:"a01b",n:75},{f:"a02a",n:75},{f:"a02b",n:75},{f:"a03",n:90},{f:"a04",n:90},{f:"a05",n:18},{f:"a06a",n:75},{f:"a06b",n:75},{f:"a07",n:90},{f:"a08",n:90},{f:"a09a",n:75},{f:"a09b",n:75},{f:"a10",n:90}] },
+  Am:{ total: 350, seg:[50,99,128,157,163,213,242,271,320,350] },
+  Id:{ total: 690, anchors:[1,90,180,270,360,450,540,597,690], clips:[{f:"i01",n:90},{f:"i02",n:90},{f:"i03",n:90},{f:"i04",n:90},{f:"i05",n:90},{f:"i06",n:90},{f:"i07a",n:75},{f:"i07b",n:75}] },
+  Im:{ total: 224, anchors:[1,30,59,88,117,146,175,194,224] } }/*FILM*/;
+const FA = small ? FILM.Am : FILM.Ad, FI = small ? FILM.Im : FILM.Id, U = small ? 1 : 3;
+const S = FA.seg, segA = i => (i ? S[i-1] + 1 : 1), segB = i => S[i];
+/* shot index → caption (shot 4 is the cut from inside the plot to the street) */
+const CAPS = [
+  {s:0, k:{ar:"01 · الأرض",en:"01 · The plot"}, t:{ar:"كل شيء يبدأ<br>بأرض فارغة.",en:"It starts with<br>an empty plot."}, p:{ar:"نسوّر الموقع ونثبّت المحاور، ثم نحفر حتى منسوب الأساسات.",en:"The site is fenced and set out, then excavated down to foundation level."}},
+  {s:1, k:{ar:"02 · الأساسات",en:"02 · Foundations"}, t:{ar:"أولاً،<br>نبني الأساس.",en:"First, we build<br>the foundation."}, p:{ar:"حديد تسليح وطوبار، ثم صبّ القواعد والجسور الأرضية، وتُنصب الرافعة البرجية.",en:"Rebar and formwork, then the footings and ground beams are poured, and the tower crane goes up."}},
+  {s:2, k:{ar:"03 · الأعمدة",en:"03 · Columns"}, t:{ar:"ثم يبدأ<br>الارتفاع.",en:"Then it begins<br>to rise."}, p:{ar:"ردم ودكّ، عقدة أرضية، ثم أعمدة تُصبّ على المحاور نفسها.",en:"Backfill, a ground slab, then columns cast exactly on the grid."}},
+  {s:3, k:{ar:"04 · أول عقدة",en:"04 · The first slab"}, t:{ar:"عقدة<br>فوق عقدة.",en:"Slab<br>over slab."}, p:{ar:"دعامات وطوبار، تُصبّ العقدة، ثم أعمدة الطابق التالي فوق أعمدة الذي تحته.",en:"Props and formwork, the slab is poured, then the next columns stand on the ones below."}},
+  {s:5, k:{ar:"05 · الهيكل",en:"05 · Structure"}, t:{ar:"طابقاً<br>بعد طابق.",en:"Floor<br>by floor."}, p:{ar:"الهيكل الخرساني يرتفع بنفس مقاطع الأعمدة حتى السطح.",en:"The concrete frame rises with the same column sections up to the roof."}},
+  {s:6, k:{ar:"06 · البلوك والحجر",en:"06 · Blockwork and stone"}, t:{ar:"الحجر<br>أولاً.",en:"Stone<br>first."}, p:{ar:"بعد اكتمال الهيكل: جدران بلوك، ثم تلبيس الحجر من الأرضي حتى السطح. الفتحات تبقى بلا زجاج.",en:"Once the frame is complete: blockwork walls, then stone cladding from the ground up. The openings stay unglazed."}},
+  {s:7, k:{ar:"07 · الزجاج والتسليم",en:"07 · Glazing and handover"}, t:{ar:"ثم الزجاج،<br>والضوء.",en:"Then glass,<br>and light."}, p:{ar:"بعد فكّ الرافعة: إطارات وزجاج ودرابزين، ثم يُرفع السياج وتكتمل الأرصفة والمدخل.",en:"With the crane gone: frames, glazing and balustrades, then the hoarding comes down and the pavements and entrance are finished."}},
+  {s:8, k:{ar:"08 · المدخل",en:"08 · The entrance"}, t:{ar:"تفضّل<br>بالدخول.",en:"Step<br>inside."}, p:{ar:"باب محوري من الزجاج والبرونز بين أكتاف من الحجر.",en:"A glass and bronze pivot door between limestone piers."}},
+  {s:9, k:{ar:"09 · البهو",en:"09 · The lobby"}, t:{ar:"والآن،<br>كيف تشطّب الداخل؟",en:"Now, how was<br>the inside finished?"}, p:{ar:"في الأسفل نأخذ غرفة واحدة ونعيدها إلى العظم، ثم نتابعها مرحلة بعد مرحلة.",en:"Below we take one room back to bare concrete and follow it stage by stage."}}
+];
+const PHASES = [
+  {ar:"الحفر",en:"Excavation"},{ar:"الأساسات",en:"Foundations"},{ar:"العقدة الأرضية والأعمدة",en:"Ground slab & columns"},{ar:"أول عقدة",en:"First slab"},
+  {ar:"",en:""},{ar:"الهيكل الخرساني",en:"Concrete frame"},{ar:"البلوك والحجر",en:"Blockwork & stone"},{ar:"الزجاج والتشطيب الخارجي",en:"Glazing & handover"},{ar:"الدخول",en:"Walk-in"},{ar:"البهو",en:"Lobby"}
+];
+/* the nine interior stages, in site order; furniture appears only in the last one */
+const STAGES = [
+  {ar:"العظم",en:"Raw structure", dAr:"هيكل خرساني مسلّح: أعمدة، جسور، وعقدة السقف. لا شيء غير الخرسانة.", dEn:"The reinforced concrete frame: columns, beams and the slab above. Nothing but concrete."},
+  {ar:"القواطع",en:"Partitions", dAr:"جدران بلوك تحدّد الغرفة، مع فتحات الأبواب.", dEn:"Blockwork walls define the room, with the door openings."},
+  {ar:"التمديدات",en:"MEP rough-in", dAr:"مجاري التكييف، شبكة الإطفاء، المياه المبرّدة، الصرف، وتمديدات الكهرباء في فراغ السقف والجدران.", dEn:"HVAC ducts, sprinklers, chilled water, drainage and power conduits in the ceiling void and walls."},
+  {ar:"القصارة",en:"Plaster", dAr:"قصارة الجدران، وتبقى علب الكهرباء ظاهرة.", dEn:"The walls are plastered; electrical back boxes stay exposed."},
+  {ar:"السقف المعلّق",en:"Suspended ceiling", dAr:"علّاقات وألواح جبس تُخفي الأنظمة، مع مجرى الإضاءة المخفية.", dEn:"Hangers and gypsum boards conceal the services, with the slot for hidden light."},
+  {ar:"الأرضيات والجدران",en:"Floor & wall finishes", dAr:"بلاط أرضيات كبير المقاس، وتلبيس حجر على الجدار الرئيسي.", dEn:"Large-format floor tiles and stone cladding on the feature wall."},
+  {ar:"الدهان، الأبواب، الإنارة",en:"Paint, doors, lighting", dAr:"دهان نهائي، أبواب، سبوتات وإضاءة مخفية، وتجهيزات كهربائية.", dEn:"Final paint, doors, downlights, cove lighting and fittings."},
+  {ar:"التنظيف النهائي",en:"Final cleaning", dAr:"إزالة الأغطية والأدوات، وتنظيف الزجاج والأرضيات قبل التسليم.", dEn:"Protection, tools and dust are cleared; glass and floors are cleaned for handover."},
+  {ar:"الأثاث",en:"Furnished", dAr:"أثاث وستائر: مساحة جاهزة لأصحابها.", dEn:"Furniture and curtains: a space ready for its owners."}
+];
+const SYS = [
+  {id:"hvac",  c:"#b8c4d0", ar:"مجاري التكييف", en:"HVAC ductwork"},
+  {id:"fire",  c:"#d0473a", ar:"شبكة الإطفاء (رشاشات)", en:"Fire sprinkler network"},
+  {id:"water", c:"#4c7fd1", ar:"مواسير المياه المبرّدة", en:"Chilled-water pipes"},
+  {id:"fcu",   c:"#e3cda0", ar:"وحدة التكييف (FCU)", en:"Fan-coil unit"},
+  {id:"drain", c:"#9aa3ab", ar:"خط الصرف", en:"Drainage line"}
+];
+/* anchor points = Blender camera projection (CAM_ROOM) of each system; third value: label opens to the left */
+const TAGPOS = { hvac:[0.701,0.284,0], fire:[0.48,0.174,0], water:[0.249,0.125,1], fcu:[0.284,0.208,0], drain:[0.701,0.143,0] };
+const IG = "https://www.instagram.com/";
+/* [image, Arabic name, English name, post path, status] — names and links exactly as published on @jallad.contracting */
+const REAL = [
+  ["p00","مستودعات المسروجي للأدوية","Al-Masrouji Pharmaceutical Warehouses","p/DfeusyGEQkM/","done"],
+  ["p01","البنك الأردني الكويتي — أعمال مدنية","Jordan Kuwait Bank — civil works","p/DfcEaEFxNcF/","done"],
+  ["p02","جيشا كوفي هاوس","Geisha Coffee House","p/DfUiCa4gs-D/","done"],
+  ["p04","فيلا خاصة — مشروع ترميم","Private villa — renovation","p/DfSBbz8iFO0/","done"],
+  ["p07","حلويات زلاطيمو","Zalatimo Sweets","p/DfPNvkzkfMZ/","live"],
+  ["p05","مطعم ألي واي","Alley Way Restaurant","p/DfR0nPekdHS/","done"],
+  ["p08","ريغالو بازار","Regalo Bazzar","p/DfMlbhBEeMr/","done"],
+  ["p10","مطعم وينغز ماستر","Wings Master Restaurant","p/DfJ-DngkVwh/","live"],
+  ["p12","سكاي كافيه","Sky Cafe","p/DfE5_8sggP3/","done"],
+  ["p13","سيك ناتشورالز","SEEK Naturals","p/DfE3osFEQ7x/","done"]
+];
+
+/* ---------------- language ---------------- */
+function applyLang(){
+  document.documentElement.lang = lang; document.documentElement.dir = lang === "ar" ? "rtl" : "ltr";
+  $("#langBtn").textContent = lang === "ar" ? "EN" : "ع";
+  try { localStorage.setItem("jec-poc-lang", lang); } catch(e){}
+  renderCaps(); renderSystems(); renderSteps(); renderReal(); hudA(filmA.cur); setReveal(revP); stIdx = -1; hudI(filmI.cur);
+}
+$("#langBtn").addEventListener("click", () => { lang = lang === "ar" ? "en" : "ar"; applyLang(); });
+
+/* ---------------- nav: slides away on the way down, returns on the way up ---------------- */
+(function(){
+  const nav = $("#nav"); let last = scrollY, acc = 0;
+  addEventListener("scroll", () => {
+    const y = scrollY, d = y - last; last = y;
+    acc = (d > 0) === (acc > 0) ? acc + d : d;
+    if (y < 80){ nav.classList.remove("hide", "solid"); return; }
+    if (acc > 24) nav.classList.add("hide");
+    else if (acc < -24){ nav.classList.remove("hide"); nav.classList.add("solid"); }
+  }, {passive:true});
+  nav.addEventListener("focusin", () => nav.classList.remove("hide"));
+})();
+
+/* ---------------- 00 hero video ---------------- */
+const heroVid = $("#heroVid");
+if (!reduce){
+  heroVid.src = small ? "media/hero_540.mp4" : "media/hero_1080.mp4";
+  heroVid.addEventListener("playing", () => { $("#heroPoster").style.opacity = 0; }, {once:true});
+  heroVid.play().catch(() => {});
+  new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) heroVid.play().catch(()=>{}); else heroVid.pause(); })).observe($("#hero"));
+}
+
+/* ---------------- scroll films ----------------
+   Both players share one interface: target (scroll progress 0–1), cur (current frame), map (optional progress → frame), start(). */
+
+/* phone: frames drawn on a canvas from WebP tiles (four 960×540 frames per tile, 2×2), cross-faded between neighbours */
+class Scrub {
+  constructor(cv, dir, total, onFrame){
+    this.cv = cv; this.cx = cv.getContext("2d"); this.dir = dir; this.total = total;
+    this.frames = new Array(total + 2); this.tiles = {}; this.cur = 1; this.pos = 1; this.key = ""; this.onFrame = onFrame;
+    this.target = 0; this.p = 0; this.last = -1; this.started = false;
+    addEventListener("resize", () => this.size());
+    const glide = () => {
+      const d = this.target - this.p;
+      this.p = (reduce || Math.abs(d) < 0.0003) ? this.target : this.p + d * 0.14;
+      const f = this.map ? this.map(this.p) : 1 + this.p * (this.total - 1);
+      if (Math.abs(f - this.last) > 0.01){ this.last = f; this.set(f); }
+      requestAnimationFrame(glide);
+    };
+    glide();
+  }
+  tileOf(i){ const n = i - 1, j = n % 4; return { k: Math.floor(n / 4) + 1, sx: (j % 2) * 960, sy: Math.floor(j / 2) * 540, sw: 960, sh: 540 }; }
+  loadTile(k){
+    if (this.tiles[k]) return this.tiles[k];
+    return this.tiles[k] = new Promise(res => {
+      const im = new Image(); im.decoding = "async";
+      im.onload = () => { for (let i = (k - 1) * 4 + 1; i <= Math.min(this.total, k * 4); i++){ const t = this.tileOf(i); this.frames[i] = { im, sx: t.sx, sy: t.sy, sw: t.sw, sh: t.sh }; } res(); };
+      im.onerror = res;
+      im.src = `tiles/${this.dir}/t${String(k).padStart(3, "0")}.webp`;
+    });
+  }
+  /* coarse pass over the whole film first, so every scroll position has a nearby frame, then finer passes */
+  async start(onFirst){
+    if (this.started) return; this.started = true;
+    const order = []; for (const st of [32,16,8,4]) for (let i = 1; i <= this.total; i += st){ const k = this.tileOf(i).k; if (!order.includes(k)) order.push(k); }
+    const first = order.slice(0, 8); let n = 0;
+    await Promise.all(first.map(k => this.loadTile(k).then(() => { n++; if (onFirst) onFirst(n / first.length); })));
+    this.size(); if (onFirst) onFirst(2);
+    const rest = order.slice(first.length);
+    for (let k = 0; k < rest.length; k += 6){ await Promise.all(rest.slice(k, k + 6).map(x => this.loadTile(x))); if (this.onLoad) this.onLoad((first.length + k + 6) / order.length); this.key = ""; this.draw(); }
+    if (this.onLoad) this.onLoad(1);
+  }
+  near(i){ for (let d = 0; d < this.total; d++){ if (this.frames[i-d]) return this.frames[i-d]; if (this.frames[i+d]) return this.frames[i+d]; } return null; }
+  size(){ const dpr = Math.min(devicePixelRatio || 1, 2), w = Math.round(this.cv.clientWidth * dpr), h = Math.round(this.cv.clientHeight * dpr); if (!w || !h) return; if (this.cv.width !== w || this.cv.height !== h){ this.cv.width = w; this.cv.height = h; } this.key = ""; this.draw(); }
+  blit(fr){ const W = this.cv.width, H = this.cv.height, s = Math.max(W / fr.sw, H / fr.sh), w = fr.sw * s, h = fr.sh * s; this.cx.drawImage(fr.im, fr.sx, fr.sy, fr.sw, fr.sh, (W - w) / 2, (H - h) / 2, w, h); }
+  draw(){
+    const a = Math.floor(this.pos), t = reduce ? 0 : Math.round((this.pos - a) * 16) / 16;
+    const A = this.frames[a] || this.near(a), B = t > 0 ? this.frames[a + 1] : null; if (!A) return;
+    const key = a + ":" + (B ? t : 0) + ":" + (this.frames[a] ? 1 : 0); if (key === this.key) return; this.key = key;
+    this.cx.globalAlpha = 1; this.blit(A);
+    if (B && this.frames[a]){ this.cx.globalAlpha = t; this.blit(B); this.cx.globalAlpha = 1; }
+  }
+  set(f){
+    this.pos = Math.max(1, Math.min(this.total, f)); this.cur = Math.round(this.pos);
+    this.draw(); if (this.onFrame) this.onFrame(this.cur);
+  }
+}
+
+/* desktop: one H.264 clip per shot, every frame kept; the clip under the scroll position is seeked to the exact frame.
+   Clips are fetched whole (so a seek never waits for the network) and only the current shot and its two neighbours hold a decoder. */
+class VScrub {
+  constructor(wrap, dir, clips, onFrame){
+    this.wrap = wrap; this.dir = dir; this.onFrame = onFrame; this.fps = 30; wrap.hidden = false;
+    let off = 0;
+    this.clips = clips.map(c => { const o = { f: c.f, n: c.n, start: off, url: null, att: false, painted: false, wk: 0, v: null }; off += c.n; return o; });
+    this.total = off; this.cur = 1; this.active = -1; this.target = 0; this.p = 0; this.last = -1; this.started = false; this.got = 0;
+    this.seeks = 0; this.seekMs = 0;
+    this.poster = new Image(); this.poster.alt = ""; this.poster.decoding = "async"; wrap.appendChild(this.poster); this.stills = [];
+    for (const c of this.clips){
+      const v = document.createElement("video"); v.muted = true; v.playsInline = true; v.preload = "auto"; v.disablePictureInPicture = true;
+      v.addEventListener("seeked", () => { if (c.t0){ this.seekMs += performance.now() - c.t0; this.seeks++; c.t0 = 0; } this.settle(c); });
+      v.addEventListener("loadeddata", () => this.settle(c));
+      v.addEventListener("error", () => { if (c.att && c.url && c.url.startsWith("blob:")){ c.url = `${this.dir}/${c.f}.mp4`; v.src = c.url; } });
+      wrap.appendChild(v); c.v = v;
+    }
+    const glide = () => {
+      const d = this.target - this.p;
+      this.p = (reduce || Math.abs(d) < 0.0003) ? this.target : this.p + d * 0.14;
+      const f = this.map ? this.map(this.p) : 1 + this.p * (this.total - 1);
+      if (Math.abs(f - this.last) > 0.01){ this.last = f; this.set(f); }
+      requestAnimationFrame(glide);
+    };
+    glide();
+  }
+  locate(g){ for (let i = 0; i < this.clips.length; i++){ const c = this.clips[i]; if (g < c.start + c.n) return [i, g - c.start]; } const l = this.clips.length - 1; return [l, this.clips[l].n - 1]; }
+  at(v){ return Math.floor(v.currentTime * this.fps + 0.01); }
+  seek(c, k){
+    c.wk = Math.max(0, Math.min(c.n - 1, k));
+    const v = c.v; if (!c.att || v.readyState < 1 || v.seeking) return;
+    if (this.at(v) !== c.wk){ c.t0 = performance.now(); v.currentTime = (c.wk + 0.5) / this.fps; }
+  }
+  /* after every seek: go again if the scroll has moved on, otherwise this clip now shows the frame that was asked for */
+  settle(c){
+    const v = c.v; if (!c.att || v.seeking) return;
+    if (this.at(v) !== c.wk){ c.t0 = performance.now(); v.currentTime = (c.wk + 0.5) / this.fps; return; }
+    c.painted = true; if (this.clips[this.active] === c) this.show(c);
+  }
+  show(c){ for (const o of this.clips) o.v.classList.toggle("on", o === c); }
+  attach(i){ const c = this.clips[i]; if (!c || c.att || !c.url) return; c.att = true; c.painted = false; c.v.src = c.url; }
+  detach(i){ const c = this.clips[i]; if (!c || !c.att) return; c.att = false; c.painted = false; c.v.classList.remove("on"); c.v.removeAttribute("src"); c.v.load(); }
+  set(f){
+    const g = Math.max(0, Math.min(this.total - 1, Math.round(f) - 1)); this.cur = g + 1;
+    const [i, k] = this.locate(g), c = this.clips[i];
+    if (i !== this.active){
+      this.active = i;
+      for (let j = 0; j < this.clips.length; j++){ if (Math.abs(j - i) <= 1) this.attach(j); else this.detach(j); }
+      /* the neighbours wait on the frame they share with this shot, so crossing a cut never shows a stale picture */
+      const pv = this.clips[i - 1], nx = this.clips[i + 1];
+      if (pv) this.seek(pv, pv.n - 1); if (nx) this.seek(nx, 0);
+      if (c.painted) this.show(c);
+      else { this.poster.src = `${this.dir}/${c.f}.webp`; if (!c.url) this.show(null); }
+    }
+    this.wrap.classList.toggle("wait", !c.url);
+    this.seek(c, k);
+    if (this.onFrame) this.onFrame(this.cur);
+  }
+  /* what to fetch next: the shot on screen first, then the ones after it, then the ones before */
+  pick(){
+    const a = Math.max(0, this.active), n = this.clips.length;
+    for (let i = a; i < n; i++) if (!this.clips[i].url && !this.clips[i].busy) return i;
+    for (let i = a - 1; i >= 0; i--) if (!this.clips[i].url && !this.clips[i].busy) return i;
+    return -1;
+  }
+  async grab(i, onProg){
+    const c = this.clips[i]; c.busy = true;
+    try {
+      const r = await fetch(`${this.dir}/${c.f}.mp4`); if (!r.ok) throw new Error(r.status);
+      const len = +r.headers.get("content-length") || 0;
+      if (onProg && r.body && len){
+        const rd = r.body.getReader(), parts = []; let n = 0;
+        for (;;){ const { done, value } = await rd.read(); if (done) break; parts.push(value); n += value.length; onProg(n / len); }
+        c.url = URL.createObjectURL(new Blob(parts, { type: "video/mp4" }));
+      } else c.url = URL.createObjectURL(await r.blob());
+    } catch (e){ c.url = `${this.dir}/${c.f}.mp4`; }
+    this.got += c.n; if (this.onLoad) this.onLoad(this.got / this.total);
+    if (c.url && this.active >= 0 && Math.abs(i - this.active) <= 1){ this.active = -9; this.set(this.cur); }
+  }
+  /* the first still shows at once; the clips arrive behind it in story order, two at a time */
+  async start(onFirst){
+    if (this.started) return; this.started = true;
+    await new Promise(r => { this.poster.onload = this.poster.onerror = r; this.poster.src = `${this.dir}/${this.clips[0].f}.webp`; });
+    this.poster.onload = this.poster.onerror = null;
+    if (onFirst) onFirst(2);
+    this.stills = this.clips.map(c => { const im = new Image(); im.src = `${this.dir}/${c.f}.webp`; return im; });
+    const next = async () => { for (let i; (i = this.pick()) >= 0; ) await this.grab(i); };
+    await Promise.all([next(), next()]);
+  }
+}
+/* Shift+D shows how long seeks take on this machine */
+addEventListener("keydown", e => {
+  if (!(e.shiftKey && e.key === "D") || small) return;
+  const el = $("#dbg"); el.style.display = el.style.display === "block" ? "none" : "block";
+  clearInterval(window.__dbgT);
+  if (el.style.display === "block") window.__dbgT = setInterval(() => { const a = filmA, b = filmI; el.textContent = `film ${a.cur}/${a.total} · seeks ${a.seeks + b.seeks} · avg ${((a.seekMs + b.seekMs) / Math.max(1, a.seeks + b.seeks)).toFixed(1)} ms`; }, 300);
+});
+
+/* ---------------- 01 construction film ---------------- */
+function renderCaps(){
+  $("#caps").innerHTML = CAPS.map((c,i) => `<div class="cap" data-i="${i}"><span class="kick">${L(c.k)}</span><h2 class="disp">${L(c.t)}</h2><p>${L(c.p)}</p></div>`).join("");
+  $("#track").querySelectorAll("b").forEach(b => b.remove());
+  S.slice(0, -1).forEach(f => { const b = document.createElement("b"); b.style.insetInlineStart = ((f - 1) / (FA.total - 1) * 100) + "%"; $("#track").appendChild(b); });
+}
+function hudA(f){
+  $("#fnum").textContent = String(f).padStart(small ? 3 : 4, "0");
+  $("#ftrack").style.width = ((f - 1) / (FA.total - 1) * 100).toFixed(2) + "%";
+  const si = S.findIndex(e => f <= e); $("#phase").textContent = si >= 0 ? L(PHASES[si]) : "";
+  document.querySelectorAll(".cap").forEach((el,i) => {
+    const c = CAPS[i], a = segA(c.s) + 3 * U, b = segB(c.s) - 2 * U, fade = 6 * U;
+    let o = 0;
+    if (f >= a && f <= b) o = Math.min(1, (f - a) / fade + (i === 0 ? 1 : 0), (b - f) / fade + (i === CAPS.length - 1 ? 1 : 0));
+    el.style.opacity = Math.max(0, o).toFixed(3);
+    el.style.setProperty("--ty", ((1 - Math.max(0,o)) * 16).toFixed(1) + "px");
+  });
+}
+const filmA = small ? new Scrub($("#film"), "m", FA.total, hudA) : new VScrub($("#filmV"), "v", FA.clips, hudA);
+filmA.onLoad = q => { $("#fbuf").style.width = (q * 100).toFixed(1) + "%"; if (q >= 1) setTimeout(() => { $("#fbuf").style.opacity = 0; }, 1200); };
+filmA.start(p => { $("#lbar").style.width = Math.min(100, p * 100) + "%"; if (p > 1){ const l = $("#loader"); if (l){ l.style.opacity = 0; setTimeout(() => l.remove(), 900); } filmA.set(filmA.cur); } });
+
+/* ---------------- 02 finishing film ---------------- */
+let stIdx = -1;
+const AN = FI.anchors;
+function renderSteps(){ $("#steps").innerHTML = STAGES.map((s,i) => `<li><b class="num">${String(i + 1).padStart(2,"0")}</b><span>${L(s)}</span></li>`).join(""); stIdx = -1; }
+function hudI(f){
+  /* a stage becomes current as soon as its work starts on screen, and stays current while the film rests on its finished frame */
+  let now = 0; for (let k = 1; k < AN.length; k++){ if (f >= AN[k-1] + (AN[k] - AN[k-1]) * 0.18) now = k; }
+  if (now === stIdx) return; stIdx = now;
+  document.querySelectorAll("#steps li").forEach((li,k) => { li.classList.toggle("on", k === now); li.classList.toggle("done", k < now); });
+  $("#stageText").textContent = lang === "ar" ? STAGES[now].dAr : STAGES[now].dEn;
+}
+const filmI = small ? new Scrub($("#finCv"), "im", FI.total, hudI) : new VScrub($("#finV"), "vi", FI.clips, hudI);
+/* scroll progress → frame, resting a little on every stage before moving to the next */
+filmI.map = p => {
+  const n = AN.length - 1, t = Math.min(n, Math.max(0, p * 1.04) * n), i = Math.min(n - 1, Math.floor(t));
+  let u = Math.max(0, Math.min(1, (t - i - 0.16) / 0.68)); u = u * u * (3 - 2 * u);
+  return AN[i] + (AN[i+1] - AN[i]) * u;
+};
+new IntersectionObserver((es, ob) => es.forEach(e => { if (e.isIntersecting){ ob.disconnect(); filmI.start(); } }), {rootMargin: "200% 0px"}).observe($("#fin"));
+
+/* ---------------- 03 reveal ---------------- */
+let revP = 0;
+function renderSystems(){
+  $("#legend").innerHTML = SYS.map(s => `<div data-id="${s.id}" style="--c:${s.c}"><b></b><span>${L(s)}</span></div>`).join("");
+  $("#tags").innerHTML = SYS.filter(s => TAGPOS[s.id]).map(s => `<div class="tag" data-id="${s.id}"><i style="background:${s.c}"></i><span>${L(s)}</span></div>`).join("");
+  placeTags();
+}
+/* tag anchors come from Blender (camera projection of each system); map them through the object-fit:cover crop */
+let pan = 0.5, vpan = 0.5;
+function placeTags(){
+  const st = $("#revStage"), W = st.clientWidth, H = st.clientHeight, s = Math.max(W / 1920, H / 1080);
+  const dw = 1920 * s, dh = 1080 * s, ox = (W - dw) * pan, oy = (H - dh) * vpan;
+  document.querySelectorAll(".tag").forEach(t => {
+    const [u, v, left] = TAGPOS[t.dataset.id], x = ox + u * dw, y = oy + v * dh;
+    const inside = x > 12 && x < W - 12 && y > 56 && y < H - 12;
+    t.style.left = x + "px"; t.style.top = y + "px"; t.style.display = inside ? "flex" : "none";
+    t.classList.toggle("flip", !!left || x > W * 0.7);
+  });
+}
+addEventListener("resize", placeTags);
+function setReveal(p){
+  revP = p;
+  const st = $("#revStage");
+  /* portrait: pan across the room; wide screens: keep the ceiling (the subject here) in frame */
+  if (st.clientWidth < st.clientHeight * 1.2){ pan = Math.max(0, Math.min(1, (p - 0.3) / 0.65)); vpan = 0.5; }
+  else { pan = 0.5; vpan = st.clientWidth / st.clientHeight > 16 / 9 ? 0 : 0.5; }
+  const op = (pan * 100).toFixed(1) + "% " + (vpan * 100) + "%";
+  document.querySelectorAll("#revStage .layer, #lens").forEach(im => im.style.objectPosition = op);
+  placeTags();
+  const e = Math.max(0, Math.min(1, (p - 0.08) / 0.55));
+  /* the ceiling lifts away from the top of the frame downward */
+  $("#xr").style.clipPath = `inset(0 0 ${(100 - e * 100).toFixed(2)}% 0)`;
+  const wl = $("#wline"); wl.style.top = (e * 100).toFixed(2) + "%"; wl.style.opacity = e > 0.01 && e < 0.99 ? 1 : 0;
+  if (p > 0.12){ lens.style.opacity = 0; ring.style.opacity = 0; }
+  const portrait = st.clientWidth < st.clientHeight * 1.2;
+  const shownN = portrait ? (e > 0.45 ? SYS.length : 0) : Math.max(0, Math.min(SYS.length, Math.floor((p - 0.35) / 0.08) + 1));
+  document.querySelectorAll("#legend div").forEach((d,i) => d.classList.toggle("on", i < shownN));
+  document.querySelectorAll(".tag").forEach(t => { const i = SYS.findIndex(s => s.id === t.dataset.id); t.classList.toggle("on", i < shownN); });
+  $("#hint").style.opacity = e < 0.05 ? 1 : 0;
+}
+const stg = $("#revStage"), lens = $("#lens"), ring = $("#ring");
+stg.addEventListener("pointermove", e => {
+  if (e.pointerType !== "mouse" || revP > 0.12) { lens.style.opacity = 0; ring.style.opacity = 0; return; }
+  const r = stg.getBoundingClientRect(), x = e.clientX - r.left, y = e.clientY - r.top;
+  for (const el of [lens, ring]) { el.style.setProperty("--mx", x + "px"); el.style.setProperty("--my", y + "px"); el.style.setProperty("--r", "150px"); }
+  lens.style.opacity = 1; ring.style.opacity = 1;
+});
+stg.addEventListener("pointerleave", () => { lens.style.opacity = 0; ring.style.opacity = 0; });
+
+/* ---------------- before / after ---------------- */
+const cmp = $("#cmp");
+$("#cmpIn").addEventListener("input", e => cmp.style.setProperty("--p", e.target.value + "%"));
+
+/* ---------------- real projects ---------------- */
+function renderReal(){
+  const st = s => s === "live" ? (lang==="ar" ? "قيد التنفيذ" : "In progress") : (lang==="ar" ? "منجز" : "Completed");
+  $("#strip").innerHTML = REAL.map(r => `<a class="card" href="${IG + r[3]}" target="_blank" rel="noopener"><div class="im"><img src="real/${r[0]}.webp" alt="${lang==="ar"?r[1]:r[2]}" loading="lazy" width="540" height="720"></div><b>${lang==="ar"?r[1]:r[2]}</b><span>${st(r[4])} · Instagram</span></a>`).join("");
+}
+
+/* ---------------- end: day to dusk, played once when it comes into view ---------------- */
+const endVid = $("#endVid");
+if (!reduce){
+  endVid.src = small ? "media/end_daydusk_540.mp4" : "media/end_daydusk_1080.mp4";
+  let played = false;
+  new IntersectionObserver(es => es.forEach(e => {
+    if (e.isIntersecting && e.intersectionRatio > 0.45 && !played){ played = true; endVid.play().then(() => { $("#endPoster").style.opacity = 0; }).catch(() => {}); }
+  }), {threshold:[0, 0.5]}).observe($("#end"));
+} else { $("#endPoster").src = "media/end_poster_dusk.webp"; }
+
+/* ---------------- scroll wiring ---------------- */
+if (window.gsap && window.ScrollTrigger){
+  gsap.registerPlugin(ScrollTrigger);
+  ScrollTrigger.create({trigger:"#filmSec", start:"top top", end:"bottom bottom", onUpdate: s => { filmA.target = s.progress; }});
+  ScrollTrigger.create({trigger:"#fin", start:"top top", end:"bottom bottom", onUpdate: s => { filmI.target = s.progress; }});
+  ScrollTrigger.create({trigger:"#reveal", start:"top top", end:"bottom bottom", scrub: true, onUpdate: s => setReveal(s.progress)});
+}
+applyLang();
+</script>
+</body>
+</html>
