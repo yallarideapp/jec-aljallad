@@ -67,7 +67,11 @@ the behaviours to keep, open requests, and the change log shared by Claude and C
    the quote button, Instagram, language and the legal links; Escape, the backdrop and any link close it).
    Arabic RTL by default with the AR/EN toggle (localStorage key `jec-lang`, wrapped in try/catch; the old key `jec-poc-lang` is only read),
    `prefers-reduced-motion` handling, the slim nav that hides on scroll down, the quote estimator and the Instagram DM link.
-7. Film player: desktop `VScrub` seeks H.264 clips frame by frame; phone `Scrub` draws WebP tiles (4 frames of 960×540 per tile).
+7. Film player: desktop `VScrub` seeks H.264 clips frame by frame; every touch device (phones, iPad, any width) and screens ≤820 px
+   (`lite`) use `Scrub`, which draws WebP tiles (4 frames of 960×540 per tile). `Scrub` keeps memory bounded for iPhone Safari:
+   anchor tiles every 10 tiles stay loaded, plus a window of ±7 tiles around the frame on screen, only while its film is near the
+   screen (about 31 tiles at most). Do not go back to loading every tile; iOS closes tabs that decode too many images.
+   `ScrollTrigger.config({ignoreMobileResize:true})` stops the iPhone address bar from re-measuring the pinned sections.
    The `FILM` constant in index.html holds clip names, frame counts and stage boundaries. Change it together with the media.
    Clips must stay GOP 6, no B-frames, each file under 20 MiB (see `Production/higgsfield/README.md`).
 8. Construction order on screen: glass only after structure, blockwork and stone. Interior order is fixed:
