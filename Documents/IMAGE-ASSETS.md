@@ -2,6 +2,7 @@
 
 ## Real (the company's own photos)
 - `Source/real/p00 … p13.webp` — photos from the company's Instagram posts (see `SOURCES.md`), resized to WebP.
+- `Source/assets/logo.webp` — the company logo from its Instagram profile.
 
 ## AI architectural visualization (not a completed project; the site says so)
 The building, workers, machines, surrounding city and the interior room were made for this site:
@@ -18,6 +19,8 @@ The building, workers, machines, surrounding city and the interior room were mad
 | `Source/vi/i01 … i07b.mp4` (+ `.webp`) | Higgsfield videos of the interior finishing. `i03` and `i06` end with a short dissolve made in code; in `i06` two extra ceiling lights were removed by inpainting. |
 | `Source/tiles/m/*.webp`, `Source/tiles/im/*.webp` | Frames taken from the same videos, for phones |
 | `Source/renders/p1.webp`, `p9.webp` | Photoreal stills I1 (raw room) and I9 (finished room) |
+| `Source/renders/frame.webp` | Photoreal still of the concrete frame stage (S4), used in the process section |
+| `Source/assets/sectors/*.webp` | Illustrative sector images (villa, commercial, major) generated with Higgsfield AI for the first site; labelled “illustrative” |
 | `Source/renders/x10.webp` | Blender render of the ceiling systems (HVAC, sprinklers, chilled water, fan-coil unit, drainage) |
 
 ## Third-party material inside the Blender scene

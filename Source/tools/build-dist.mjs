@@ -7,7 +7,7 @@ import { fileURLToPath } from 'node:url';
 const SRC = join(dirname(fileURLToPath(import.meta.url)), '..');
 const DIST = join(SRC, 'dist');
 const FILES = ['index.html', '_headers'];
-const DIRS = ['v', 'vi', 'tiles', 'media', 'renders', 'real'];
+const DIRS = ['v', 'vi', 'tiles', 'media', 'renders', 'real', 'assets'];
 const LIMIT = 25 * 1024 * 1024;          // Cloudflare's per-file limit for static assets
 const SKIP = new Set(['.DS_Store', 'Thumbs.db', 'desktop.ini']);
 

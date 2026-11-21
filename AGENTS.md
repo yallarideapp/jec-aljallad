@@ -1,4 +1,4 @@
-# AGENTS.md — JEC | AlJallad Contracting website (proof of concept)
+# AGENTS.md — JEC | AlJallad Contracting website (proof of concept for the company's approval)
 
 Read `JEC-ALJALLAD-CONTEXT.md` first (Arabic). It has the current status, what is real and what is AI-made,
 the behaviours to keep, open requests, and the change log shared by Claude and ChatGPT.
@@ -20,7 +20,13 @@ the behaviours to keep, open requests, and the change log shared by Claude and C
 - `Source/` — the only place website code is edited. Static site, no framework (`npm run build` only copies files for Cloudflare):
   `index.html` (HTML, CSS and JS in one file; GSAP 3.12.5 + ScrollTrigger from cdnjs; Google Fonts),
   media in `v/` (exterior film clips), `vi/` (interior film clips), `tiles/` (phone frames), `media/` (hero and end videos),
-  `renders/` (before/after and "behind the ceiling"), `real/` (photos of the 10 real JEC projects).
+  `renders/` (before/after, "behind the ceiling", the process still), `real/` (photos of the 14 real JEC projects),
+  `assets/` (company logo, sector images).
+- One page, in this order: hero → construction film → who we are + stats → process (9 structural steps, exterior finishing) →
+  finishing film → behind the ceiling → before/after → finishing trades + renovation → sectors → real projects (filters, lightbox) →
+  services → quote estimator (WhatsApp, consent) → end → footer. `#privacy` and `#terms` open the legal overlay.
+  The company sections come from the first JEC site (2026-11-18), restyled into this design; their data (`SKELETON`, `TRADES`,
+  `SERVICES`, `CATS`, `SUBS`, `SCOPES`, `PROJECTS`, `FILTERS`, `LEGAL`, `CFG`) lives in the script of index.html.
 - `Source/server.cjs` — local preview server with HTTP Range support (the scroll film seeks inside videos).
 - Cloudflare: `Source/wrangler.jsonc` (Worker `jec-aljallad`, assets from `Source/dist`), `Source/package.json` (wrangler pinned, lockfile committed),
   `Source/tools/build-dist.mjs` (`npm run build`: copies the runtime files and `_headers` into `dist/`, refuses files over 25 MiB),
@@ -48,10 +54,15 @@ the behaviours to keep, open requests, and the change log shared by Claude and C
    unless Jafar asks. The client's existing website is separate and must not be overwritten.
 4. Truthfulness: the building is an AI architectural visualization (Blender model + Higgsfield AI). Keep every badge and note that
    says so, in both languages. Never present it as a completed JEC project. No invented statistics, awards, years, clients or quotes.
-5. The real-projects section (`REAL` in index.html) lists 10 posts of @jallad.contracting with names and links exactly as published.
-   Do not add, rename or invent projects.
-6. Keep: Arabic RTL by default with the AR/EN toggle (localStorage key `jec-poc-lang`, wrapped in try/catch),
-   `prefers-reduced-motion` handling, the slim nav that hides on scroll down, contact through the Instagram DM link.
+5. The real-projects section (`PROJECTS` in index.html) lists 14 posts of @jallad.contracting with names and links exactly as published.
+   Do not add, rename or invent projects. Brand names shown there feed the trademark notice in the footer and the Terms (`LEGAL.notice()`).
+   The stats in "who we are" are counts of that real data (projects, sectors, steps, trades, services); never add invented figures.
+6a. Legal: `LEGAL` is the single source for the Privacy Policy, Terms, footer notice and the estimator consent. It must describe what the
+   code does (estimator data goes nowhere except the WhatsApp/Instagram message the visitor sends; only the language key is stored).
+   Update `LAST_UPDATED` when you change it. Jordan PDPL No. 24 of 2023. `CFG.WHATSAPP_NUMBER` stays empty until JEC gives a number
+   (the button then opens WhatsApp's chat picker); `CFG.RATES` stays null unless JEC confirms JOD/m² ranges.
+6. Keep: Arabic RTL by default with the AR/EN toggle (localStorage key `jec-lang`, wrapped in try/catch; the old key `jec-poc-lang` is only read),
+   `prefers-reduced-motion` handling, the slim nav that hides on scroll down, the quote estimator and the Instagram DM link.
 7. Film player: desktop `VScrub` seeks H.264 clips frame by frame; phone `Scrub` draws WebP tiles (4 frames of 960×540 per tile).
    The `FILM` constant in index.html holds clip names, frame counts and stage boundaries. Change it together with the media.
    Clips must stay GOP 6, no B-frames, each file under 20 MiB (see `Production/higgsfield/README.md`).
@@ -69,6 +80,6 @@ the behaviours to keep, open requests, and the change log shared by Claude and C
 ## Known gaps
 - The city behind the building is not the same in every exterior shot (each anchor still was made photoreal separately).
 - Video is native 1920×1080 at 30 fps; no 2K/4K version exists.
-- No privacy policy or terms pages yet (the site has no forms; it uses Google Fonts and cdnjs). Add them before a public launch.
+- Privacy Policy and Terms exist (`#privacy`, `#terms`) but need the owner's review (not legal advice). The company WhatsApp number is still missing.
 - Cloudflare is not connected yet: Jafar connects the repo himself (`Cloudflare-guide.md`). Tested locally with `wrangler dev` only.
 - Native master films on disk are the v4 cut (`Documents/Archives/films_v4`); the v5 film exists as the clips in `Source/v`, `Source/vi`.

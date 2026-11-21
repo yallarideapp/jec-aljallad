@@ -3,8 +3,9 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>JEC | AlJallad Contracting — Architectural Experience</title>
+<title>JEC | AlJallad Contracting</title>
 <meta name="theme-color" content="#0B0B0C">
+<meta name="description" content="شركة الجلاد للمقاولات JEC — هندسة مدنية وإنشاءات: سكني، تجاري، تشطيبات وترميم. عمّان، الأردن.">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 64 64%27%3E%3Crect width=%2764%27 height=%2764%27 fill=%27%230B0B0C%27/%3E%3Ctext x=%2732%27 y=%2742%27 font-family=%27Arial%27 font-size=%2722%27 fill=%27%23E3CDA0%27 text-anchor=%27middle%27 letter-spacing=%272%27%3EJEC%3C/text%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -170,21 +171,6 @@ html[lang="ar"] .tag span{direction:rtl}
 .cmp .lb.l{left:16px}.cmp .lb.r{right:16px}
 .cmp input{position:absolute;inset:0;opacity:0;cursor:ew-resize;width:100%;height:100%;margin:0}
 
-/* real projects */
-.real{padding:clamp(90px,11vw,160px) 0 clamp(70px,9vw,120px);background:var(--ink);border-top:1px solid var(--line)}
-.real .head{padding:0 var(--gut);display:grid;grid-template-columns:1.1fr .9fr;gap:40px;align-items:end;margin-bottom:44px}
-.real h2{font-size:clamp(2.2rem,4.8vw,4rem);margin-top:14px}
-.real p{margin:0;color:var(--mute)}
-.note{margin-top:14px;font-size:.82rem;color:rgba(238,233,225,.6);border-inline-start:1px solid var(--gold);padding-inline-start:12px}
-.strip{display:flex;gap:16px;overflow-x:auto;padding:0 var(--gut) 18px;scroll-snap-type:x mandatory;scrollbar-width:thin}
-.card{flex:0 0 clamp(240px,24vw,340px);scroll-snap-align:start;text-decoration:none}
-.card .im{aspect-ratio:3/4;overflow:hidden;background:var(--char)}
-.card img{width:100%;height:100%;object-fit:cover;transition:transform 1s cubic-bezier(.2,.7,.2,1)}
-.card:hover img{transform:scale(1.05)}
-.card b{display:block;font-weight:400;margin-top:12px;font-size:.98rem}
-.card span{font-size:.76rem;color:var(--gold)}
-@media (max-width:820px){.real .head{grid-template-columns:1fr}}
-
 /* end: day-to-dusk shot of the finished building */
 .end{position:relative;min-height:100vh;min-height:100svh;display:grid;place-items:center;text-align:center;overflow:hidden;background:#000;border-top:1px solid var(--line)}
 .end video,.end .poster{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
@@ -205,19 +191,217 @@ html[lang="ar"] .tag span{direction:rtl}
   .cmp{aspect-ratio:4/5}
   .hud{grid-template-columns:auto 1fr}.hud .phase{display:none}
 }
+/* ---------- company sections (who we are, process, trades, sectors, projects, services, quote, footer, legal) ---------- */
+.disp em{font-style:normal;color:var(--gold-2)}
+.brand img{width:30px;height:30px;border-radius:50%;align-self:center;flex:none}
+.ghost svg{width:17px;height:17px;flex:none}
+.s{position:relative;padding:clamp(90px,11vw,160px) var(--gut);background:var(--ink);border-top:1px solid var(--line)}
+.s.alt{background:var(--char)}
+.s .in{max-width:1320px;margin-inline:auto}
+.shead{display:grid;grid-template-columns:1.1fr .9fr;gap:40px;align-items:end;margin-bottom:clamp(40px,6vw,64px)}
+.shead h2{font-size:clamp(2.2rem,4.8vw,4rem);margin-top:14px}
+.shead p{margin:0;color:var(--mute);max-width:52ch}
+@media (max-width:820px){.shead{grid-template-columns:1fr;gap:18px}}
+.rv{transition:opacity 1s cubic-bezier(.2,.7,.2,1),transform 1s cubic-bezier(.2,.7,.2,1)}
+.rv.pre{opacity:0;transform:translateY(24px)}
+
+/* who we are */
+.who h2{font-size:clamp(1.9rem,3.6vw,3.2rem);max-width:24ch;margin-top:18px;line-height:1.3}
+html[lang="en"] .who h2{text-transform:none;letter-spacing:.01em;line-height:1.2}
+.stats{display:grid;grid-template-columns:repeat(5,1fr);border-top:1px solid var(--line);margin-top:clamp(48px,7vw,90px)}
+.stat{padding:26px 16px 0;border-inline-start:1px solid var(--line)}
+.stat:first-child{border-inline-start:0;padding-inline-start:0}
+.stat b{display:block;font-family:var(--f-en);font-weight:200;font-size:clamp(2.8rem,5.4vw,4.6rem);line-height:1;color:var(--bone)}
+.stat span{display:block;margin-top:12px;color:var(--mute);font-size:.86rem;line-height:1.5}
+@media (max-width:820px){.stats{grid-template-columns:1fr 1fr}.stat{border-inline-start:0;padding:20px 0;border-bottom:1px solid var(--line)}.stat:last-child{grid-column:span 2}}
+
+/* process: the company's own nine structural steps */
+.proc{display:grid;grid-template-columns:1.05fr .95fr;gap:clamp(30px,5vw,72px);align-items:start}
+.plist{list-style:none;margin:0;padding:0;border-top:1px solid var(--line)}
+.plist li{display:grid;grid-template-columns:54px 1fr;gap:6px 14px;padding:18px 0;border-bottom:1px solid var(--line)}
+.plist b{grid-row:span 2;font-family:var(--f-en);font-weight:200;font-size:1.5rem;color:var(--gold-2);line-height:1.1}
+.plist h3{font-size:1.06rem;font-weight:400}
+.plist p{margin:0;color:var(--mute);font-size:.9rem}
+.pside{position:sticky;top:80px;display:grid;gap:22px}
+.pside figure{margin:0;position:relative;overflow:hidden;background:var(--char-2)}
+.pside img{width:100%;aspect-ratio:16/10;object-fit:cover}
+.pside figcaption{position:absolute;top:12px;inset-inline-end:12px;font-size:.66rem;color:rgba(238,233,225,.75);border:1px solid rgba(238,233,225,.22);background:rgba(11,11,12,.4);padding:3px 9px}
+.flist{list-style:none;margin:10px 0 0;padding:0;display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--line);border:1px solid var(--line)}
+.flist li{background:var(--char);padding:14px 16px;display:flex;gap:12px;align-items:baseline;font-size:.92rem}
+.flist b{font-family:var(--f-en);font-weight:300;color:var(--gold-2);font-size:.8rem;letter-spacing:.12em}
+@media (max-width:900px){.proc{grid-template-columns:1fr}.pside{position:static}}
+
+/* finishing trades + renovation */
+.trades{display:grid;grid-template-columns:repeat(3,1fr);border-top:1px solid var(--line)}
+.trade{padding:26px 22px 26px 0;border-bottom:1px solid var(--line);display:grid;grid-template-columns:50px 1fr;gap:8px}
+.trade b{font-family:var(--f-en);font-weight:200;font-size:1.4rem;color:var(--gold-2);line-height:1.2}
+.trade h3{font-size:1.04rem;font-weight:400;margin-bottom:4px}
+.trade p{margin:0;color:var(--mute);font-size:.9rem}
+@media (max-width:980px){.trades{grid-template-columns:1fr 1fr}}
+@media (max-width:600px){.trades{grid-template-columns:1fr}.trade{padding-inline-end:0}}
+.reno{display:grid;grid-template-columns:1fr 1fr;margin-top:clamp(56px,8vw,96px);background:var(--char);border:1px solid var(--line)}
+.reno .duo{display:grid;grid-template-columns:1fr 1fr}
+.reno .duo figure{margin:0;position:relative}
+.reno .duo img{width:100%;height:100%;object-fit:cover;min-height:320px}
+.reno .txt{padding:clamp(24px,4vw,48px);display:flex;flex-direction:column;gap:14px;justify-content:center;align-items:flex-start}
+.reno .txt h3{font-size:clamp(1.8rem,3vw,2.6rem)}
+.reno .txt p{margin:0;color:rgba(238,233,225,.8)}
+@media (max-width:820px){.reno{grid-template-columns:1fr}.reno .duo img{min-height:220px}}
+
+/* sectors */
+.sectors{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.sector{position:relative;min-height:clamp(440px,62vh,640px);overflow:hidden;isolation:isolate;display:flex;flex-direction:column;justify-content:flex-end;padding:clamp(20px,2.4vw,30px);text-decoration:none;border:1px solid var(--line)}
+.sector img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:-2;transition:transform 1.1s cubic-bezier(.2,.7,.2,1)}
+.sector:hover img{transform:scale(1.05)}
+.sector::after{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(180deg,rgba(11,11,12,.05) 25%,rgba(11,11,12,.92))}
+.sector .n{font-family:var(--f-en);font-weight:300;font-size:1rem;letter-spacing:.14em;color:var(--gold-2)}
+.sector h3{font-size:clamp(1.8rem,2.6vw,2.4rem);margin:6px 0 8px}
+.sector p{margin:0;color:rgba(238,233,225,.82);font-size:.93rem}
+.sector .go{margin-top:18px;align-self:flex-start}
+.sector .ill{position:absolute;top:12px;inset-inline-end:12px;font-size:.64rem;color:rgba(238,233,225,.75);border:1px solid rgba(238,233,225,.22);background:rgba(11,11,12,.4);padding:3px 9px}
+@media (max-width:900px){.sectors{grid-template-columns:1fr}.sector{min-height:420px}}
+
+/* real projects: filters, grid, lightbox */
+.filters{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:24px}
+.fbtn{border:1px solid var(--line);background:transparent;padding:6px 16px;cursor:pointer;color:var(--mute);font-size:.85rem}
+.fbtn[aria-pressed="true"]{background:var(--bone);color:var(--ink);border-color:var(--bone)}
+.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;grid-auto-flow:dense}
+.pcard{position:relative;border:0;padding:0;overflow:hidden;background:var(--char-2);cursor:pointer;aspect-ratio:3/4;text-align:start;isolation:isolate;color:inherit}
+.pcard.h{grid-column:span 2;aspect-ratio:3/2}
+.pcard img{width:100%;height:100%;object-fit:cover;transition:transform .9s cubic-bezier(.2,.7,.2,1)}
+.pcard:hover img{transform:scale(1.05)}
+.pcard::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 50%,rgba(11,11,12,.92))}
+.pcap{position:absolute;inset-inline:0;bottom:0;padding:14px;z-index:1}
+.pcap b{display:block;font-weight:400;font-size:.98rem;line-height:1.35}
+.pcap span{font-size:.76rem;color:var(--gold-2)}
+.ptag{position:absolute;top:10px;inset-inline-start:10px;z-index:1;font-size:.68rem;padding:3px 10px;background:rgba(11,11,12,.7);border:1px solid var(--line)}
+.ptag.live{inset-inline-start:auto;inset-inline-end:10px;background:var(--gold-2);color:var(--ink);border-color:transparent}
+.pnote{margin:30px 0 0;font-size:.82rem;color:rgba(238,233,225,.6);border-inline-start:1px solid var(--gold);padding-inline-start:12px;max-width:70ch}
+@media (max-width:1000px){.grid{grid-template-columns:repeat(3,1fr)}}
+@media (max-width:680px){.grid{grid-template-columns:1fr 1fr}.pcard.h{grid-column:span 2}}
+dialog{border:1px solid var(--line);background:var(--char);color:var(--bone);padding:0;max-width:min(1000px,94vw);width:100%}
+dialog::backdrop{background:rgba(5,5,6,.86);backdrop-filter:blur(4px)}
+.lbx{display:grid;grid-template-columns:1.25fr 1fr}
+.lbx .media{background:#000;display:flex;align-items:center;justify-content:center;max-height:82vh}
+.lbx .media img,.lbx .media video{max-height:82vh;width:100%;object-fit:contain}
+.lbx .info{padding:28px;display:flex;flex-direction:column;gap:14px;align-items:flex-start}
+.lbx .info h3{font-size:1.9rem}
+.lbx .info p{margin:0;color:rgba(238,233,225,.8)}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chips span{font-size:.76rem;border:1px solid var(--line);padding:2px 10px;color:rgba(238,233,225,.85)}
+#lb .x{position:absolute;top:12px;inset-inline-end:12px;width:40px;height:40px;border:1px solid var(--line);background:rgba(11,11,12,.8);cursor:pointer;font-size:1.25rem;z-index:2}
+@media (max-width:760px){.lbx{grid-template-columns:1fr}.lbx .media{max-height:50vh}.lbx .media img{max-height:50vh}}
+
+/* services */
+.svc{border-top:1px solid var(--line)}
+.svc details{border-bottom:1px solid var(--line)}
+.svc summary{list-style:none;display:grid;grid-template-columns:70px 1fr auto;gap:16px;align-items:baseline;padding:26px 0;cursor:pointer}
+.svc summary::-webkit-details-marker{display:none}
+.svc summary b{font-family:var(--f-en);font-weight:200;font-size:1.4rem;color:var(--gold-2)}
+.svc summary h3{font-size:clamp(1.5rem,3vw,2.3rem)}
+.svc summary i{font-style:normal;font-size:1.6rem;color:var(--mute);transition:transform .3s}
+.svc details[open] summary i{transform:rotate(45deg)}
+.svc .body{display:grid;grid-template-columns:70px 1.2fr 1fr;gap:16px;padding:0 0 30px}
+.svc .body p{margin:0;color:rgba(238,233,225,.8)}
+.svc .body ul{margin:0;padding:0;list-style:none;display:grid;gap:6px;color:var(--mute)}
+.svc .body li::before{content:"—";color:var(--gold);margin-inline-end:10px}
+@media (max-width:760px){.svc summary{grid-template-columns:44px 1fr auto}.svc .body{grid-template-columns:1fr;padding-inline-start:60px}}
+
+/* quote estimator */
+.est{display:grid;grid-template-columns:1.25fr 1fr;gap:22px;align-items:start}
+.form{background:var(--char-2);border:1px solid var(--line);padding:clamp(18px,3vw,32px);display:grid;gap:24px}
+fieldset{border:0;padding:0;margin:0;min-width:0}
+legend,.lbl{display:block;font-weight:400;margin-bottom:10px;font-size:.95rem}
+legend small,.lbl small{color:var(--mute)}
+.opts{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.opt{position:relative}
+.opt input{position:absolute;opacity:0;inset:0;cursor:pointer;margin:0}
+.opt span{display:flex;flex-direction:column;gap:2px;height:100%;border:1px solid var(--line);padding:12px 14px;transition:border-color .2s,background .2s}
+.opt span b{font-weight:500}
+.opt span i{font-style:normal;color:var(--mute);font-size:.8rem;line-height:1.45}
+.opt input:checked+span{border-color:var(--gold-2);background:rgba(227,205,160,.1)}
+.opt input:focus-visible+span{outline:1px solid var(--gold-2);outline-offset:2px}
+.mini{display:flex;flex-wrap:wrap;gap:8px}
+.mini label{position:relative}
+.mini input{position:absolute;opacity:0;inset:0;margin:0;cursor:pointer}
+.mini span{display:inline-block;border:1px solid var(--line);padding:5px 12px;font-size:.85rem;color:var(--mute)}
+.mini input:checked+span{color:var(--ink);background:var(--gold-2);border-color:var(--gold-2)}
+.mini input:focus-visible+span{outline:1px solid var(--gold-2);outline-offset:2px}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.field input,.field select,.field textarea{width:100%;background:var(--ink);border:1px solid var(--line);padding:11px 12px;color:var(--bone);font:inherit;border-radius:0}
+.field textarea{min-height:84px;resize:vertical}
+.range{display:flex;gap:12px;align-items:center}
+.range input[type=range]{flex:1;accent-color:var(--gold);padding:0;border:0;background:none}
+.range input[type=number]{width:110px}
+.stepper{display:inline-flex;align-items:center;border:1px solid var(--line)}
+.stepper button{width:44px;height:44px;background:var(--ink);border:0;cursor:pointer;font-size:1.2rem;color:var(--gold-2)}
+.stepper output{min-width:56px;text-align:center}
+.consent{display:flex;gap:10px;align-items:flex-start;font-size:.9rem;color:rgba(238,233,225,.85)}
+.consent input{margin-top:5px;accent-color:var(--gold);width:18px;height:18px;flex:none}
+.consent a{color:var(--gold-2)}
+.err{color:#EC7A6C;font-size:.85rem;margin:6px 0 0}
+.err:empty{display:none}
+.sum{position:sticky;top:80px;background:var(--char-2);border:1px solid rgba(227,205,160,.3);padding:clamp(18px,3vw,30px);display:grid;gap:16px}
+.sum h3{font-size:1.6rem}
+.kv{display:grid;gap:8px;font-size:.92rem;margin:0}
+.kv div{display:flex;justify-content:space-between;gap:12px;border-bottom:1px dashed var(--line);padding-bottom:7px}
+.kv dt{color:var(--mute)}.kv dd{margin:0;text-align:end}
+.bigsum{display:flex;align-items:baseline;gap:10px}
+.bigsum b{font-family:var(--f-en);font-weight:200;font-size:3.4rem;color:var(--gold-2);line-height:1}
+.scopebar{display:flex;height:6px;overflow:hidden;background:rgba(238,233,225,.08)}
+.scopebar i{display:block;height:100%}
+.slegend{display:flex;flex-wrap:wrap;gap:12px;font-size:.78rem;color:var(--mute);margin-top:8px}
+.slegend span::before{content:"";display:inline-block;width:9px;height:9px;margin-inline-end:6px;background:var(--c)}
+.snote{font-size:.84rem;color:var(--mute);border-inline-start:1px solid var(--gold);padding-inline-start:10px;margin:0}
+.msg{unicode-bidi:plaintext;text-align:start;white-space:pre-wrap;background:var(--ink);border:1px solid var(--line);padding:12px;font-size:.82rem;color:rgba(238,233,225,.8);max-height:180px;overflow:auto;margin:0;font-family:var(--f-body)}
+.actions{display:grid;gap:10px}
+.actions .ghost{width:100%;justify-content:center}
+.ok{color:#5CC08A;font-size:.85rem;min-height:1.2em;margin:0}
+@media (max-width:980px){.est{grid-template-columns:1fr}.sum{position:static}}
+@media (max-width:560px){.opts{grid-template-columns:1fr}.two{grid-template-columns:1fr}}
+
+/* end section buttons */
+.end .row{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+
+/* footer */
+footer{border-top:1px solid var(--line);padding:56px var(--gut) 34px;background:#070708}
+.fgrid{display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:28px;max-width:1320px;margin-inline:auto}
+.fgrid h4{margin:0 0 10px;color:var(--gold-2);font-family:var(--f-en);font-size:.72rem;letter-spacing:.2em;text-transform:uppercase;font-weight:400}
+html[lang="ar"] .fgrid h4{font-family:var(--f-body);letter-spacing:.06em}
+.fgrid a,.fgrid span.t{display:block;text-decoration:none;color:var(--mute);padding:3px 0}
+.fgrid a:hover{color:var(--bone)}
+.fgrid .brand{margin-bottom:14px}
+.fine{max-width:1320px;margin:30px auto 0;padding-top:18px;border-top:1px solid var(--line);color:#85807a;font-size:.8rem;display:grid;gap:6px}
+@media (max-width:760px){.fgrid{grid-template-columns:1fr}}
+
+/* privacy and terms pages (#privacy, #terms) */
+.legal{position:fixed;inset:0;z-index:90;background:var(--ink);overflow:auto;display:none}
+.legal.open{display:block}
+.legal .wrap{max-width:820px;margin-inline:auto;padding:0 var(--gut) 60px}
+.legal .top{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:26px;position:sticky;top:0;background:var(--ink);padding:12px 0;border-bottom:1px solid var(--line)}
+.legal h1{font-size:clamp(2rem,4vw,3rem)}
+.legal h2{font-size:1.05rem;font-weight:400;margin:26px 0 8px;color:var(--gold-2)}
+.legal p{color:rgba(238,233,225,.82)}
+.legal .upd{color:var(--mute);font-size:.88rem}
+@media (prefers-reduced-motion:reduce){.rv.pre{opacity:1;transform:none}}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}.hero .copy>*{opacity:1;transform:none}}
 </style>
 </head>
 <body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+<symbol id="i-wa" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8s-.4-.1-.6.1-.7.8-.8 1-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4.3-.4.7-1.4.1-.2 0-.3 0-.5l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.7 11.8 11.8 0 0 0 4.5 4c1.7.7 2.3.8 3.2.6a2.7 2.7 0 0 0 1.8-1.3 2.2 2.2 0 0 0 .1-1.3c0-.1-.2-.2-.4-.3z"/></symbol>
+<symbol id="i-ig" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r=".8" fill="currentColor"/></symbol>
+</defs></svg>
 <header class="nav" id="nav">
-  <a class="brand" href="#top" aria-label="JEC | AlJallad Contracting"><b>JEC</b><small>ALJALLAD CONTRACTING</small></a>
+  <a class="brand" href="#top" aria-label="JEC | AlJallad Contracting"><img src="assets/logo.webp" alt="" width="30" height="30"><b>JEC</b><small>ALJALLAD CONTRACTING</small></a>
   <nav aria-label="main">
     <a href="#filmSec"><span data-lang="ar">كيف نبني</span><span data-lang="en">How we build</span></a>
     <a href="#fin"><span data-lang="ar">التشطيب</span><span data-lang="en">Finishing</span></a>
-    <a href="#reveal"><span data-lang="ar">الأنظمة</span><span data-lang="en">Systems</span></a>
-    <a href="#real"><span data-lang="ar">المشاريع</span><span data-lang="en">Projects</span></a>
+    <a href="#sectors"><span data-lang="ar">القطاعات</span><span data-lang="en">Sectors</span></a>
+    <a href="#projects"><span data-lang="ar">المشاريع</span><span data-lang="en">Projects</span></a>
+    <a href="#services"><span data-lang="ar">الخدمات</span><span data-lang="en">Services</span></a>
   </nav>
-  <a class="ghost cta" href="#end"><span data-lang="ar">ابدأ مشروعك</span><span data-lang="en">Start a project</span> →</a>
+  <a class="ghost cta" href="#quote"><span data-lang="ar">اطلب عرض سعر</span><span data-lang="en">Request a quote</span> →</a>
   <button class="ghost lang" id="langBtn" type="button">EN</button>
 </header>
 
@@ -234,7 +418,7 @@ html[lang="ar"] .tag span{direction:rtl}
     <p><span data-lang="ar">تميّز هندسي، مبنيّ على الثقة. شاهد مبنى واحداً يُبنى أمامك وسط المدينة، من أرض فارغة إلى مساحة جاهزة للسكن.</span><span data-lang="en">Engineering excellence, built on trust. Watch one building rise in the middle of the city, from an empty plot to a space ready to live in.</span></p>
     <div class="row">
       <a class="ghost fill" href="#filmSec"><span data-lang="ar">شاهد كيف نبني</span><span data-lang="en">See how we build</span> ↓</a>
-      <a class="ghost" href="#real"><span data-lang="ar">مشاريعنا الحقيقية</span><span data-lang="en">Our real projects</span> →</a>
+      <a class="ghost" href="#quote"><span data-lang="ar">اطلب عرض سعر</span><span data-lang="en">Request a quote</span> →</a>
     </div>
   </div>
   <span class="down"><i></i>SCROLL</span>
@@ -251,6 +435,40 @@ html[lang="ar"] .tag span{direction:rtl}
     <div id="caps"></div>
     <div class="hud"><span class="num" id="fnum">001</span><div class="track" id="track"><u id="fbuf"></u><i id="ftrack"></i></div><span class="phase" id="phase"></span></div>
     <div class="loader" id="loader"><div><span>JEC</span><b><i id="lbar"></i></b></div></div>
+  </div>
+</section>
+
+<!-- company -->
+<section class="s who" id="who">
+  <div class="in">
+    <span class="kick rv"><span data-lang="ar">من نحن</span><span data-lang="en">Who we are</span></span>
+    <h2 class="disp rv"><span data-lang="ar">شركة مقاولات من عمّان، ننفّذ المشروع <em>من الحفرة الأولى</em> حتى آخر تفصيلة تشطيب.</span><span data-lang="en">An Amman contractor that takes a project <em>from the first dig</em> to the last finishing detail.</span></h2>
+    <div class="stats rv">
+      <div class="stat"><b class="num" id="nProj">14</b><span data-lang="ar">مشروعًا منشورًا من أرض الواقع</span><span data-lang="en">On-site projects published</span></div>
+      <div class="stat"><b class="num">3</b><span data-lang="ar">قطاعات: خاص، تجاري، كبرى</span><span data-lang="en">Sectors: private, commercial, major</span></div>
+      <div class="stat"><b class="num">9</b><span data-lang="ar">مراحل متسلسلة لأعمال العظم</span><span data-lang="en">Sequential structural steps</span></div>
+      <div class="stat"><b class="num">9</b><span data-lang="ar">أعمال تشطيب أساسية</span><span data-lang="en">Core finishing trades</span></div>
+      <div class="stat"><b class="num">5</b><span data-lang="ar">خدمات من الهندسة حتى إدارة المشروع</span><span data-lang="en">Services, engineering to project management</span></div>
+    </div>
+  </div>
+</section>
+
+
+<!-- the company's nine structural steps and its exterior finishing works -->
+<section class="s alt" id="process">
+  <div class="in">
+    <div class="shead">
+      <div><span class="kick"><span data-lang="ar">أنواع ومراحل العمل</span><span data-lang="en">How we build</span></span>
+      <h2 class="disp"><span data-lang="ar">المبنى، <em>قطعةً قطعة.</em></span><span data-lang="en">The building, <em>piece by piece.</em></span></h2></div>
+      <p><span data-lang="ar">ما شاهدته في الفيلم هو تسلسلنا الفعلي في الموقع: تسع مراحل لأعمال العظم، ثم التشطيبات الخارجية.</span><span data-lang="en">What you saw in the film is our actual site sequence: nine structural steps, then the exterior finishing works.</span></p>
+    </div>
+    <div class="proc">
+      <ol class="plist" id="skList"></ol>
+      <div class="pside">
+        <figure><img src="renders/frame.webp" alt="" loading="lazy" width="1600" height="905"><figcaption><span data-lang="ar">تصوّر معماري بالذكاء الاصطناعي</span><span data-lang="en">AI architectural visualization</span></figcaption></figure>
+        <div><span class="kick"><span data-lang="ar">أعمال تشطيبات خارجية</span><span data-lang="en">Exterior finishing</span></span><ol class="flist" id="fnList"></ol></div>
+      </div>
+    </div>
   </div>
 </section>
 
@@ -305,15 +523,114 @@ html[lang="ar"] .tag span{direction:rtl}
   </div>
 </section>
 
-<!-- 04 · real work -->
-<section class="real" id="real">
-  <div class="head">
-    <div><span class="kick"><span data-lang="ar">مشاريع حقيقية</span><span data-lang="en">Real JEC projects</span></span>
-    <h2 class="disp"><span data-lang="ar">ومن أرض الواقع.</span><span data-lang="en">And on real sites.</span></h2></div>
-    <div><p><span data-lang="ar">صور من مشاريع نفّذتها JEC أو تنفّذها الآن، كما نُشرت على حسابها في إنستغرام.</span><span data-lang="en">Photographs of projects JEC has delivered or is delivering, as published on its Instagram.</span></p>
-    <p class="note"><span data-lang="ar">المبنى في الأعلى تصوّر معماري صُمّم لهذا الموقع بالنمذجة ثلاثية الأبعاد والذكاء الاصطناعي، وليس مشروعًا منفّذًا.</span><span data-lang="en">The building above is an architectural visualization made for this website with 3D modelling and AI, not a completed project.</span></p></div>
+<!-- finishing trades, renovation -->
+<section class="s" id="trades">
+  <div class="in">
+    <div class="shead">
+      <div><span class="kick"><span data-lang="ar">أعمال تشطيبات</span><span data-lang="en">Finishing works</span></span>
+      <h2 class="disp"><span data-lang="ar">تسعة أعمال، <em>فريقٌ واحد.</em></span><span data-lang="en">Nine trades, <em>one team.</em></span></h2></div>
+      <p><span data-lang="ar">ننسّق كل أعمال التشطيب الداخلية والخارجية تحت إدارة واحدة، حتى يُسلَّم المبنى جاهزًا.</span><span data-lang="en">We coordinate every interior and exterior trade under one management, so the building is handed over ready.</span></p>
+    </div>
+    <div class="trades" id="tradeGrid"></div>
+    <div class="reno rv">
+      <div class="duo">
+        <figure><img src="real/p04.webp" alt="" loading="lazy" width="540" height="720"></figure>
+        <figure><img src="real/p03.webp" alt="" loading="lazy" width="540" height="720"></figure>
+      </div>
+      <div class="txt">
+        <span class="kick"><span data-lang="ar">ترميم</span><span data-lang="en">Renovation</span></span>
+        <h3 class="disp"><span data-lang="ar">نُعيد للبناء القائم <em>حياته.</em></span><span data-lang="en">We give existing buildings <em>a second life.</em></span></h3>
+        <p><span data-lang="ar">إعادة البناء أو تعديل البناء القائم، في أعمال التشطيبات أو أعمال العظم، حسب رغبة الزبون. في الصورتين: فيلا خاصة رمّمتها JEC.</span><span data-lang="en">Rebuilding or modifying an existing building, in its finishing or its structure, to the client’s wishes. Pictured: a private villa renovated by JEC.</span></p>
+        <button class="ghost fill" type="button" id="renoQuote"><span data-lang="ar">اطلب تسعيرة ترميم</span><span data-lang="en">Request a renovation quote</span></button>
+      </div>
+    </div>
   </div>
-  <div class="strip" id="strip"></div>
+</section>
+
+<!-- sectors -->
+<section class="s alt" id="sectors">
+  <div class="in">
+    <div class="shead">
+      <div><span class="kick"><span data-lang="ar">قطاعات المشاريع</span><span data-lang="en">Project sectors</span></span>
+      <h2 class="disp"><span data-lang="ar">ثلاثة قطاعات، <em>ومعيار واحد.</em></span><span data-lang="en">Three sectors, <em>one standard.</em></span></h2></div>
+      <p><span data-lang="ar">من بيتك الخاص إلى مستشفى أو بنك، نفس الفريق ونفس الدقّة في كل مرحلة.</span><span data-lang="en">From your own home to a hospital or a bank: the same team and the same precision at every stage.</span></p>
+    </div>
+    <div class="sectors" id="sectorCards"></div>
+  </div>
+</section>
+
+<!-- real projects -->
+<section class="s alt" id="projects">
+  <div class="in">
+    <div class="shead">
+      <div><span class="kick"><span data-lang="ar">من أرض الواقع</span><span data-lang="en">From the site</span></span>
+      <h2 class="disp"><span data-lang="ar">من أرض <em>الواقع.</em></span><span data-lang="en">Real projects, <em>real sites.</em></span></h2></div>
+      <p><span data-lang="ar">مشاريع نفّذتها JEC أو تنفّذها الآن، كما نُشرت على حسابنا في إنستغرام.</span><span data-lang="en">Projects JEC has delivered or is delivering now, as published on our Instagram.</span></p>
+    </div>
+    <div class="filters" id="filters" role="group" aria-label="filter"></div>
+    <div class="grid" id="grid"></div>
+    <p class="pnote"><span data-lang="ar">المبنى في الأفلام أعلى الصفحة تصوّر معماري صُمّم لهذا الموقع بالنمذجة ثلاثية الأبعاد والذكاء الاصطناعي، وليس مشروعًا منفّذًا. المشاريع في هذا القسم حقيقية كما نُشرت على حساب الشركة.</span><span data-lang="en">The building in the films above is an architectural visualization made for this website with 3D modelling and AI, not a completed project. The projects in this section are real, as published on the company’s account.</span></p>
+  </div>
+</section>
+
+<!-- services -->
+<section class="s" id="services">
+  <div class="in">
+    <div class="shead">
+      <div><span class="kick"><span data-lang="ar">خدماتنا</span><span data-lang="en">Our services</span></span>
+      <h2 class="disp"><span data-lang="ar">من الفكرة <em>حتى التسليم.</em></span><span data-lang="en">From concept <em>to completion.</em></span></h2></div>
+      <p><span data-lang="ar">خمس خدمات رسمية تغطي المشروع كاملًا.</span><span data-lang="en">Five official services that cover the whole project.</span></p>
+    </div>
+    <div class="svc" id="svcList"></div>
+  </div>
+</section>
+
+<!-- quote -->
+<section class="s alt" id="quote">
+  <div class="in">
+    <div class="shead">
+      <div><span class="kick"><span data-lang="ar">حاسبة المشروع</span><span data-lang="en">Project estimator</span></span>
+      <h2 class="disp"><span data-lang="ar">حدّد مشروعك، <em>وأرسله لنا.</em></span><span data-lang="en">Scope your project, <em>send it to us.</em></span></h2></div>
+      <p><span data-lang="ar">اختر القطاع ونطاق العمل والمساحة، ونجهّز لك رسالة كاملة ترسلها عبر واتساب.</span><span data-lang="en">Choose the sector, scope and area. We prepare a complete message you send on WhatsApp.</span></p>
+    </div>
+    <div class="est">
+      <form class="form" id="estForm" novalidate>
+        <fieldset><legend><span data-lang="ar">قطاع المشروع</span><span data-lang="en">Project sector</span> *</legend><div class="opts" id="catOpts"></div><p class="err" id="eCat"></p></fieldset>
+        <div class="field" id="subWrap"><label class="lbl" for="sub"><span data-lang="ar">نوع المبنى</span><span data-lang="en">Building type</span></label><select id="sub"></select></div>
+        <fieldset><legend><span data-lang="ar">نطاق العمل</span><span data-lang="en">Work scope</span> * <small data-lang="ar">(يمكن اختيار أكثر من نطاق)</small><small data-lang="en">(one or more)</small></legend><div class="opts" id="scopeOpts"></div><p class="err" id="eScope"></p></fieldset>
+        <fieldset id="tradesWrap" hidden><legend><span data-lang="ar">أعمال التشطيب المطلوبة</span><span data-lang="en">Finishing trades needed</span></legend><div class="mini" id="tradeOpts"></div></fieldset>
+        <div class="two">
+          <div class="field"><label class="lbl" for="areaN"><span data-lang="ar">مساحة الطابق</span><span data-lang="en">Area per floor</span> <small>(m²)</small></label><div class="range"><input type="range" id="area" min="50" max="3000" step="10" value="250" aria-label="area"><input type="number" id="areaN" min="20" max="20000" value="250" inputmode="numeric"></div></div>
+          <div class="field"><span class="lbl" id="floorsLbl"><span data-lang="ar">عدد الطوابق</span><span data-lang="en">Floors</span></span><div class="stepper" role="group" aria-labelledby="floorsLbl"><button type="button" id="fMinus" aria-label="-">−</button><output id="floors" class="num">2</output><button type="button" id="fPlus" aria-label="+">+</button></div></div>
+        </div>
+        <div class="two">
+          <div class="field"><label class="lbl" for="loc"><span data-lang="ar">موقع المشروع</span><span data-lang="en">Project location</span></label><input id="loc" autocomplete="address-level2"></div>
+          <div class="field"><label class="lbl" for="start"><span data-lang="ar">موعد البدء المتوقع</span><span data-lang="en">Expected start</span></label><select id="start"></select></div>
+        </div>
+        <div class="field"><span class="lbl"><span data-lang="ar">هل المخططات الهندسية جاهزة؟</span><span data-lang="en">Are the engineering drawings ready?</span></span><div class="mini" id="drawOpts"></div></div>
+        <div class="two">
+          <div class="field"><label class="lbl" for="name"><span data-lang="ar">الاسم</span><span data-lang="en">Name</span> *</label><input id="name" autocomplete="name"><p class="err" id="eName"></p></div>
+          <div class="field"><label class="lbl" for="phone"><span data-lang="ar">رقم الهاتف</span><span data-lang="en">Phone</span> <small data-lang="ar">(اختياري)</small><small data-lang="en">(optional)</small></label><input id="phone" type="tel" autocomplete="tel" dir="ltr"></div>
+        </div>
+        <div class="field"><label class="lbl" for="notes"><span data-lang="ar">ملاحظات</span><span data-lang="en">Notes</span></label><textarea id="notes"></textarea></div>
+        <div><label class="consent"><input type="checkbox" id="consent"><span><span data-lang="ar">أوافق على <a href="#privacy">سياسة الخصوصية</a> و<a href="#terms">الشروط والأحكام</a>، وعلى استخدام بياناتي للرد على طلبي.</span><span data-lang="en">I agree to the <a href="#privacy">Privacy Policy</a> and <a href="#terms">Terms &amp; Conditions</a>, and to my data being used to answer my request.</span></span></label><p class="err" id="eConsent"></p></div>
+      </form>
+      <aside class="sum" aria-live="polite">
+        <h3 class="disp"><span data-lang="ar">ملخّص المشروع</span><span data-lang="en">Project summary</span></h3>
+        <div class="bigsum"><b class="num" id="sTotal">500</b><span><span data-lang="ar">م² مسطّح بناء إجمالي</span><span data-lang="en">m² total built-up area</span></span></div>
+        <dl class="kv" id="sKv"></dl>
+        <div><div class="scopebar" id="sBar"></div><div class="slegend" id="sLegend"></div></div>
+        <p class="snote" id="sNote"></p>
+        <pre class="msg" id="sMsg"></pre>
+        <div class="actions">
+          <a class="ghost fill" id="waBtn" href="#" target="_blank" rel="noopener"><svg aria-hidden="true"><use href="#i-wa"/></svg><span data-lang="ar">أرسل الطلب عبر واتساب</span><span data-lang="en">Send request on WhatsApp</span></a>
+          <button class="ghost" type="button" id="copyBtn"><span data-lang="ar">نسخ نص الرسالة</span><span data-lang="en">Copy message text</span></button>
+          <a class="ghost" href="https://ig.me/m/jallad.contracting" target="_blank" rel="noopener"><svg aria-hidden="true"><use href="#i-ig"/></svg><span data-lang="ar">أو راسلنا على إنستغرام</span><span data-lang="en">Or message us on Instagram</span></a>
+          <p class="ok" id="okMsg"></p>
+        </div>
+      </aside>
+    </div>
+  </div>
 </section>
 
 <section class="end" id="end">
@@ -323,13 +640,39 @@ html[lang="ar"] .tag span{direction:rtl}
   <div class="copy">
     <span class="kick"><span data-lang="ar">ابدأ مشروعك</span><span data-lang="en">Start a project</span></span>
     <h2 class="disp"><span data-lang="ar">نبني ما يدوم.</span><span data-lang="en">We build what lasts.</span></h2>
-    <p><span data-lang="ar">راسلنا على إنستغرام لطلب عرض سعر أو زيارة موقع.</span><span data-lang="en">Message us on Instagram for a quote or a site visit.</span></p>
-    <a class="ghost fill" href="https://ig.me/m/jallad.contracting" target="_blank" rel="noopener">@jallad.contracting →</a>
+    <p><span data-lang="ar">أرسل لنا فكرتك أو مخططاتك، ونعود إليك بخطة تنفيذ وعرض سعر مكتوب.</span><span data-lang="en">Send us your idea or drawings, and we come back with a build plan and a written quote.</span></p>
+    <div class="row"><a class="ghost fill" href="#quote"><svg aria-hidden="true"><use href="#i-wa"/></svg><span data-lang="ar">ابدأ طلب التسعير</span><span data-lang="en">Start a quote</span></a><a class="ghost" href="https://www.instagram.com/jallad.contracting/" target="_blank" rel="noopener"><svg aria-hidden="true"><use href="#i-ig"/></svg>@jallad.contracting</a></div>
     <p class="poc"><span data-lang="ar">نسخة تجريبية للموافقة — المبنى المعروض تصوّر معماري، وليس مشروعاً منفّذاً.</span><span data-lang="en">Proof of concept for approval — the building shown is an architectural visualization, not a completed project.</span></p>
   </div>
   <span class="credit"><span data-lang="ar">النموذج والكاميرات: Blender · الواقعية والحركة: Higgsfield AI، مولّدة من صور Blender لنفس المبنى</span><span data-lang="en">Model and cameras: Blender · Realism and motion: Higgsfield AI, generated from Blender renders of the same building</span></span>
 </section>
 </main>
+
+<footer>
+  <div>
+    <div class="fgrid">
+      <div><a class="brand" href="#top"><img src="assets/logo.webp" alt="" width="30" height="30"><b>JEC</b><small>BUILDING TRUST. DELIVERING QUALITY.</small></a>
+        <p style="color:var(--mute);max-width:44ch"><span data-lang="ar">عدي الجلاد للمقاولات — هندسة مدنية وإنشاءات: سكني، تجاري، تشطيبات. عمّان، الأردن.</span><span data-lang="en">Odai AlJallad Contracting — civil engineering &amp; construction: residential, commercial, finishing. Amman, Jordan.</span></p></div>
+      <div><h4><span data-lang="ar">الموقع</span><span data-lang="en">Site</span></h4>
+        <a href="#projects"><span data-lang="ar">المشاريع</span><span data-lang="en">Projects</span></a><a href="#filmSec"><span data-lang="ar">كيف نبني</span><span data-lang="en">How we build</span></a><a href="#sectors"><span data-lang="ar">القطاعات</span><span data-lang="en">Sectors</span></a><a href="#services"><span data-lang="ar">الخدمات</span><span data-lang="en">Services</span></a><a href="#quote"><span data-lang="ar">طلب تسعيرة</span><span data-lang="en">Quote request</span></a></div>
+      <div><h4><span data-lang="ar">تواصل</span><span data-lang="en">Contact</span></h4>
+        <a href="https://www.instagram.com/jallad.contracting/" target="_blank" rel="noopener">Instagram · @jallad.contracting</a>
+        <a href="https://ig.me/m/jallad.contracting" target="_blank" rel="noopener"><span data-lang="ar">رسالة مباشرة على إنستغرام</span><span data-lang="en">Instagram direct message</span></a>
+        <span class="t"><span data-lang="ar">عمّان، الأردن</span><span data-lang="en">Amman, Jordan</span></span>
+        <a href="#privacy"><span data-lang="ar">سياسة الخصوصية</span><span data-lang="en">Privacy Policy</span></a><a href="#terms"><span data-lang="ar">الشروط والأحكام</span><span data-lang="en">Terms &amp; Conditions</span></a></div>
+    </div>
+    <div class="fine"><span id="tmNotice"></span><span>© <span class="num" id="yr">2026</span> JEC | AlJallad Contracting</span></div>
+  </div>
+</footer>
+
+<div class="legal" id="legal" role="dialog" aria-modal="true" aria-labelledby="legalTitle">
+  <div class="wrap">
+    <div class="top"><a class="brand" href="#top"><img src="assets/logo.webp" alt="" width="30" height="30"><b>JEC</b></a><button class="ghost" type="button" id="legalClose"><span data-lang="ar">رجوع إلى الموقع</span><span data-lang="en">Back to site</span></button></div>
+    <article id="legalBody"></article>
+  </div>
+</div>
+
+<dialog id="lb" aria-labelledby="lbTitle"><button class="x" type="button" id="lbClose" aria-label="close">×</button><div class="lbx"><div class="media" id="lbMedia"></div><div class="info" id="lbInfo"></div></div></dialog>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
@@ -337,8 +680,14 @@ html[lang="ar"] .tag span{direction:rtl}
 const $ = s => document.querySelector(s);
 const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
 const small = matchMedia("(max-width: 820px)").matches;
-let lang = "ar"; try { const s = localStorage.getItem("jec-poc-lang"); if (s) lang = s; } catch(e){}
-const L = o => o[lang];
+let lang = "ar"; try { const s = localStorage.getItem("jec-lang") || localStorage.getItem("jec-poc-lang"); if (s === "en" || s === "ar") lang = s; } catch(e){}
+const L = o => (o && typeof o === "object" && "ar" in o) ? o[lang] : o;
+const pad = n => String(n).padStart(2,"0");
+const CFG = {
+  WHATSAPP_NUMBER: "",   // JEC WhatsApp, international format without "+", e.g. "9627XXXXXXXX"
+  RATES: null            // optional JOD/m² ranges confirmed by JEC: { skeleton:[min,max], finishing:[min,max], renovation:[min,max] }
+};
+
 
 /* ---------------- data ---------------- */
 /* A = construction film, I = interior finishing film.
@@ -388,27 +737,124 @@ const SYS = [
 ];
 /* anchor points = Blender camera projection (CAM_ROOM) of each system; third value: label opens to the left */
 const TAGPOS = { hvac:[0.701,0.284,0], fire:[0.48,0.174,0], water:[0.249,0.125,1], fcu:[0.284,0.208,0], drain:[0.701,0.143,0] };
-const IG = "https://www.instagram.com/";
-/* [image, Arabic name, English name, post path, status] — names and links exactly as published on @jallad.contracting */
-const REAL = [
-  ["p00","مستودعات المسروجي للأدوية","Al-Masrouji Pharmaceutical Warehouses","p/DfeusyGEQkM/","done"],
-  ["p01","البنك الأردني الكويتي — أعمال مدنية","Jordan Kuwait Bank — civil works","p/DfcEaEFxNcF/","done"],
-  ["p02","جيشا كوفي هاوس","Geisha Coffee House","p/DfUiCa4gs-D/","done"],
-  ["p04","فيلا خاصة — مشروع ترميم","Private villa — renovation","p/DfSBbz8iFO0/","done"],
-  ["p07","حلويات زلاطيمو","Zalatimo Sweets","p/DfPNvkzkfMZ/","live"],
-  ["p05","مطعم ألي واي","Alley Way Restaurant","p/DfR0nPekdHS/","done"],
-  ["p08","ريغالو بازار","Regalo Bazzar","p/DfMlbhBEeMr/","done"],
-  ["p10","مطعم وينغز ماستر","Wings Master Restaurant","p/DfJ-DngkVwh/","live"],
-  ["p12","سكاي كافيه","Sky Cafe","p/DfE5_8sggP3/","done"],
-  ["p13","سيك ناتشورالز","SEEK Naturals","p/DfE3osFEQ7x/","done"]
+/* ---------------- company data (from the first JEC site) ---------------- */
+const SKELETON = [
+  {f:3,  ar:"استلام الموقع والمخططات", en:"Site & drawings handover", dAr:"استلام الموقع واستلام المخططات الهندسية من المكتب الهندسي أو المالك.", dEn:"We take over the site and receive the engineering drawings from the design office or the owner."},
+  {f:8,  ar:"تحديد حدود البناء", en:"Setting out the boundaries", dAr:"تحديد حدود البناء بواسطة مسّاح مرخّص.", dEn:"Building limits are set out on site by a licensed surveyor."},
+  {f:13, ar:"أعمال الحفر", en:"Excavation", dAr:"البدء بأعمال الحفر حسب المناسيب المقرّرة من مختبرات فحص التربة.", dEn:"Excavation to the levels set by the soil-testing laboratory."},
+  {f:17, ar:"القواعد والأساسات", en:"Footings & foundations", dAr:"البدء بأعمال القواعد والأساسات وتسليح الأشاير.", dEn:"Footings and foundations are formed, reinforced and poured."},
+  {f:21, ar:"عزل القواعد والأساسات", en:"Foundation insulation", dAr:"أعمال عزل القواعد والأساسات لحمايتها من الرطوبة والمياه.", dEn:"Footings and foundations are insulated against moisture and water."},
+  {f:27, ar:"الطمم والمدّات الأرضية", en:"Backfill & ground slabs", dAr:"أعمال الطمم والدك والمدّات الأرضية.", dEn:"Backfilling, compaction and the ground-floor slab."},
+  {f:40, ar:"الأعمدة وصبّها", en:"Columns", dAr:"أعمال الأعمدة وصبّها طابقًا بعد طابق.", dEn:"Columns are formed and poured, floor by floor."},
+  {f:75, ar:"الحجر والطوب الخارجي", en:"Stone & external blockwork", dAr:"أعمال الطوب الخارجي وتلبيس الحجر.", dEn:"External blockwork and natural-stone cladding."},
+  {f:55, ar:"العقدة أو سقف الطابق", en:"Slab / floor roof", dAr:"أعمال العقدة (سقف الطابق) حتى السطح الأخير.", dEn:"Floor slabs up to the final roof slab."}
 ];
+const TRADES = [
+  {ic:"trowel", ar:"أعمال قصارة", en:"Plastering", dAr:"قصارة داخلية وخارجية بمستويات دقيقة.", dEn:"Interior and exterior plaster to true levels."},
+  {ic:"bolt",   ar:"أعمال كهرباء", en:"Electrical", dAr:"تمديدات وإنارة ولوحات توزيع.", dEn:"Wiring, lighting and distribution boards.", f:117},
+  {ic:"pipe",   ar:"أعمال ميكانيك", en:"Mechanical & plumbing", dAr:"تمديدات المياه والصرف الصحي.", dEn:"Water supply and drainage installations."},
+  {ic:"fan",    ar:"أعمال تكييف", en:"HVAC", dAr:"أنظمة التكييف والتهوية.", dEn:"Air-conditioning and ventilation systems."},
+  {ic:"brush",  ar:"أعمال دهان", en:"Painting", dAr:"دهانات داخلية وخارجية.", dEn:"Interior and exterior paint systems."},
+  {ic:"decor",  ar:"أعمال الديكورات", en:"Interior decor & gypsum", dAr:"جبس بورد وديكورات داخلية.", dEn:"Gypsum board and interior decor."},
+  {ic:"glass",  ar:"أعمال الزجاج", en:"Glazing & façades", dAr:"واجهات زجاجية ونوافذ ألمنيوم.", dEn:"Glass façades and aluminium windows.", f:97},
+  {ic:"tile",   ar:"أعمال بلاط", en:"Tiling & flooring", dAr:"بلاط وأرضيات داخلية وخارجية.", dEn:"Interior and exterior tiling and flooring.", f:111},
+  {ic:"door",   ar:"أعمال الأبواب", en:"Doors & woodwork", dAr:"أبواب وأعمال خشبية ومعدنية.", dEn:"Doors, woodwork and metal doors.", f:104}
+];
+const SERVICES = [
+  {ic:"civil", ar:"الهندسة المدنية والإنشاءات", en:"Civil Engineering & Construction", li:[["أعمال إنشائية","Structural works"],["هياكل خرسانية","Concrete structures"],["أعمال بنية تحتية","Infrastructure works"],["إشراف وتنفيذ","Supervision & execution"]], dAr:"ننفّذ الهيكل الإنشائي كاملًا وفق المخططات المعتمدة: حفر، أساسات، أعمدة، وعقدات، مع إشراف هندسي في كل مرحلة.", dEn:"We build the full structural frame to the approved drawings: excavation, foundations, columns and slabs, with engineering supervision at every stage."},
+  {ic:"home", ar:"المباني السكنية", en:"Residential Buildings", li:[["فلل","Villas"],["مساكن خاصة","Private residences"],["توسعات وطوابق إضافية","Extensions & added floors"],["ترميم","Renovations"]], dAr:"فلل وبيوت مستقلة وطوابق إضافية فوق بناء قائم، بتنفيذ يحترم تفاصيل البيت الأردني.", dEn:"Villas, independent houses and added floors on existing buildings, built with care for the details of a Jordanian home."},
+  {ic:"tower", ar:"المباني التجارية", en:"Commercial Buildings", li:[["مكاتب","Offices"],["مساحات تجارية","Retail spaces"],["مبانٍ متعددة الاستخدام","Mixed-use buildings"],["حلول مخصّصة","Custom solutions"]], dAr:"مطاعم، كوفي شوب، صيدليات، ومحلات بكافة أنواعها، من الهيكل حتى الافتتاح.", dEn:"Restaurants, coffee houses, pharmacies and shops of every kind, from shell to opening day."},
+  {ic:"tools", ar:"أعمال التشطيبات", en:"Finishing Works", li:[["تشطيب داخلي وخارجي","Interior & exterior finishing"],["بلاط وحجر","Tiles & stone works"],["جبس ودهان","Gypsum & paint works"],["تنسيق MEP","MEP coordination"]], dAr:"تسعة أعمال تشطيب أساسية تُدار كفريق واحد: قصارة، كهرباء، ميكانيك، تكييف، دهان، ديكور، زجاج، بلاط، وأبواب.", dEn:"Nine core finishing trades run as one team: plaster, electrical, mechanical, HVAC, paint, decor, glazing, tiling and doors."},
+  {ic:"plan", ar:"إدارة المشاريع", en:"Project Management", li:[["تخطيط وجدولة","Planning & scheduling"],["ضبط التكاليف","Cost control"],["ضمان الجودة","Quality assurance"],["تسليم في الموعد","On-time delivery"]], dAr:"جدول زمني واضح، ضبط للتكلفة، وفحص جودة عند كل مرحلة حتى التسليم.", dEn:"A clear schedule, cost control and a quality check at every stage until handover."}
+];
+const CATS = [
+  {id:"private", sAr:"مشروع خاص", sEn:"Private", img:"real/p04.webp", k:{ar:"قطاع 01",en:"Sector 01"}, ar:"مشاريع خاصة", en:"Private projects", dAr:"فلل، بيوت مستقلة، طابق إضافي فوق بناء قائم، وكافة الأملاك الخاصة.", dEn:"Villas, independent houses, an added floor on an existing building, and all private property.", t:[["فلل","Villas"],["بيوت مستقلة","Independent houses"],["طابق إضافي","Added floor"],["أملاك خاصة","Private property"]]},
+  {id:"commercial", sAr:"مشروع تجاري", sEn:"Commercial", img:"real/p02.webp", k:{ar:"قطاع 02",en:"Sector 02"}, ar:"مشاريع تجارية", en:"Commercial projects", dAr:"مجمعات تجارية، مطاعم، كوفي هاوس، صيدليات، ومحلات تجارية بكافة أنواعها.", dEn:"Commercial complexes, restaurants, coffee houses, pharmacies and shops of every kind.", t:[["مجمعات تجارية","Commercial complexes"],["مطاعم","Restaurants"],["كوفي هاوس","Coffee houses"],["صيدليات","Pharmacies"],["محلات","Shops"]]},
+  {id:"major", sAr:"مشروع كبير", sEn:"Major", img:"real/p01.webp", k:{ar:"قطاع 03",en:"Sector 03"}, ar:"مشاريع كبرى", en:"Major projects", dAr:"مستشفيات، بنوك، مدارس، مولات، وفنادق.", dEn:"Hospitals, banks, schools, malls and hotels.", t:[["مستشفيات","Hospitals"],["بنوك","Banks"],["مدارس","Schools"],["مولات","Malls"],["فنادق","Hotels"]]}
+];
+const SUBS = {
+  private:[["فيلا","Villa"],["بيت مستقل","Independent house"],["طابق إضافي فوق بناء قائم","Added floor on existing building"],["ملك خاص آخر","Other private property"]],
+  commercial:[["مجمع تجاري","Commercial complex"],["مطعم","Restaurant"],["كوفي هاوس","Coffee house"],["صيدلية","Pharmacy"],["محل تجاري","Shop"]],
+  major:[["مستشفى","Hospital"],["بنك","Bank"],["مدرسة","School"],["مول","Mall"],["فندق","Hotel"]]
+};
+const SCOPES = [
+  {id:"skeleton", ar:"أعمال عظم", en:"Structural works", dAr:"9 مراحل من الحفر حتى العقدة", dEn:"9 steps, excavation to roof slab", c:"#C9A24B"},
+  {id:"finishing", ar:"أعمال تشطيبات", en:"Finishing works", dAr:"اختر من 9 أعمال تشطيب", dEn:"Pick from 9 finishing trades", c:"#CDB89A"},
+  {id:"reno", ar:"Renovation", en:"Renovation", dAr:"ترميم أو تعديل بناء قائم", dEn:"Rebuild or modify an existing building", c:"#6F8FB0"}
+];
+const STARTS = [["في أقرب وقت","As soon as possible"],["خلال 3 أشهر","Within 3 months"],["خلال 6 أشهر","Within 6 months"],["لم يُحدَّد بعد","Not decided yet"]];
+const DRAW = [["جاهزة","Ready"],["قيد الإعداد","In progress"],["غير موجودة","Not yet"]];
+/* real projects from @jallad.contracting (posters are frames from each post). Add an MP4 path in `video` to play a site clip in the lightbox. */
+const IG = "https://www.instagram.com/jallad.contracting/";
+const PROJECTS = [
+  {img:"real/p06h.webp", h:true, type:"reel", url:IG+"reel/DfPdA31CwrH/", video:"", cat:"commercial", st:"done", brand:"", ar:"مشروع في قطاع الصرافة", en:"Exchange-sector project", tAr:["تشطيب داخلي","ديكور","إنارة"], tEn:["Interior finishing","Decor","Lighting"], dAr:"مكتب صرافة بتشطيب داخلي متكامل: كاونترات، إنارة مخفية، وأرضيات.", dEn:"An exchange office with complete interior finishing: counters, concealed lighting and flooring."},
+  {img:"real/p00.webp", type:"post", url:IG+"p/DfeusyGEQkM/", video:"", cat:"commercial", st:"done", brand:"Al-Masrouji", ar:"مستودعات المسروجي للأدوية", en:"Al-Masrouji Pharmaceutical Warehouses", tAr:["مدني","خارجي","تشطيب","ديكور","كهرباء","ميكانيك"], tEn:["Civil","External","Finishing","Interior","Electrical","Mechanical"], dAr:"مبنى بواجهة حجر أردني ونوافذ زجاجية، مع مكاتب داخلية مكتملة.", dEn:"A Jordanian-stone building with glazed ribbon windows and fully finished offices."},
+  {img:"real/p01.webp", type:"post", url:IG+"p/DfcEaEFxNcF/", video:"", cat:"major", st:"done", brand:"Jordan Kuwait Bank", ar:"البنك الأردني الكويتي — أعمال مدنية", en:"Jordan Kuwait Bank — Civil Works", tAr:["أعمال مدنية","قبل وبعد"], tEn:["Civil works","Before & after"], dAr:"أعمال مدنية لفرع بنكي: بناء الجدران الداخلية وتجهيزها للتشطيب.", dEn:"Civil works for a bank branch: internal walls built and prepared for finishing."},
+  {img:"real/p02.webp", type:"post", url:IG+"p/DfUiCa4gs-D/", video:"", cat:"commercial", st:"done", brand:"Geisha Coffee", ar:"جيشا كوفي هاوس", en:"Geisha Coffee House", tAr:["مدني","MEP","تجهيز داخلي"], tEn:["Civil","MEP","Interior fit-out"], dAr:"من الأعمال المدنية وتمديدات MEP حتى التجهيز الداخلي للمقهى.", dEn:"From civil works and MEP installations to the coffee house interior fit-out."},
+  {img:"real/p04.webp", type:"post", url:IG+"p/DfSBbz8iFO0/", video:"", cat:"private", st:"done", reno:true, brand:"", ar:"فيلا خاصة — مشروع ترميم", en:"Private villa — renovation", tAr:["ترميم","واجهات","قبل وبعد"], tEn:["Renovation","Façades","Before & after"], dAr:"تحويل فيلا قائمة بالكامل: واجهات جديدة، سطح بدرابزين، ونوافذ حديثة.", dEn:"A complete makeover of an existing villa: new façades, a railed roof terrace and modern windows."},
+  {img:"real/p03.webp", type:"post", url:IG+"p/DfSBrBWiru0/", video:"", cat:"private", st:"done", reno:true, brand:"", ar:"فيلا خاصة — حدائق وترميم خارجي", en:"Private villa — landscaping & outdoor renovation", tAr:["تنسيق حدائق","ترميم خارجي","مدني","تشطيب"], tEn:["Landscaping","Outdoor renovation","Civil","Finishing"], dAr:"مدرجات حدائق، أدراج حجرية، وممرات خارجية جديدة.", dEn:"Terraced gardens, stone stairs and new outdoor walkways."},
+  {img:"real/p05.webp", type:"post", url:IG+"p/DfR0nPekdHS/", video:"", cat:"commercial", st:"done", brand:"Alley Way", ar:"مطعم ألي واي", en:"Alley Way Restaurant", tAr:["هيكل معدني","تجهيز داخلي","MEP","تشطيب"], tEn:["Steel structure","Interior fit-out","MEP","Finishing"], dAr:"هيكل معدني بميزانين وتجهيز داخلي كامل للمطعم.", dEn:"A steel mezzanine structure and the restaurant’s full interior fit-out."},
+  {img:"real/p07.webp", type:"post", url:IG+"p/DfPNvkzkfMZ/", video:"", cat:"commercial", st:"live", brand:"Zalatimo Sweets", ar:"حلويات زلاطيمو", en:"Zalatimo Sweets", tAr:["إنشاءات","تشطيب داخلي","MEP","عزل"], tEn:["Construction","Interior finishing","MEP","Waterproofing"], dAr:"مشروع قيد التنفيذ: واجهات زجاجية عالية، حجر، وتشطيب داخلي.", dEn:"Ongoing: tall glazed façades, stone and interior finishing."},
+  {img:"real/p08.webp", type:"post", url:IG+"p/DfMlbhBEeMr/", video:"", cat:"major", st:"done", brand:"Regalo Bazzar", ar:"ريغالو بازار", en:"Regalo Bazzar", tAr:["تشطيب","كهرباء","دهان"], tEn:["Finishing","Electrical","Painting"], dAr:"تشطيب مساحات تجارية واسعة بأرضيات رخامية وإنارة خطية.", dEn:"Large retail floors finished with marble-look flooring and linear lighting."},
+  {img:"real/p09.webp", type:"post", url:IG+"p/DfKqkE9EX8y/", video:"", cat:"commercial", st:"done", brand:"Western Union", ar:"العربية للصرافة — ويسترن يونيون", en:"Al Arabyia Exchange — Western Union", tAr:["واجهة حجر","تشطيب"], tEn:["Stone façade","Finishing"], dAr:"واجهة حجر داكن بإطار مميّز وتشطيب داخلي.", dEn:"A dark-stone façade with a feature frame and interior finishing."},
+  {img:"real/p10.webp", type:"post", url:IG+"p/DfJ-DngkVwh/", video:"", cat:"commercial", st:"live", brand:"Wings Master", ar:"مطعم وينغز ماستر", en:"Wings Master Restaurant", tAr:["إنشاءات","تشطيب داخلي","MEP","أعمال خارجية"], tEn:["Construction","Interior finishing","MEP","Exterior works"], dAr:"أعمال خارجية وجلسات، تشطيب داخلي، وتمديدات فنية.", dEn:"Exterior works and seating, interior finishing and technical installations."},
+  {img:"real/p11.webp", type:"post", url:IG+"p/DfE8BjzAgjQ/", video:"", cat:"commercial", st:"live", brand:"", ar:"مطعم سوشي", en:"Sushi Restaurant", tAr:["إنشاءات","تشطيب"], tEn:["Construction","Finishing"], dAr:"مشروع قيد التنفيذ من أولى مراحل البناء حتى التشطيب.", dEn:"In progress, from the first construction stage to finishing."},
+  {img:"real/p12.webp", type:"post", url:IG+"p/DfE5_8sggP3/", video:"", cat:"commercial", st:"done", brand:"Sky Cafe", ar:"سكاي كافيه", en:"Sky Cafe", tAr:["واجهات زجاجية","حجر"], tEn:["Glass façades","Stone"], dAr:"واجهات زجاجية حديثة وتفاصيل معمارية بحجر داكن وكورتن.", dEn:"Modern glass façades with dark-stone and corten details."},
+  {img:"real/p13.webp", type:"post", url:IG+"p/DfE3osFEQ7x/", video:"", cat:"commercial", st:"done", brand:"SEEK Naturals", ar:"سيك ناتشورالز", en:"SEEK Naturals — Dead Sea Skin Care", tAr:["واجهة","تجاري"], tEn:["Shopfront","Commercial"], dAr:"واجهة محل بإطار أسود وزجاج كامل الارتفاع.", dEn:"A shopfront with a black frame and full-height glazing."}
+];
+CATS[0].img = "assets/sectors/private.webp"; CATS[1].img = "assets/sectors/commercial.webp"; CATS[2].img = "assets/sectors/major.webp";
+const FILTERS = [["all","الكل","All"],["commercial","تجاري","Commercial"],["private","خاص","Private"],["major","كبرى","Major"],["live","قيد التنفيذ","In progress"],["reno","ترميم","Renovation"]];
+
+/* legal text: single source of truth for both pages, footer notice and consent */
+const LEGAL = {
+  LAST_UPDATED: "2026-11-21",
+  notice(){
+    const brands = [...new Set(PROJECTS.map(p => p.brand).filter(Boolean))].join("، ");
+    return lang==="ar"
+      ? `أسماء المشاريع والعلامات التجارية الظاهرة في الموقع (${brands}) مملوكة لأصحابها، وتُعرض مرجعًا لأعمال نفّذتها الشركة ولا تعني شراكة أو تبعية. المبنى في الأفلام تصوّر معماري بالذكاء الاصطناعي، وليس مشروعًا منفّذًا.`
+      : `Project names and trademarks shown on this site (${brands.replace(/، /g,", ")}) belong to their owners. They are shown as references for work JEC carried out and imply no partnership or affiliation. The building in the films is an AI architectural visualization, not a completed project.`;
+  },
+  privacy:{
+    title:{ar:"سياسة الخصوصية",en:"Privacy Policy"},
+    s:[
+      [{ar:"من نحن",en:"Who we are"},{ar:"JEC | شركة الجلاد للمقاولات (عدي الجلاد للمقاولات)، عمّان، الأردن. نحن الجهة المسؤولة عن البيانات التي ترسلها لنا عبر هذا الموقع.",en:"JEC | AlJallad Contracting (Odai AlJallad Contracting), Amman, Jordan. We are responsible for the data you send us through this site."}],
+      [{ar:"البيانات التي نجمعها",en:"What we collect"},{ar:"حاسبة المشروع تجمع ما تُدخله فقط: قطاع المشروع ونوع المبنى، نطاق العمل وأعمال التشطيب، المساحة وعدد الطوابق، الموقع، موعد البدء، حالة المخططات، الاسم، رقم الهاتف (اختياري)، والملاحظات. لا نطلب أي بيانات دفع.",en:"The project estimator collects only what you enter: sector and building type, work scope and finishing trades, area and floors, location, start date, drawings status, name, phone (optional) and notes. We never ask for payment data."}],
+      [{ar:"كيف تصلنا البيانات",en:"How the data reaches us"},{ar:"لا يرسل الموقع بياناتك إلى أي خادم. عند الضغط على «أرسل الطلب عبر واتساب» يفتح تطبيق واتساب برسالة جاهزة، ولا تصلنا إلا إذا أرسلتها أنت. يعالج واتساب (Meta) الرسالة وفق سياسته الخاصة. يمكنك أيضًا مراسلتنا على إنستغرام.",en:"The site sends your data to no server. Pressing “Send request on WhatsApp” opens WhatsApp with a prepared message, which reaches us only if you send it. WhatsApp (Meta) processes it under its own policy. You can also message us on Instagram."}],
+      [{ar:"التخزين في المتصفح",en:"Browser storage"},{ar:"نحفظ تفضيل اللغة فقط في متصفحك (المفتاح jec-lang). لا نستخدم ملفات تعريف الارتباط ولا أدوات تتبّع أو تحليلات.",en:"We store only your language choice in your browser (key jec-lang). We use no cookies, trackers or analytics."}],
+      [{ar:"أطراف ثالثة",en:"Third parties"},{ar:"مزوّد الاستضافة، وخطوط Google Fonts، ومكتبة GSAP من cdnjs (Cloudflare) تتلقى عنوان IP الخاص بك عند تحميل الصفحة كجزء من عمل الإنترنت المعتاد. روابط إنستغرام وواتساب تنقلك إلى خدمات Meta.",en:"The hosting provider, Google Fonts and the GSAP library on cdnjs (Cloudflare) receive your IP address when the page loads, as a normal part of how the web works. Instagram and WhatsApp links take you to Meta services."}],
+      [{ar:"الاستخدام والاحتفاظ",en:"Use & retention"},{ar:"نستخدم بيانات طلبك للرد عليه وإعداد عرض السعر وتنفيذ أي عقد لاحق، ونحتفظ بها طوال المدة اللازمة لذلك أو كما يتطلب القانون.",en:"We use your request data to reply, prepare a quote and perform any resulting contract, and keep it only as long as needed for that or as the law requires."}],
+      [{ar:"حقوقك",en:"Your rights"},{ar:"وفق قانون حماية البيانات الشخصية الأردني رقم 24 لسنة 2023، يحق لك الاطلاع على بياناتك وتصحيحها وطلب حذفها وسحب موافقتك في أي وقت عبر مراسلتنا. ويحق لك تقديم شكوى إلى وحدة حماية البيانات الشخصية في وزارة الاقتصاد الرقمي والريادة.",en:"Under Jordan’s Personal Data Protection Law No. 24 of 2023 you may access, correct or ask us to delete your data and withdraw consent at any time by messaging us. You may also complain to the Personal Data Protection Unit at the Ministry of Digital Economy and Entrepreneurship."}],
+      [{ar:"التواصل",en:"Contact"},{ar:"إنستغرام: ‎@jallad.contracting — عمّان، الأردن.",en:"Instagram: @jallad.contracting — Amman, Jordan."}]
+    ]
+  },
+  terms:{
+    title:{ar:"الشروط والأحكام",en:"Terms & Conditions"},
+    s:[
+      [{ar:"الشركة",en:"The company"},{ar:"هذا الموقع لشركة JEC | الجلاد للمقاولات في عمّان، الأردن، ويعرّف بخدماتها في الإنشاءات والتشطيبات والترميم.",en:"This site belongs to JEC | AlJallad Contracting, Amman, Jordan, and presents its construction, finishing and renovation services."}],
+      [{ar:"المشاريع والعلامات التجارية",en:"Projects & trademarks"},{ar:"__NOTICE__",en:"__NOTICE__"}],
+      [{ar:"الصور والأفلام",en:"Images & films"},{ar:"صور المشاريع من حساب الشركة على إنستغرام. المبنى الظاهر في الأفلام والصور المولّدة تصوّر معماري صُنع من نموذج ثلاثي الأبعاد بالذكاء الاصطناعي، وليس مشروعًا منفّذًا، وقد تختلف الألوان والتفاصيل عن الواقع. صور القطاعات توضيحية.",en:"Project images come from the company’s Instagram. The building in the films and the generated images is an architectural visualization made from a 3D model with AI, not a completed project; colours and details may differ from reality. Sector images are illustrative."}],
+      [{ar:"الطلبات والتسعير",en:"Requests & pricing"},{ar:"ملخّص الحاسبة تقديري وغير ملزم، وأي طلب يُرسل هو طلب عرض سعر وليس عقدًا. السعر النهائي يُحدَّد بعرض مكتوب بالدينار الأردني بعد معاينة الموقع ودراسة المخططات.",en:"The estimator summary is indicative and non-binding; a request is a request for a quote, not a contract. The final price is set in a written quote in Jordanian dinars after a site visit and a review of the drawings."}],
+      [{ar:"التنفيذ والدفعات",en:"Execution & payments"},{ar:"مدة التنفيذ وجدول الدفعات ونطاق الأعمال تُحدَّد في العقد المكتوب بين الشركة والعميل.",en:"Duration, payment schedule and scope of work are set in the written contract between the company and the client."}],
+      [{ar:"الضمان",en:"Warranty"},{ar:"وفق ما ينص عليه العقد والقوانين الأردنية النافذة.",en:"As set out in the contract and applicable Jordanian law."}],
+      [{ar:"الاستخدام المقبول",en:"Acceptable use"},{ar:"يُمنع استخدام الموقع لإرسال معلومات مضلّلة أو محتوى مخالف للقانون، أو نسخ محتوياته دون إذن.",en:"Do not use the site to send misleading or unlawful content, or copy its content without permission."}],
+      [{ar:"حدود المسؤولية",en:"Limitation of liability"},{ar:"المعلومات في الموقع عامة ولا تغني عن الاستشارة الهندسية لمشروعك. لا نتحمّل مسؤولية قرارات تُتخذ بناءً على ملخّص الحاسبة وحده.",en:"Site information is general and does not replace engineering advice for your project. We are not liable for decisions based on the estimator summary alone."}],
+      [{ar:"القانون الواجب التطبيق",en:"Governing law"},{ar:"تخضع هذه الشروط لقوانين المملكة الأردنية الهاشمية، وتختص محاكم عمّان بأي نزاع.",en:"These terms are governed by the laws of the Hashemite Kingdom of Jordan; the courts of Amman have jurisdiction."}],
+      [{ar:"التواصل",en:"Contact"},{ar:"إنستغرام: ‎@jallad.contracting — عمّان، الأردن.",en:"Instagram: @jallad.contracting — Amman, Jordan."}]
+    ]
+  }
+};
+
+
+
 
 /* ---------------- language ---------------- */
 function applyLang(){
   document.documentElement.lang = lang; document.documentElement.dir = lang === "ar" ? "rtl" : "ltr";
   $("#langBtn").textContent = lang === "ar" ? "EN" : "ع";
-  try { localStorage.setItem("jec-poc-lang", lang); } catch(e){}
-  renderCaps(); renderSystems(); renderSteps(); renderReal(); hudA(filmA.cur); setReveal(revP); stIdx = -1; hudI(filmI.cur);
+  $("#langBtn").setAttribute("aria-label", lang === "ar" ? "Switch to English" : "التبديل إلى العربية");
+  try { localStorage.setItem("jec-lang", lang); } catch(e){}
+  renderCaps(); renderSystems(); renderSteps(); hudA(filmA.cur); setReveal(revP); stIdx = -1; hudI(filmI.cur);
+  renderCompany();
 }
 $("#langBtn").addEventListener("click", () => { lang = lang === "ar" ? "en" : "ar"; applyLang(); });
 
@@ -683,10 +1129,204 @@ stg.addEventListener("pointerleave", () => { lens.style.opacity = 0; ring.style.
 const cmp = $("#cmp");
 $("#cmpIn").addEventListener("input", e => cmp.style.setProperty("--p", e.target.value + "%"));
 
-/* ---------------- real projects ---------------- */
-function renderReal(){
-  const st = s => s === "live" ? (lang==="ar" ? "قيد التنفيذ" : "In progress") : (lang==="ar" ? "منجز" : "Completed");
-  $("#strip").innerHTML = REAL.map(r => `<a class="card" href="${IG + r[3]}" target="_blank" rel="noopener"><div class="im"><img src="real/${r[0]}.webp" alt="${lang==="ar"?r[1]:r[2]}" loading="lazy" width="540" height="720"></div><b>${lang==="ar"?r[1]:r[2]}</b><span>${st(r[4])} · Instagram</span></a>`).join("");
+/* =========================  PROCESS (the company's nine structural steps)  ========================= */
+const FIN = [6, 8, 7, 1];   /* exterior finishing: glazing, doors, tiling, electrical & lighting */
+function renderProcess(){
+  $("#skList").innerHTML = SKELETON.map((s,i) => `<li><b class="num">${pad(i+1)}</b><h3>${L({ar:s.ar,en:s.en})}</h3><p>${L({ar:s.dAr,en:s.dEn})}</p></li>`).join("");
+  $("#fnList").innerHTML = FIN.map((t,i) => `<li><b>${["I","II","III","IV"][i]}</b><span>${L({ar:TRADES[t].ar,en:TRADES[t].en})}</span></li>`).join("");
+}
+
+/* =========================  SECTIONS  ========================= */
+function renderSectors(){
+  $("#sectorCards").innerHTML = CATS.map((c,i) => `<a class="sector rv" href="#quote" data-cat="${c.id}"><img src="${c.img}" alt="" loading="lazy"><span class="ill">${lang==="ar"?"صورة توضيحية":"Illustrative image"}</span><span class="n">0${i+1}</span><h3 class="disp">${L({ar:c.ar,en:c.en})}</h3><p>${L({ar:c.dAr,en:c.dEn})}</p><span class="ghost go">${lang==="ar"?"احسب نطاق "+c.sAr:"Scope a "+c.sEn.toLowerCase()+" project"}</span></a>`).join("");
+}
+$("#sectorCards").addEventListener("click", e => { const a = e.target.closest("[data-cat]"); if (!a) return; est.cat = a.dataset.cat; est.sub = 0; renderEst(); });
+function renderTrades(){
+  $("#tradeGrid").innerHTML = TRADES.map((t,i) => `<div class="trade"><b class="num">${pad(i+1)}</b><div><h3>${L({ar:t.ar,en:t.en})}</h3><p>${L({ar:t.dAr,en:t.dEn})}</p></div></div>`).join("");
+}
+$("#renoQuote").addEventListener("click", () => { est.scope = new Set(["reno"]); renderEst(); $("#quote").scrollIntoView({behavior: reduce?"auto":"smooth"}); });
+function renderServices(){
+  $("#svcList").innerHTML = SERVICES.map((s,i) => `<details ${i===0?"open":""}><summary><b class="num">${pad(i+1)}</b><h3 class="disp">${L({ar:s.ar,en:s.en})}</h3><i aria-hidden="true">+</i></summary><div class="body"><span></span><p>${L({ar:s.dAr,en:s.dEn})}</p><ul>${s.li.map(x=>`<li>${lang==="ar"?x[0]:x[1]}</li>`).join("")}</ul></div></details>`).join("");
+}
+let filt = "all";
+function renderProjects(){
+  $("#nProj").textContent = PROJECTS.length;
+  $("#filters").innerHTML = FILTERS.map(f => `<button class="fbtn" type="button" aria-pressed="${filt===f[0]}" data-f="${f[0]}">${lang==="ar"?f[1]:f[2]}</button>`).join("");
+  const list = PROJECTS.map((p,i) => ({p,i})).filter(({p}) => filt==="all" || p.cat===filt || (filt==="live" && p.st==="live") || (filt==="reno" && p.reno));
+  $("#grid").innerHTML = list.map(({p,i}) => `<button class="pcard${p.h?" h":""}" type="button" data-i="${i}"><img src="${p.img}" alt="" loading="lazy">
+    <span class="ptag">${p.type==="reel"?(lang==="ar"?"▶ ريل":"▶ Reel"):(lang==="ar"?"منشور":"Post")}</span>${p.st==="live"?`<span class="ptag live">${lang==="ar"?"قيد التنفيذ":"In progress"}</span>`:""}
+    <span class="pcap"><b>${L({ar:p.ar,en:p.en})}</b><span>${(lang==="ar"?p.tAr:p.tEn).slice(0,3).join(" · ")}</span></span></button>`).join("");
+}
+$("#filters").addEventListener("click", e => { const b = e.target.closest(".fbtn"); if (!b) return; filt = b.dataset.f; renderProjects(); });
+const lb = $("#lb");
+$("#grid").addEventListener("click", e => {
+  const c = e.target.closest(".pcard"); if (!c) return; const p = PROJECTS[+c.dataset.i];
+  $("#lbMedia").innerHTML = p.video ? `<video src="${p.video}" poster="${p.img}" controls playsinline autoplay muted></video>` : `<img src="${p.img}" alt="${L({ar:p.ar,en:p.en})}">`;
+  const catName = lang==="ar" ? {commercial:"مشروع تجاري",private:"مشروع خاص",major:"مشروع كبير"}[p.cat] : {commercial:"Commercial",private:"Private",major:"Major"}[p.cat];
+  $("#lbInfo").innerHTML = `<span class="kick">${catName}${p.st==="live"?(lang==="ar"?" · قيد التنفيذ":" · In progress"):""}</span><h3 class="disp" id="lbTitle">${L({ar:p.ar,en:p.en})}</h3><p>${L({ar:p.dAr,en:p.dEn})}</p><div class="chips">${(lang==="ar"?p.tAr:p.tEn).map(t=>`<span>${t}</span>`).join("")}</div>
+    <a class="ghost" href="${p.url}" target="_blank" rel="noopener"><svg aria-hidden="true"><use href="#i-ig"/></svg>${p.type==="reel"?(lang==="ar"?"شاهد الريل على إنستغرام":"Watch the reel on Instagram"):(lang==="ar"?"افتح المنشور على إنستغرام":"Open the post on Instagram")}</a>
+    <button class="ghost fill" type="button" id="lbQuote">${lang==="ar"?"أريد مشروعًا مشابهًا":"I want a similar project"}</button>`;
+  $("#lbQuote").onclick = () => { est.cat = p.cat; est.sub = 0; if (p.reno) est.scope = new Set(["reno"]); renderEst(); lb.close(); $("#quote").scrollIntoView({behavior: reduce?"auto":"smooth"}); };
+  lb.showModal();
+});
+$("#lbClose").addEventListener("click", () => lb.close());
+lb.addEventListener("click", e => { if (e.target === lb) lb.close(); });
+lb.addEventListener("close", () => { const v = lb.querySelector("video"); if (v) v.pause(); });
+
+
+/* =========================  ESTIMATOR  ========================= */
+const est = {cat:"", sub:0, scope:new Set(), trades:new Set(TRADES.map((_,i)=>i)), area:250, floors:2, start:0, draw:0};
+function radios(name, items, sel, desc){ return items.map((x,i) => `<label class="opt"><input type="${name==="scope"?"checkbox":"radio"}" name="${name}" value="${x.id}" ${sel(x)?"checked":""}><span><b>${L({ar:x.ar,en:x.en})}</b>${desc?`<i>${L({ar:x.dAr,en:x.dEn})}</i>`:""}</span></label>`).join(""); }
+function renderEst(){
+  $("#catOpts").innerHTML = radios("cat", CATS.map(c=>({id:c.id,ar:c.sAr,en:c.sEn,dAr:c.t.slice(0,3).map(x=>x[0]).join("، "),dEn:c.t.slice(0,3).map(x=>x[1]).join(", ")})), x => x.id===est.cat, true);
+  $("#scopeOpts").innerHTML = radios("scope", SCOPES, x => est.scope.has(x.id), true);
+  const subs = SUBS[est.cat] || [];
+  $("#subWrap").hidden = !subs.length;
+  $("#sub").innerHTML = subs.map((s,i) => `<option value="${i}" ${i===est.sub?"selected":""}>${lang==="ar"?s[0]:s[1]}</option>`).join("");
+  $("#tradesWrap").hidden = !est.scope.has("finishing");
+  $("#tradeOpts").innerHTML = TRADES.map((t,i) => `<label><input type="checkbox" value="${i}" ${est.trades.has(i)?"checked":""}><span>${L({ar:t.ar,en:t.en})}</span></label>`).join("");
+  $("#start").innerHTML = STARTS.map((s,i) => `<option value="${i}" ${i===est.start?"selected":""}>${lang==="ar"?s[0]:s[1]}</option>`).join("");
+  $("#drawOpts").innerHTML = DRAW.map((d,i) => `<label><input type="radio" name="draw" value="${i}" ${i===est.draw?"checked":""}><span>${lang==="ar"?d[0]:d[1]}</span></label>`).join("");
+  $("#area").value = Math.min(3000, est.area); $("#areaN").value = est.area; $("#floors").textContent = est.floors;
+  summary();
+}
+function message(){
+  const ar = lang === "ar", catO = CATS.find(c => c.id === est.cat), subs = SUBS[est.cat] || [];
+  const scopeTxt = SCOPES.filter(s => est.scope.has(s.id)).map(s => {
+    if (s.id === "finishing"){ const tr = [...est.trades].sort((a,b)=>a-b).map(i => L({ar:TRADES[i].ar,en:TRADES[i].en})); return L({ar:s.ar,en:s.en}) + (tr.length && tr.length < 9 ? ` (${tr.join(ar?"، ":", ")})` : (tr.length===9 ? (ar?" (كاملة)":" (all trades)") : "")); }
+    return L({ar:s.ar,en:s.en}); }).join(" + ");
+  const total = est.area * est.floors;
+  const v = id => $(id).value.trim();
+  const lines = ar ? [
+    "السلام عليكم، أرغب بطلب عرض سعر من شركة الجلاد للمقاولات (JEC):",
+    `• القطاع: ${catO ? catO.sAr : "—"}${subs[est.sub] ? " — " + subs[est.sub][0] : ""}`,
+    `• نطاق العمل: ${scopeTxt || "—"}`,
+    `• المساحة: ${est.area} م² × ${est.floors} ${est.floors===1?"طابق":"طوابق"} = ${total.toLocaleString("en-US")} م²`,
+    `• الموقع: ${v("#loc") || "—"}`,
+    `• المخططات: ${DRAW[est.draw][0]}`,
+    `• موعد البدء: ${STARTS[est.start][0]}`,
+    `• الاسم: ${v("#name") || "—"}`,
+    v("#phone") ? `• الهاتف: ${v("#phone")}` : null,
+    v("#notes") ? `• ملاحظات: ${v("#notes")}` : null,
+    "(أُرسلت من موقع JEC)"
+  ] : [
+    "Hello, I would like a quote from JEC | AlJallad Contracting:",
+    `• Sector: ${catO ? catO.sEn : "—"}${subs[est.sub] ? " — " + subs[est.sub][1] : ""}`,
+    `• Scope: ${scopeTxt || "—"}`,
+    `• Area: ${est.area} m² × ${est.floors} floor${est.floors===1?"":"s"} = ${total.toLocaleString("en-US")} m²`,
+    `• Location: ${v("#loc") || "—"}`,
+    `• Drawings: ${DRAW[est.draw][1]}`,
+    `• Expected start: ${STARTS[est.start][1]}`,
+    `• Name: ${v("#name") || "—"}`,
+    v("#phone") ? `• Phone: ${v("#phone")}` : null,
+    v("#notes") ? `• Notes: ${v("#notes")}` : null,
+    "(Sent from the JEC website)"
+  ];
+  return lines.filter(Boolean).join("\n");
+}
+function summary(){
+  const ar = lang === "ar", total = est.area * est.floors;
+  $("#sTotal").textContent = total.toLocaleString("en-US");
+  const nSteps = (est.scope.has("skeleton") ? 9 : 0) + (est.scope.has("finishing") ? est.trades.size : 0);
+  const catO = CATS.find(c => c.id === est.cat);
+  $("#sKv").innerHTML = [
+    [ar?"القطاع":"Sector", catO ? L({ar:catO.ar,en:catO.en}) : "—"],
+    [ar?"نطاق العمل":"Scope", SCOPES.filter(s=>est.scope.has(s.id)).map(s=>L({ar:s.ar,en:s.en})).join(" + ") || "—"],
+    [ar?"المراحل والأعمال المشمولة":"Steps & trades included", nSteps ? String(nSteps) : (est.scope.has("reno") ? (ar?"حسب المعاينة":"After site visit") : "—")],
+    [ar?"المساحة × الطوابق":"Area × floors", `${est.area} × ${est.floors}`]
+  ].map(r => `<div><dt>${r[0]}</dt><dd class="num">${r[1]}</dd></div>`).join("");
+  const parts = SCOPES.filter(s => est.scope.has(s.id)).map(s => ({c:s.c, w: s.id==="skeleton"?9:s.id==="finishing"?Math.max(1,est.trades.size):4, n:L({ar:s.ar,en:s.en})}));
+  const sum = parts.reduce((a,b)=>a+b.w,0) || 1;
+  $("#sBar").innerHTML = parts.map(p => `<i style="width:${p.w/sum*100}%;background:${p.c}"></i>`).join("");
+  $("#sLegend").innerHTML = parts.map(p => `<span style="--c:${p.c}">${p.n}</span>`).join("");
+  let note = ar ? "السعر النهائي يُحدَّد بعرض مكتوب بعد معاينة الموقع ودراسة المخططات." : "The final price comes in a written quote after a site visit and a review of the drawings.";
+  if (CFG.RATES && est.scope.size){
+    let lo = 0, hi = 0; est.scope.forEach(id => { const r = CFG.RATES[id]; if (r){ lo += r[0] * total; hi += r[1] * total; } });
+    if (hi) note = (ar ? `تقدير مبدئي غير ملزم: ${Math.round(lo).toLocaleString("en-US")}–${Math.round(hi).toLocaleString("en-US")} دينار. ` : `Indicative, non-binding: JOD ${Math.round(lo).toLocaleString("en-US")}–${Math.round(hi).toLocaleString("en-US")}. `) + note;
+  }
+  $("#sNote").textContent = note;
+  const msg = message(); $("#sMsg").textContent = msg;
+  const num = String(CFG.WHATSAPP_NUMBER || "").replace(/\D/g, "");
+  $("#waBtn").href = `https://wa.me/${num}?text=${encodeURIComponent(msg)}`;
+}
+function validate(){
+  const ar = lang === "ar"; let ok = true;
+  const set = (id, bad, a, e) => { $(id).textContent = bad ? (ar ? a : e) : ""; if (bad) ok = false; };
+  set("#eCat", !est.cat, "اختر قطاع المشروع.", "Choose the project sector.");
+  set("#eScope", !est.scope.size, "اختر نطاق عمل واحدًا على الأقل.", "Choose at least one work scope.");
+  set("#eName", !$("#name").value.trim(), "اكتب اسمك حتى نعرف بمن نتواصل.", "Enter your name so we know who to reply to.");
+  set("#eConsent", !$("#consent").checked, "يلزم الموافقة على سياسة الخصوصية والشروط قبل الإرسال.", "Please accept the Privacy Policy and Terms before sending.");
+  return ok;
+}
+const form = $("#estForm");
+form.addEventListener("submit", e => e.preventDefault());
+form.addEventListener("change", e => {
+  const t = e.target;
+  if (t.name === "cat"){ est.cat = t.value; est.sub = 0; renderEst(); return; }
+  if (t.name === "scope"){ t.checked ? est.scope.add(t.value) : est.scope.delete(t.value); renderEst(); return; }
+  if (t.closest("#tradeOpts")){ const i = +t.value; t.checked ? est.trades.add(i) : est.trades.delete(i); }
+  if (t.name === "draw") est.draw = +t.value;
+  if (t.id === "sub") est.sub = +t.value;
+  if (t.id === "start") est.start = +t.value;
+  if (t.id === "consent" && t.checked) $("#eConsent").textContent = "";
+  summary();
+});
+form.addEventListener("input", e => {
+  const t = e.target;
+  if (t.id === "area"){ est.area = +t.value; $("#areaN").value = est.area; }
+  if (t.id === "areaN"){ const n = Math.max(20, Math.min(20000, Math.round(+t.value || 0))); if (+t.value){ est.area = n; $("#area").value = Math.min(3000, n); } }
+  if (t.id === "name" && t.value.trim()) $("#eName").textContent = "";
+  summary();
+});
+$("#fMinus").addEventListener("click", () => { est.floors = Math.max(1, est.floors - 1); $("#floors").textContent = est.floors; summary(); });
+$("#fPlus").addEventListener("click", () => { est.floors = Math.min(30, est.floors + 1); $("#floors").textContent = est.floors; summary(); });
+$("#waBtn").addEventListener("click", e => {
+  summary();
+  if (!validate()){ e.preventDefault(); $("#okMsg").textContent = ""; const first = document.querySelector(".err:not(:empty)"); if (first) first.closest("fieldset,.field,div").scrollIntoView({behavior: reduce?"auto":"smooth", block:"center"}); return; }
+  $("#okMsg").textContent = lang==="ar" ? "يُفتح واتساب الآن برسالتك. اضغط إرسال هناك ليصلنا الطلب." : "WhatsApp is opening with your message. Press send there so it reaches us.";
+});
+$("#copyBtn").addEventListener("click", async () => {
+  if (!validate()) return;
+  try { await navigator.clipboard.writeText(message()); $("#okMsg").textContent = lang==="ar" ? "تم نسخ الرسالة. الصقها في واتساب أو إنستغرام." : "Message copied. Paste it into WhatsApp or Instagram."; }
+  catch(err){ $("#okMsg").textContent = lang==="ar" ? "تعذّر النسخ تلقائيًا. حدّد النص أعلاه وانسخه يدويًا." : "Couldn’t copy automatically. Select the text above and copy it."; }
+});
+
+
+
+
+/* =========================  LEGAL (#privacy / #terms)  ========================= */
+function renderLegal(){
+  const key = location.hash.replace("#", ""); const pg = LEGAL[key];
+  const box = $("#legal");
+  if (!pg || !pg.s){ box.classList.remove("open"); document.body.style.overflow = ""; return; }
+  $("#legalBody").innerHTML = `<h1 class="disp" id="legalTitle">${L(pg.title)}</h1><p class="upd num">${lang==="ar"?"آخر تحديث:":"Last updated:"} ${LEGAL.LAST_UPDATED}</p>` +
+    pg.s.map(([h,p]) => `<h2>${L(h)}</h2><p>${L(p) === "__NOTICE__" ? LEGAL.notice() : L(p)}</p>`).join("") +
+    `<h2>${lang==="ar"?"ملاحظة":"Note"}</h2><p>${LEGAL.notice()}</p>`;
+  document.title = L(pg.title) + " | JEC";
+  box.classList.add("open"); box.scrollTop = 0; document.body.style.overflow = "hidden";
+}
+let backTo = "top";
+addEventListener("hashchange", () => { const h = location.hash.slice(1); if (!LEGAL[h] || !LEGAL[h].s){ document.title = "JEC | AlJallad Contracting"; } renderLegal(); });
+document.addEventListener("click", e => { const a = e.target.closest('a[href="#privacy"],a[href="#terms"]'); if (a) backTo = a.closest("#quote") ? "quote" : "top"; });
+$("#legalClose").addEventListener("click", () => { location.hash = backTo; });
+addEventListener("keydown", e => { if (e.key === "Escape" && $("#legal").classList.contains("open")) location.hash = backTo; });
+
+
+
+
+/* fade-in for the company sections */
+function reveals(){
+  const els = document.querySelectorAll(".rv:not(.seen)");
+  const io = new IntersectionObserver(en => en.forEach(x => { if (x.isIntersecting){ x.target.classList.remove("pre"); x.target.classList.add("seen"); io.unobserve(x.target); } }), {rootMargin:"0px 0px -10% 0px"});
+  els.forEach(el => { const r = el.getBoundingClientRect(); if (!reduce && r.top > innerHeight * 0.9){ el.classList.add("pre"); io.observe(el); } else el.classList.add("seen"); });
+}
+function renderCompany(){
+  renderSectors(); renderProcess(); renderTrades(); renderServices(); renderProjects(); renderEst();
+  $("#loc").placeholder = lang==="ar" ? "مثال: عمّان — خلدا" : "e.g. Amman — Khalda";
+  $("#notes").placeholder = lang==="ar" ? "أي تفاصيل تساعدنا: عمر البناء، نوع الحجر، المطلوب بالضبط…" : "Anything that helps: building age, stone type, exactly what you need…";
+  $("#tmNotice").textContent = LEGAL.notice(); $("#yr").textContent = new Date().getFullYear();
+  renderLegal(); reveals();
+  if (window.ScrollTrigger) ScrollTrigger.refresh();
 }
 
 /* ---------------- end: day to dusk, played once when it comes into view ---------------- */
