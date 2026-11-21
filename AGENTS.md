@@ -97,9 +97,14 @@ the behaviours to keep, open requests, and the change log shared by Claude and C
 - Entrance shot (Jafar, 2026-11-21): in the clip `w1` the video model grows two olive trees in planters in front of the entrance
   while the camera walks up, and one of them fills the screen just before the door. Three edited versions were tried the same day
   (tree cut out with a whoosh; walk cut short; walk kept with the trees painted out) and Jafar then asked for the original back.
-  The site uses `w1` as generated (`a09a` 75 + `a09b` 75 frames, `FILM.Ad` total 1068). Do not edit this shot again unless he asks.
+  The walk itself is used as generated (`a09a` 75 + `a09b` 75 frames, `FILM.Ad` total 1068). Do not edit the trees again unless he asks.
   `Production/higgsfield/entrance.py` (the last edited version, makes `clips/w1t.mp4`) is kept for reference and is not in use.
   A clean version of this walk needs a regenerated clip, which costs Higgsfield credits.
+- Door handles (Jafar, 2026-11-21): the generated entrance doors had a different handle on each leaf, the left one by the hinge.
+  In `w1` (walk) and `w2f` (lobby) the left handle is removed, the glass behind it filled with the real lobby, and a mirrored copy
+  of the right handle placed on the left leaf; both handles are fixed to their leaf by two bronze arms. The site uses the results,
+  `clips/w1h.mp4` and `clips/w2h.mp4` (same frame counts); scripts and steps in `Production/higgsfield/doorhandles/README.md`.
+  Jafar checks the door glass closely: show him a before/after before uploading any change to these shots.
 - 3D: `Production/blender/JEC_MASTER.blend` (Blender 5.3, Cycles, texture paths relative to the .blend).
   The scripts find their own folder through `__file__`; inside Blender run
   `import sys; sys.path.insert(0, '<project>/Production/blender'); import jecmaster, jmcity`.
