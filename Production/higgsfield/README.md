@@ -12,7 +12,7 @@ Run everything from this folder. Needs Python 3 with `numpy`, `pillow`, `opencv-
 | v5 | street camera: frame rising to the roof |
 | v6n | frame → blockwork and stone, window openings still empty, crane removed |
 | v7n | glazing, then hoarding removed (completion) |
-| w1 → w1t, w2 → w2f | walk up to the entrance and into the door (w1t = the same walk without the two olive trees that grow in front of the entrance: 119 frames), lobby (w2f = lobby with the round ceiling lights removed) |
+| w1, w2 → w2f | walk up to the entrance and into the door (used as generated), lobby (w2f = lobby with the round ceiling lights removed) |
 | i12 … i79 (i34t, i67f) | interior stages; i34t and i67f end with a short dissolve, i67f also without two extra ceiling lights |
 | hero, v8 | hero dusk push-in, day to dusk (used for `Source/media`, encoded in v4) |
 
@@ -23,8 +23,12 @@ python3 spots3.py fxw2o fxw2p      # second pass: lights next to the door frame
 ffmpeg -y -framerate 30 -i fxw2p/%04d.jpg -c:v libx264 -preset fast -crf 10 -pix_fmt yuv420p -an clips/w2f.mp4
 python3 fixspots.py room           # clips/i67.mp4 -> clips/i67f.mp4
 python3 fixspots.py i34            # clips/i34.mp4 -> clips/i34t.mp4
-python3 entrance.py                # clips/w1.mp4 -> clips/w1t.mp4: the walk to the door with the two olive trees removed (see the top of the script)
+python3 entrance.py                # NOT in use: clips/w1.mp4 -> clips/w1t.mp4, the walk to the door with the two olive trees edited out (see below)
 ```
+
+`entrance.py` is kept for reference only. Jafar tried three edited versions of the entrance walk on 2026-11-21 and then asked for the
+original back, so `jobs_v5.json` and `plans_v5.json` use `w1` as generated. To try the edited walk again, put `w1t` in place of `w1`
+in both files (parts 0-75 and 75-119) and update `FILM` in `Source/index.html`.
 
 ## 2. Desktop clips → `Source/v`, `Source/vi` (each with a `.webp` still)
 ```bash
