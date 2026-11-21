@@ -68,9 +68,14 @@ the behaviours to keep, open requests, and the change log shared by Claude and C
    Arabic RTL by default with the AR/EN toggle (localStorage key `jec-lang`, wrapped in try/catch; the old key `jec-poc-lang` is only read),
    `prefers-reduced-motion` handling, the slim nav that hides on scroll down, the quote estimator and the Instagram DM link.
 7. Film player: desktop `VScrub` seeks H.264 clips frame by frame; every touch device (phones, iPad, any width) and screens ≤820 px
-   (`lite`) use `Scrub`, which draws WebP tiles (4 frames of 960×540 per tile). `Scrub` keeps memory bounded for iPhone Safari:
-   anchor tiles every 10 tiles stay loaded, plus a window of ±7 tiles around the frame on screen, only while its film is near the
-   screen (about 31 tiles at most). Do not go back to loading every tile; iOS closes tabs that decode too many images.
+   (`lite`) use `Scrub`, which draws WebP tiles (4 frames of 960×540 per tile). Smooth scrolling on phones: `Source/assets/tiles-worker.js`
+   fetches every tile of the film in the background (kept compressed) and decodes the needed ones off the main thread, sending
+   ImageBitmaps scaled to the canvas (decoding on the main thread was what made the film stutter). Without a worker (old browser,
+   page opened from the file) the tiles load as images decoded before use. Memory stays bounded for iPhone Safari: anchor tiles every
+   10 tiles, plus 8 tiles ahead in the scroll direction and 3 behind (up to 8 behind kept), only while the film is near the screen;
+   dropped tiles are closed at once. Do not go back to decoding every tile; iOS closes tabs that hold too many decoded images.
+   The glide toward the scroll position is time-based (110 ms), so it feels the same at 60 and 120 Hz. Touch screens get no live
+   backdrop blur (bar, menu button, stage list).
    `ScrollTrigger.config({ignoreMobileResize:true})` stops the iPhone address bar from re-measuring the pinned sections.
    The `FILM` constant in index.html holds clip names, frame counts and stage boundaries. Change it together with the media.
    Clips must stay GOP 6, no B-frames, each file under 20 MiB (see `Production/higgsfield/README.md`).

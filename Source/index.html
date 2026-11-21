@@ -231,6 +231,12 @@ html[lang="ar"] .tag span{direction:rtl}
   .steps li{grid-template-columns:auto;font-size:.72rem;white-space:nowrap}.steps li span{display:none}.steps li.on span{display:inline}
   .cmp{aspect-ratio:16/9}
 }
+/* touch screens: no live blur behind the bar, the menu button and the stage list; re-blurring a moving film every frame
+   costs a phone more than anything else on screen while scrolling */
+@media (hover:none) and (pointer:coarse){
+  .nav.solid,.menu,.steps,.cmp .knob,.tag span{-webkit-backdrop-filter:none;backdrop-filter:none}
+  .nav.solid{background:rgba(11,11,12,.9)}.menu{background:rgba(11,11,12,.8)}.steps{background:rgba(11,11,12,.84)}.cmp .knob{background:rgba(11,11,12,.72)}
+}
 @media (min-aspect-ratio: 2/1) and (max-height: 520px){
   .frame{inset:0 auto;left:50%;width:auto;height:100%;aspect-ratio:16/9;transform:translateX(-50%)}
 }
@@ -973,42 +979,86 @@ class Scrub {
     this.cv = cv; this.cx = cv.getContext("2d"); this.dir = dir; this.total = total;
     this.frames = new Array(total + 2); this.ims = {}; this.busy = {}; this.cur = 1; this.pos = 1; this.key = ""; this.onFrame = onFrame;
     this.target = 0; this.p = 0; this.last = -1; this.started = false; this.live = false; this.pumping = false;
-    this.nT = Math.ceil(total / 4);
+    this.nT = Math.ceil(total / 4); this.w = null; this.pend = new Set(); this.way = 1;
     /* phones (iPhone above all) close a tab that holds too many decoded images: only a few anchor tiles spread over the film
-       stay in memory, plus a window of tiles around the frame on screen, and only while the film is near the screen */
+       stay in memory, plus a window of tiles around the frame on screen (8 ahead in the scroll direction, 3 behind),
+       and only while the film is near the screen */
     this.anchors = new Set(); for (let k = 1; k <= this.nT; k += 10) this.anchors.add(k); this.anchors.add(this.nT);
-    this.win = 7;
-    addEventListener("resize", () => this.size());
-    const glide = () => {
+    this.win = 8; this.back = 3;
+    addEventListener("resize", () => { this.size(); if (this.w) this.w.postMessage({ tw: this.tw() }); });
+    /* the film glides to the scroll position with the same feel at 60 or 120 frames a second, and keeps pace when a frame is dropped */
+    let lt = 0;
+    const glide = now => {
+      now = now || performance.now(); const dt = lt ? Math.min(100, now - lt) : 16.7; lt = now;
       const d = this.target - this.p;
-      this.p = (reduce || Math.abs(d) < 0.0003) ? this.target : this.p + d * 0.14;
+      this.p = (reduce || Math.abs(d) < 0.0003) ? this.target : this.p + d * (1 - Math.exp(-dt / 110));
       const f = this.map ? this.map(this.p) : 1 + this.p * (this.total - 1);
       if (Math.abs(f - this.last) > 0.01){ this.last = f; this.set(f); }
       requestAnimationFrame(glide);
     };
     glide();
   }
-  tileOf(i){ const n = i - 1, j = n % 4; return { k: Math.floor(n / 4) + 1, sx: (j % 2) * 960, sy: Math.floor(j / 2) * 540, sw: 960, sh: 540 }; }
+  tileOf(i){ const n = i - 1; return { k: Math.floor(n / 4) + 1, j: n % 4 }; }
+  /* decoded tiles are ImageBitmaps from the worker (possibly scaled down to the canvas) or, without a worker, images */
+  put(k, im){
+    this.ims[k] = im;
+    const hw = im.width / 2, hh = im.height / 2;
+    for (let i = (k - 1) * 4 + 1; i <= Math.min(this.total, k * 4); i++){ const j = (i - 1) % 4; this.frames[i] = { im, sx: (j % 2) * hw, sy: Math.floor(j / 2) * hh, sw: hw, sh: hh }; }
+    this.key = ""; this.draw();
+  }
+  keep(k){ return this.anchors.has(k) || (this.live && Math.abs(k - this.tileOf(this.cur).k) <= this.win); }
+  drop(k){
+    const im = this.ims[k]; if (!im) return; delete this.ims[k];
+    for (let i = (k - 1) * 4 + 1; i <= Math.min(this.total, k * 4); i++) if (this.frames[i] && this.frames[i].im === im) this.frames[i] = undefined;
+    if (im.close) im.close();
+  }
+  /* the tile on screen first, then the next ones in the scroll direction, with a few behind */
+  wanted(){
+    const kc = this.tileOf(this.cur).k, f = this.way, out = [kc];
+    for (let d = 1; d <= this.win; d++){ out.push(kc + f * d); if (d <= this.back) out.push(kc - f * d); }
+    return out.filter(k => k >= 1 && k <= this.nT);
+  }
+  trim(){ for (const k of Object.keys(this.ims).map(Number)) if (!this.keep(k)) this.drop(k); }
+  /* tile width wanted from the worker: two frames side by side at the canvas' pixel width, never above the original 1920 */
+  tw(){ const w = Math.round(this.cv.clientWidth * Math.min(devicePixelRatio || 1, 2)); return Math.max(640, Math.min(1920, 2 * w)); }
+  worker(){
+    return new Promise(res => {
+      if (!window.Worker || !window.createImageBitmap || location.protocol === "file:") return res(false);
+      let w; try { w = new Worker("assets/tiles-worker.js"); } catch (e){ return res(false); }
+      const fail = () => { clearTimeout(t); w.terminate(); res(false); };
+      const t = setTimeout(fail, 5000);
+      w.onerror = fail;
+      w.onmessage = e => {
+        if (!("ready" in e.data)) return;
+        clearTimeout(t);
+        if (!e.data.ready) return fail();
+        this.w = w; w.onerror = null; w.onmessage = ev => this.got(ev.data); res(true);
+      };
+      w.postMessage({ init: { base: new URL(`tiles/${this.dir}/`, location.href).href, n: this.nT, tw: this.tw() } });
+    });
+  }
+  got(m){
+    this.pend.delete(m.k);
+    if (m.bm){ if (this.ims[m.k] || !this.keep(m.k)) m.bm.close(); else this.put(m.k, m.bm); }
+    if (this.onAnchor && this.anchors.has(m.k)) this.onAnchor();
+  }
+  /* without a worker: plain images, decoded before use so the scroll never waits on a decode */
   loadTile(k){
     if (this.ims[k]) return Promise.resolve();
     if (this.busy[k]) return this.busy[k];
     return this.busy[k] = new Promise(res => {
       const im = new Image(); im.decoding = "async";
-      im.onload = () => { delete this.busy[k]; this.ims[k] = im; for (let i = (k - 1) * 4 + 1; i <= Math.min(this.total, k * 4); i++){ const t = this.tileOf(i); this.frames[i] = { im, sx: t.sx, sy: t.sy, sw: t.sw, sh: t.sh }; } this.key = ""; res(); };
+      const done = () => { delete this.busy[k]; if (!this.ims[k] && this.keep(k)) this.put(k, im); res(); };
+      im.onload = () => { if (im.decode) im.decode().then(done, done); else done(); };
       im.onerror = () => { delete this.busy[k]; res(); };
       im.src = `tiles/${this.dir}/t${String(k).padStart(3, "0")}.webp`;
     });
   }
-  drop(k){
-    const im = this.ims[k]; if (!im) return; delete this.ims[k];
-    for (let i = (k - 1) * 4 + 1; i <= Math.min(this.total, k * 4); i++) if (this.frames[i] && this.frames[i].im === im) this.frames[i] = undefined;
+  request(){
+    if (!this.live) return;
+    if (this.w){ const need = this.wanted().filter(k => !this.ims[k]); this.pend = new Set(need); this.w.postMessage({ need }); }
+    else this.pump();
   }
-  wanted(){
-    const kc = this.tileOf(this.cur).k, out = [];
-    for (let d = 0; d <= this.win; d++) for (const k of [kc + d, kc - d]) if (k >= 1 && k <= this.nT && !out.includes(k)) out.push(k);
-    return out;
-  }
-  trim(){ const kc = this.tileOf(this.cur).k; for (const k of Object.keys(this.ims).map(Number)) if (!this.anchors.has(k) && (!this.live || Math.abs(k - kc) > this.win)) this.drop(k); }
   async pump(){
     if (this.pumping || !this.live) return; this.pumping = true;
     try {
@@ -1024,10 +1074,14 @@ class Scrub {
   async start(onFirst){
     if (this.started) return; this.started = true;
     const first = [...this.anchors]; let n = 0;
-    await Promise.all(first.map(k => this.loadTile(k).then(() => { n++; if (onFirst) onFirst(n / first.length); })));
+    const tick = () => { n++; if (onFirst) onFirst(Math.min(1, n / first.length)); };
+    if (await this.worker()){
+      await new Promise(res => { this.onAnchor = () => { tick(); if (n >= first.length) res(); }; this.pend = new Set(first); this.w.postMessage({ need: first }); });
+      this.onAnchor = null;
+    } else await Promise.all(first.map(k => this.loadTile(k).then(tick)));
     this.size(); if (onFirst) onFirst(2); if (this.onLoad) this.onLoad(1);
-    this.live = true; this.pump();
-    new IntersectionObserver(es => es.forEach(e => { this.live = e.isIntersecting; if (this.live) this.pump(); else this.trim(); }), {rootMargin: "100% 0px"}).observe(this.cv.closest("section"));
+    this.live = true; this.request();
+    new IntersectionObserver(es => es.forEach(e => { this.live = e.isIntersecting; if (this.live) this.request(); else this.trim(); }), {rootMargin: "100% 0px"}).observe(this.cv.closest("section"));
   }
   near(i){ for (let d = 0; d < this.total; d++){ if (this.frames[i-d]) return this.frames[i-d]; if (this.frames[i+d]) return this.frames[i+d]; } return null; }
   size(){ const dpr = Math.min(devicePixelRatio || 1, 2), w = Math.round(this.cv.clientWidth * dpr), h = Math.round(this.cv.clientHeight * dpr); if (!w || !h) return; if (this.cv.width !== w || this.cv.height !== h){ this.cv.width = w; this.cv.height = h; } this.key = ""; this.draw(); }
@@ -1042,8 +1096,9 @@ class Scrub {
   set(f){
     const was = this.cur;
     this.pos = Math.max(1, Math.min(this.total, f)); this.cur = Math.round(this.pos);
+    if (this.cur !== was) this.way = this.cur > was ? 1 : -1;
     this.draw(); if (this.onFrame) this.onFrame(this.cur);
-    if (this.live && this.tileOf(was).k !== this.tileOf(this.cur).k){ this.trim(); this.pump(); }
+    if (this.live && this.tileOf(was).k !== this.tileOf(this.cur).k){ this.trim(); this.request(); }
   }
 }
 
