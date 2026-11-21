@@ -771,6 +771,9 @@ const FILM = /*FILM*/{ Ad:{ total: 1068, seg:[150,300,390,480,498,648,738,828,97
   Am:{ total: 350, seg:[50,99,128,157,163,213,242,271,320,350] },
   Id:{ total: 690, anchors:[1,90,180,270,360,450,540,597,690], clips:[{f:"i01",n:90},{f:"i02",n:90},{f:"i03",n:90},{f:"i04",n:90},{f:"i05",n:90},{f:"i06",n:90},{f:"i07a",n:75},{f:"i07b",n:75}] },
   Im:{ total: 224, anchors:[1,30,59,88,117,146,175,194,224] } }/*FILM*/;
+/* browsers keep the film's files for a while under the same name: change this stamp whenever a file in v/, vi/ or tiles/ changes,
+   so that a refresh shows the new film at once */
+const MV = "?v=20261121-7";
 const FA = lite ? FILM.Am : FILM.Ad, FI = lite ? FILM.Im : FILM.Id, U = lite ? 1 : 3;
 const S = FA.seg, segA = i => (i ? S[i-1] + 1 : 1), segB = i => S[i];
 /* shot index → caption (shot 4 is the cut from inside the plot to the street) */
@@ -1024,7 +1027,7 @@ class Scrub {
   worker(){
     return new Promise(res => {
       if (!window.Worker || !window.createImageBitmap || location.protocol === "file:") return res(false);
-      let w; try { w = new Worker("assets/tiles-worker.js"); } catch (e){ return res(false); }
+      let w; try { w = new Worker("assets/tiles-worker.js" + MV); } catch (e){ return res(false); }
       const fail = () => { clearTimeout(t); w.terminate(); res(false); };
       const t = setTimeout(fail, 5000);
       w.onerror = fail;
@@ -1034,7 +1037,7 @@ class Scrub {
         if (!e.data.ready) return fail();
         this.w = w; w.onerror = null; w.onmessage = ev => this.got(ev.data); res(true);
       };
-      w.postMessage({ init: { base: new URL(`tiles/${this.dir}/`, location.href).href, n: this.nT, tw: this.tw() } });
+      w.postMessage({ init: { base: new URL(`tiles/${this.dir}/`, location.href).href, q: MV, n: this.nT, tw: this.tw() } });
     });
   }
   got(m){
@@ -1051,7 +1054,7 @@ class Scrub {
       const done = () => { delete this.busy[k]; if (!this.ims[k] && this.keep(k)) this.put(k, im); res(); };
       im.onload = () => { if (im.decode) im.decode().then(done, done); else done(); };
       im.onerror = () => { delete this.busy[k]; res(); };
-      im.src = `tiles/${this.dir}/t${String(k).padStart(3, "0")}.webp`;
+      im.src = `tiles/${this.dir}/t${String(k).padStart(3, "0")}.webp${MV}`;
     });
   }
   request(){
@@ -1116,7 +1119,7 @@ class VScrub {
       const v = document.createElement("video"); v.muted = true; v.playsInline = true; v.preload = "auto"; v.disablePictureInPicture = true;
       v.addEventListener("seeked", () => { if (c.t0){ this.seekMs += performance.now() - c.t0; this.seeks++; c.t0 = 0; } this.settle(c); });
       v.addEventListener("loadeddata", () => this.settle(c));
-      v.addEventListener("error", () => { if (c.att && c.url && c.url.startsWith("blob:")){ c.url = `${this.dir}/${c.f}.mp4`; v.src = c.url; } });
+      v.addEventListener("error", () => { if (c.att && c.url && c.url.startsWith("blob:")){ c.url = `${this.dir}/${c.f}.mp4${MV}`; v.src = c.url; } });
       wrap.appendChild(v); c.v = v;
     }
     const glide = () => {
@@ -1154,7 +1157,7 @@ class VScrub {
       const pv = this.clips[i - 1], nx = this.clips[i + 1];
       if (pv) this.seek(pv, pv.n - 1); if (nx) this.seek(nx, 0);
       if (c.painted) this.show(c);
-      else { this.poster.src = `${this.dir}/${c.f}.webp`; if (!c.url) this.show(null); }
+      else { this.poster.src = `${this.dir}/${c.f}.webp${MV}`; if (!c.url) this.show(null); }
     }
     this.wrap.classList.toggle("wait", !c.url);
     this.seek(c, k);
@@ -1170,24 +1173,24 @@ class VScrub {
   async grab(i, onProg){
     const c = this.clips[i]; c.busy = true;
     try {
-      const r = await fetch(`${this.dir}/${c.f}.mp4`); if (!r.ok) throw new Error(r.status);
+      const r = await fetch(`${this.dir}/${c.f}.mp4${MV}`); if (!r.ok) throw new Error(r.status);
       const len = +r.headers.get("content-length") || 0;
       if (onProg && r.body && len){
         const rd = r.body.getReader(), parts = []; let n = 0;
         for (;;){ const { done, value } = await rd.read(); if (done) break; parts.push(value); n += value.length; onProg(n / len); }
         c.url = URL.createObjectURL(new Blob(parts, { type: "video/mp4" }));
       } else c.url = URL.createObjectURL(await r.blob());
-    } catch (e){ c.url = `${this.dir}/${c.f}.mp4`; }
+    } catch (e){ c.url = `${this.dir}/${c.f}.mp4${MV}`; }
     this.got += c.n; if (this.onLoad) this.onLoad(this.got / this.total);
     if (c.url && this.active >= 0 && Math.abs(i - this.active) <= 1){ this.active = -9; this.set(this.cur); }
   }
   /* the first still shows at once; the clips arrive behind it in story order, two at a time */
   async start(onFirst){
     if (this.started) return; this.started = true;
-    await new Promise(r => { this.poster.onload = this.poster.onerror = r; this.poster.src = `${this.dir}/${this.clips[0].f}.webp`; });
+    await new Promise(r => { this.poster.onload = this.poster.onerror = r; this.poster.src = `${this.dir}/${this.clips[0].f}.webp${MV}`; });
     this.poster.onload = this.poster.onerror = null;
     if (onFirst) onFirst(2);
-    this.stills = this.clips.map(c => { const im = new Image(); im.src = `${this.dir}/${c.f}.webp`; return im; });
+    this.stills = this.clips.map(c => { const im = new Image(); im.src = `${this.dir}/${c.f}.webp${MV}`; return im; });
     const next = async () => { for (let i; (i = this.pick()) >= 0; ) await this.grab(i); };
     await Promise.all([next(), next()]);
   }

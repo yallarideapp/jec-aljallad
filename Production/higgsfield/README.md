@@ -49,6 +49,7 @@ python3 tiles_m.py I ../../Source/tiles/im 60
 `assemble.py` prints the frame total and stage boundaries.
 
 ## 4. Keep the page in step
+Always change the stamp `MV` in `Source/index.html` when a film file changes (browsers keep the old file under the same name).
 If frame counts change, update `FILM` in `Source/index.html`: `Ad.clips` (name, frames), `Ad.seg`, `Id.anchors`, and the phone totals
 and boundaries `Am`, `Im` printed by `assemble.py`.
 

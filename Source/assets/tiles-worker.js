@@ -3,14 +3,14 @@
    The page sends the tiles it needs, nearest first; the decoded tiles go back as ImageBitmaps.
    Every other tile of the film is also fetched in the background and kept compressed (about 250 KB each),
    so scrolling back and forth never waits for the network. */
-let base = "", n = 0, tw = 1920, need = [], center = 1, decoding = false;
+let base = "", q = "", n = 0, tw = 1920, need = [], center = 1, decoding = false;
 const blobs = new Map(), loading = new Map(), failed = new Set();
 const name = k => `t${String(k).padStart(3, "0")}.webp`;
 
 function get(k){
   if (blobs.has(k)) return Promise.resolve(blobs.get(k));
   if (!loading.has(k)){
-    loading.set(k, fetch(base + name(k))
+    loading.set(k, fetch(base + name(k) + q)
       .then(r => (r.ok ? r.blob() : null)).catch(() => null)
       .then(b => { loading.delete(k); if (b) blobs.set(k, b); else failed.add(k); fill(); decode(); return b; }));
   }
@@ -49,7 +49,7 @@ async function decode(){
 self.onmessage = e => {
   const m = e.data || {};
   if (m.init){
-    base = m.init.base; n = m.init.n; tw = m.init.tw || 1920;
+    base = m.init.base; q = m.init.q || ""; n = m.init.n; tw = m.init.tw || 1920;
     postMessage({ ready: typeof createImageBitmap === "function" && typeof fetch === "function" });
   }
   if (m.tw) tw = m.tw;

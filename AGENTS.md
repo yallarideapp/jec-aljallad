@@ -78,6 +78,9 @@ the behaviours to keep, open requests, and the change log shared by Claude and C
    backdrop blur (bar, menu button, stage list).
    `ScrollTrigger.config({ignoreMobileResize:true})` stops the iPhone address bar from re-measuring the pinned sections.
    The `FILM` constant in index.html holds clip names, frame counts and stage boundaries. Change it together with the media.
+   `MV` (next to `FILM`) is a stamp added to every film file's address (`?v=...`): browsers keep those files for a while under the
+   same name (GitHub Pages: 10 minutes), so change `MV` whenever a file in `v/`, `vi/` or `tiles/` changes; a refresh then shows
+   the new film at once.
    Clips must stay GOP 6, no B-frames, each file under 20 MiB (see `Production/higgsfield/README.md`).
 7a. Whole pictures on phones (Jafar, 2026-11-21): every full-screen picture (hero, both films, the ceiling reveal, the end shot)
    sits in a `.frame`. On wide screens the frame fills the screen as before. On upright screens (`max-aspect-ratio: 13/10`:
