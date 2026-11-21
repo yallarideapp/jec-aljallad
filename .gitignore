@@ -25,6 +25,7 @@ Documents/Archives/
 Documents/Evidence/
 Production/blender/*.blend
 Production/blender/*.blend1
+Production/blender/*_backup_before_*.py
 Production/blender/assets/*
 !Production/blender/assets/*.py
 Production/blender/final/

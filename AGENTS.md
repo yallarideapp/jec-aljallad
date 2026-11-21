@@ -11,7 +11,7 @@ the behaviours to keep, open requests, and the change log shared by Claude and C
   video clips, archives, QC sheets) stay in the project folder on Jafar's Mac and are listed in `.gitignore`.
 
 ## Layout
-- `Source/` — the only place website code is edited. Static site, no build step:
+- `Source/` — the only place website code is edited. Static site, no framework (`npm run build` only copies files for Cloudflare):
   `index.html` (HTML, CSS and JS in one file; GSAP 3.12.5 + ScrollTrigger from cdnjs; Google Fonts),
   media in `v/` (exterior film clips), `vi/` (interior film clips), `tiles/` (phone frames), `media/` (hero and end videos),
   `renders/` (before/after and "behind the ceiling"), `real/` (photos of the 10 real JEC projects).
