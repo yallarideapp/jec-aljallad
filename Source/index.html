@@ -211,6 +211,29 @@ html[lang="ar"] .tag span{direction:rtl}
   .cmp{aspect-ratio:4/5}
   .hud{grid-template-columns:auto 1fr}.hud .phase{display:none}
 }
+/* every full-screen picture sits in a .frame. Wide screens: the frame fills the screen (as before).
+   Upright screens (phones, tablets held upright): the frame is the whole 16:9 picture, full width, and the text sits under it,
+   so nothing is cut off the sides. Landscape phones: the whole picture, centred, with dark sides. */
+.frame{position:absolute;inset:0;overflow:hidden}
+@media (max-aspect-ratio: 13/10){
+  :root{--fh:56.25vw;--ft:max(64px,calc((100svh - var(--fh) - 290px) / 2))}
+  .film .frame,.pin .frame{inset:auto 0;top:var(--ft);height:auto;aspect-ratio:16/9}
+  .film .veil,.shade-r,.shade-b{display:none}
+  .cap,.fin .side,.reveal .side-b{top:calc(var(--ft) + var(--fh) + 24px);bottom:auto}
+  .hero,.end{height:auto;min-height:100vh;min-height:100svh;display:flex;flex-direction:column;justify-content:center;padding:76px 0 86px}
+  .hero .frame,.end .frame{position:relative;inset:auto;width:100%;height:auto;aspect-ratio:16/9;flex:none}
+  .hero .veil,.end .veil{display:none}
+  .hero .copy{position:relative;inset:auto;margin:28px var(--gut) 0;max-width:none}
+  .end .copy{margin-top:30px}
+  .hero .down{bottom:28px}
+  .tag span{display:none}  /* the frame is small here: coloured dots on the picture, names in the legend under it */
+  .steps{top:auto;bottom:24px;transform:none;grid-auto-flow:column;gap:12px;inset-inline:var(--gut);overflow-x:auto;padding:6px 10px}
+  .steps li{grid-template-columns:auto;font-size:.72rem;white-space:nowrap}.steps li span{display:none}.steps li.on span{display:inline}
+  .cmp{aspect-ratio:16/9}
+}
+@media (min-aspect-ratio: 2/1) and (max-height: 520px){
+  .frame{inset:0 auto;left:50%;width:auto;height:100%;aspect-ratio:16/9;transform:translateX(-50%)}
+}
 /* ---------- company sections (who we are, process, trades, sectors, projects, services, quote, footer, legal) ---------- */
 .disp em{font-style:normal;color:var(--gold-2)}
 .brand img{width:30px;height:30px;border-radius:50%;align-self:center;flex:none}
@@ -249,7 +272,7 @@ html[lang="en"] .who h2{text-transform:none;letter-spacing:.01em;line-height:1.2
 .flist{list-style:none;margin:10px 0 0;padding:0;display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--line);border:1px solid var(--line)}
 .flist li{background:var(--char);padding:14px 16px;display:flex;gap:12px;align-items:baseline;font-size:.92rem}
 .flist b{font-family:var(--f-en);font-weight:300;color:var(--gold-2);font-size:.8rem;letter-spacing:.12em}
-@media (max-width:900px){.proc{grid-template-columns:1fr}.pside{position:static}}
+@media (max-width:900px){.proc{grid-template-columns:1fr}.pside{position:static}.pside img{aspect-ratio:auto}}
 
 /* finishing trades + renovation */
 .trades{display:grid;grid-template-columns:repeat(3,1fr);border-top:1px solid var(--line)}
@@ -266,7 +289,7 @@ html[lang="en"] .who h2{text-transform:none;letter-spacing:.01em;line-height:1.2
 .reno .txt{padding:clamp(24px,4vw,48px);display:flex;flex-direction:column;gap:14px;justify-content:center;align-items:flex-start}
 .reno .txt h3{font-size:clamp(1.8rem,3vw,2.6rem)}
 .reno .txt p{margin:0;color:rgba(238,233,225,.8)}
-@media (max-width:820px){.reno{grid-template-columns:1fr}.reno .duo img{min-height:220px}}
+@media (max-width:820px){.reno{grid-template-columns:1fr}.reno .duo img{min-height:0;height:auto;aspect-ratio:3/4}}
 
 /* sectors */
 .sectors{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
@@ -279,7 +302,8 @@ html[lang="en"] .who h2{text-transform:none;letter-spacing:.01em;line-height:1.2
 .sector p{margin:0;color:rgba(238,233,225,.82);font-size:.93rem}
 .sector .go{margin-top:18px;align-self:flex-start}
 .sector .ill{position:absolute;top:12px;inset-inline-end:12px;font-size:.64rem;color:rgba(238,233,225,.75);border:1px solid rgba(238,233,225,.22);background:rgba(11,11,12,.4);padding:3px 9px}
-@media (max-width:900px){.sectors{grid-template-columns:1fr}.sector{min-height:420px}}
+@media (max-width:900px){.sectors{grid-template-columns:repeat(3,1fr);gap:12px}.sector{min-height:0;aspect-ratio:900/1205}.sector h3{font-size:1.5rem}.sector p{font-size:.84rem}}
+@media (max-width:600px){.sectors{grid-template-columns:1fr}.sector h3{font-size:1.9rem}.sector p{font-size:.93rem}}
 
 /* real projects: filters, grid, lightbox */
 .filters{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:24px}
@@ -287,7 +311,7 @@ html[lang="en"] .who h2{text-transform:none;letter-spacing:.01em;line-height:1.2
 .fbtn[aria-pressed="true"]{background:var(--bone);color:var(--ink);border-color:var(--bone)}
 .grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;grid-auto-flow:dense}
 .pcard{position:relative;border:0;padding:0;overflow:hidden;background:var(--char-2);cursor:pointer;aspect-ratio:3/4;text-align:start;isolation:isolate;color:inherit}
-.pcard.h{grid-column:span 2;aspect-ratio:3/2}
+.pcard.h{grid-column:span 2;aspect-ratio:16/9}
 .pcard img{width:100%;height:100%;object-fit:cover;transition:transform .9s cubic-bezier(.2,.7,.2,1)}
 .pcard:hover img{transform:scale(1.05)}
 .pcard::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 50%,rgba(11,11,12,.92))}
@@ -454,8 +478,8 @@ html[lang="ar"] .fgrid h4{font-family:var(--f-body);letter-spacing:.06em}
 <main id="top">
 <!-- 00 · hero: dusk shot of the finished building (Blender render → Higgsfield photoreal pass → Higgsfield video) -->
 <section class="hero" id="hero" aria-label="JEC | AlJallad Contracting">
-  <img class="poster" id="heroPoster" src="media/hero_poster.webp" alt="">
-  <video id="heroVid" muted playsinline loop preload="metadata" aria-hidden="true"></video>
+  <div class="frame"><img class="poster" id="heroPoster" src="media/hero_poster.webp" alt="">
+  <video id="heroVid" muted playsinline loop preload="metadata" aria-hidden="true"></video></div>
   <div class="veil"></div>
   <div class="copy">
     <span class="kick"><span data-lang="ar">JEC | الجلاد للمقاولات</span><span data-lang="en">JEC | AlJallad Contracting</span></span>
@@ -472,8 +496,8 @@ html[lang="ar"] .fgrid h4{font-family:var(--f-body);letter-spacing:.06em}
 <!-- 01 · construction film: every shot starts and ends on a Blender render of the same model; Higgsfield adds realism and motion -->
 <section class="film" id="filmSec" aria-label="Construction film">
   <div class="stage">
-    <canvas id="film" role="img" aria-label="On a city plot the ground is excavated, foundations are poured, columns and slabs rise floor by floor, the stone facade and glazing are installed, the finished building stands on its street, then the camera walks through the entrance into the lobby"></canvas>
-    <div class="vwrap" id="filmV" aria-hidden="true" hidden></div>
+    <div class="frame"><canvas id="film" role="img" aria-label="On a city plot the ground is excavated, foundations are poured, columns and slabs rise floor by floor, the stone facade and glazing are installed, the finished building stands on its street, then the camera walks through the entrance into the lobby"></canvas>
+    <div class="vwrap" id="filmV" aria-hidden="true" hidden></div></div>
     <div class="veil"></div>
     <span class="dbg" id="dbg"></span>
     <div id="caps"></div>
@@ -519,8 +543,8 @@ html[lang="ar"] .fgrid h4{font-family:var(--f-body);letter-spacing:.06em}
 <!-- 02 · finishing film: one room, one fixed camera, nine site stages -->
 <section class="pin fin" id="fin" aria-label="From raw structure to finished interior">
   <div class="stage">
-    <canvas id="finCv" role="img" aria-label="The same room from one fixed camera: raw concrete, blockwork partitions, services, plaster, suspended ceiling, floor and wall finishes, paint doors and lighting, cleaning, then furniture"></canvas>
-    <div class="vwrap" id="finV" aria-hidden="true" hidden></div>
+    <div class="frame"><canvas id="finCv" role="img" aria-label="The same room from one fixed camera: raw concrete, blockwork partitions, services, plaster, suspended ceiling, floor and wall finishes, paint doors and lighting, cleaning, then furniture"></canvas>
+    <div class="vwrap" id="finV" aria-hidden="true" hidden></div></div>
     <div class="shade-r"></div>
     <div class="side">
       <span class="kick"><span data-lang="ar">من العظم إلى السكن</span><span data-lang="en">From shell to home</span></span>
@@ -534,11 +558,14 @@ html[lang="ar"] .fgrid h4{font-family:var(--f-body);letter-spacing:.06em}
 <!-- 03 · the finished room with the suspended ceiling lifted (Blender model view, same camera) -->
 <section class="pin reveal" id="reveal" aria-label="Hidden systems">
   <div class="stage" id="revStage">
+    <div class="frame" id="revFrame">
     <img class="layer" src="renders/p9.webp" alt="Finished, furnished living room">
     <img class="layer xr" id="xr" src="renders/x10.webp" alt="Same room with the suspended ceiling removed, showing ductwork, sprinkler pipes, chilled-water pipes, the fan-coil unit and drainage" loading="lazy">
     <img class="lens" id="lens" src="renders/x10.webp" alt="" loading="lazy">
     <span class="ring" id="ring"></span>
     <i class="wline" id="wline" aria-hidden="true"></i>
+    <div id="tags"></div>
+    </div>
     <div class="shade-b"></div>
     <div class="side side-b">
       <span class="kick"><span data-lang="ar">الأنظمة المخفية</span><span data-lang="en">The hidden systems</span></span>
@@ -547,7 +574,6 @@ html[lang="ar"] .fgrid h4{font-family:var(--f-body);letter-spacing:.06em}
       <div class="legend" id="legend"></div>
     </div>
     <span class="hint" id="hint"><span data-lang="ar">حرّك المؤشر لترى ما خلف التشطيب</span><span data-lang="en">Move your cursor to look behind the finish</span></span>
-    <div id="tags"></div>
   </div>
 </section>
 
@@ -675,8 +701,8 @@ html[lang="ar"] .fgrid h4{font-family:var(--f-body);letter-spacing:.06em}
 </section>
 
 <section class="end" id="end">
-  <img class="poster" id="endPoster" src="media/end_poster.webp" alt="">
-  <video id="endVid" muted playsinline preload="none" aria-hidden="true"></video>
+  <div class="frame"><img class="poster" id="endPoster" src="media/end_poster.webp" alt="">
+  <video id="endVid" muted playsinline preload="none" aria-hidden="true"></video></div>
   <div class="veil"></div>
   <div class="copy">
     <span class="kick"><span data-lang="ar">ابدأ مشروعك</span><span data-lang="en">Start a project</span></span>
@@ -1171,11 +1197,11 @@ function renderSystems(){
 /* tag anchors come from Blender (camera projection of each system); map them through the object-fit:cover crop */
 let pan = 0.5, vpan = 0.5;
 function placeTags(){
-  const st = $("#revStage"), W = st.clientWidth, H = st.clientHeight, s = Math.max(W / 1920, H / 1080);
+  const st = $("#revFrame"), W = st.clientWidth, H = st.clientHeight, s = Math.max(W / 1920, H / 1080), top = st.offsetTop > 0 ? 6 : 56;
   const dw = 1920 * s, dh = 1080 * s, ox = (W - dw) * pan, oy = (H - dh) * vpan;
   document.querySelectorAll(".tag").forEach(t => {
     const [u, v, left] = TAGPOS[t.dataset.id], x = ox + u * dw, y = oy + v * dh;
-    const inside = x > 12 && x < W - 12 && y > 56 && y < H - 12;
+    const inside = x > 12 && x < W - 12 && y > top && y < H - 12;
     t.style.left = x + "px"; t.style.top = y + "px"; t.style.display = inside ? "flex" : "none";
     t.classList.toggle("flip", !!left || x > W * 0.7);
   });
@@ -1183,8 +1209,8 @@ function placeTags(){
 addEventListener("resize", placeTags);
 function setReveal(p){
   revP = p;
-  const st = $("#revStage");
-  /* portrait: pan across the room; wide screens: keep the ceiling (the subject here) in frame */
+  const st = $("#revFrame");
+  /* a portrait frame would pan across the room (upright screens now get the whole 16:9 frame); wide screens: keep the ceiling in frame */
   if (st.clientWidth < st.clientHeight * 1.2){ pan = Math.max(0, Math.min(1, (p - 0.3) / 0.65)); vpan = 0.5; }
   else { pan = 0.5; vpan = st.clientWidth / st.clientHeight > 16 / 9 ? 0 : 0.5; }
   const op = (pan * 100).toFixed(1) + "% " + (vpan * 100) + "%";
@@ -1204,7 +1230,7 @@ function setReveal(p){
 const stg = $("#revStage"), lens = $("#lens"), ring = $("#ring");
 stg.addEventListener("pointermove", e => {
   if (e.pointerType !== "mouse" || revP > 0.12) { lens.style.opacity = 0; ring.style.opacity = 0; return; }
-  const r = stg.getBoundingClientRect(), x = e.clientX - r.left, y = e.clientY - r.top;
+  const r = $("#revFrame").getBoundingClientRect(), x = e.clientX - r.left, y = e.clientY - r.top;
   for (const el of [lens, ring]) { el.style.setProperty("--mx", x + "px"); el.style.setProperty("--my", y + "px"); el.style.setProperty("--r", "150px"); }
   lens.style.opacity = 1; ring.style.opacity = 1;
 });

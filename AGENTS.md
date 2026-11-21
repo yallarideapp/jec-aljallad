@@ -74,6 +74,12 @@ the behaviours to keep, open requests, and the change log shared by Claude and C
    `ScrollTrigger.config({ignoreMobileResize:true})` stops the iPhone address bar from re-measuring the pinned sections.
    The `FILM` constant in index.html holds clip names, frame counts and stage boundaries. Change it together with the media.
    Clips must stay GOP 6, no B-frames, each file under 20 MiB (see `Production/higgsfield/README.md`).
+7a. Whole pictures on phones (Jafar, 2026-11-21): every full-screen picture (hero, both films, the ceiling reveal, the end shot)
+   sits in a `.frame`. On wide screens the frame fills the screen as before. On upright screens (`max-aspect-ratio: 13/10`:
+   phones, iPad held upright) the frame is the whole 16:9 picture at full width and the text sits under it; landscape phones
+   show the whole picture centred with dark sides. Do not go back to cropping the picture's sides on phones. On upright
+   screens the reveal shows coloured dots only; the names are in the legend under the picture. Before/after, sector cards,
+   the renovation pair and the process image also keep their whole picture on narrow screens.
 8. Construction order on screen: glass only after structure, blockwork and stone. Interior order is fixed:
    raw → partitions → MEP → plaster → ceiling → floor/wall finishes → paint/doors/lighting → cleaning → furniture last.
 9. No secrets, `.env` files or customer data in `Source/`.
