@@ -14,6 +14,7 @@
 ## أين يعيش المشروع
 - GitHub: المستودع `yallarideapp/jec-aljallad` **عام** (قرار جعفر: أي أحد معه الرابط يقدر يشوفه)، الفرع `main`. لذلك ممنوع رفع أي كلمات سر أو مفاتيح أو بيانات عملاء أو أسعار أو اتفاقيات. Cloudflare يبني المجلد `Source` وينشره مع كل push (الخطوات في `Cloudflare-guide.md`). قبل أي تعديل: fetch و rebase، لأن جعفر و ChatGPT و Claude كلهم يدفعون لنفس المستودع.
 - الـ commits باسم `yallarideapp <227899290+yallarideapp@users.noreply.github.com>`، وبدون أسماء أدوات أو مساعدين في الرسائل أو الكود أو الأدلة.
+- رابط المعاينة للعرض: https://yallarideapp.github.io/jec-aljallad/ — يتحدّث تلقائياً مع كل push على `main` عبر `.github/workflows/pages.yml` (ينشر ملفات الموقع فقط، مع `noindex`). Cloudflare يبقى الاستضافة المخططة.
 - المجلد الكامل على الماك: `Documents/ChatGPT/JEC | AlJallad Contracting` (نُقل من سطح المكتب)، وهو نسخة git من نفس المستودع. GitHub والمجلد لازم يضلّوا متطابقين: اعمل pull قبل ما تبدأ، وبعد كل تعديل commit و push ثم pull في المجلد. فيه كل ما في المستودع، وفوقه الملفات الكبيرة التي لا تُرفع على GitHub: ملف Blender والخامات والريندرات ومقاطع الفيديو الأصلية والأرشيف وصفحات المراجعة.
 - الاستضافة: Cloudflare (Workers مع ملفات ثابتة)، وليس Hostinger. Cloudflare لم يُربط بعد: جعفر يربطه بنفسه.
 
@@ -72,3 +73,4 @@
 - 2026-11-21: نقل المشروع من سطح المكتب وترتيبه بهذا الشكل: `Source` و `Documents` و `Production`، AGENTS.md، سكربت التغليف، Demo و ZIPs. مسارات Blender صارت نسبية وسكربتات بايثون تجد مجلدها تلقائياً؛ أُضيف `anchor_S5n()` و `render_S5n()` إلى `jmcity.py`. اختُبر: ملف Blender يفتح من المكان الجديد بدون خامات ناقصة، و `venc.py` يعيد إنتاج مقاطع الموقع بنفس البايتات.
 - 2026-11-21: الاستضافة صارت Cloudflare بدل Hostinger بطلب جعفر: أُضيفت `wrangler.jsonc` و `package.json` (wrangler 4.166.0 مثبت مع lockfile) و `tools/build-dist.mjs` و `_headers` و `worker/index.js` و `Cloudflare-guide.md`، وحُذف ملف الرفع لـ Hostinger ودليله. اختُبر محلياً بـ `wrangler dev`: الصفحة والرؤوس، طلبات Range للفيديو (206 والبايتات مطابقة)، 404 لملفات الأدوات والوثائق، فيلم الكمبيوتر يقفز للفريم الصحيح بدون أخطاء في الكونسول، ونسخة الموبايل تظهر صحيحة. `wrangler deploy --dry-run` ناجح. رُفع المشروع على GitHub (`yallarideapp/jec-aljallad`).
 - 2026-11-21: المستودع صار عاماً بقرار جعفر، ومجلد الماك `Documents/ChatGPT/JEC | AlJallad Contracting` صار نسخة git من المستودع حتى يتحدّثا معاً. أُضيف `README.md` يظهر أول ما يُفتح رابط GitHub.
+- 2026-11-21: رابط معاينة على GitHub Pages بطلب جعفر حتى يفتح الموقع من GitHub: `.github/workflows/pages.yml` ينشر ملفات `Source` فقط مع `noindex`. اختُبرت خطوات البناء محلياً.

@@ -1,0 +1,48 @@
+# Publishes the site (Source/ runtime files only) to GitHub Pages on every push to main:
+# https://yallarideapp.github.io/jec-aljallad/
+# One-time setting in the repo: Settings → Pages → Build and deployment → Source: GitHub Actions.
+name: Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Copy the runtime files into Source/dist
+        run: node Source/tools/build-dist.mjs
+      - name: Keep the preview out of search engines (GitHub Pages ignores _headers)
+        run: |
+          rm -f Source/dist/_headers
+          sed -i 's#<meta charset="utf-8">#<meta charset="utf-8">\n<meta name="robots" content="noindex, nofollow">#' Source/dist/index.html
+          grep -q 'name="robots"' Source/dist/index.html
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: Source/dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

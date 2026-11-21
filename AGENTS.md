@@ -9,6 +9,8 @@ the behaviours to keep, open requests, and the change log shared by Claude and C
 - The project folder on Jafar's Mac, `~/Documents/ChatGPT/JEC | AlJallad Contracting`, is a clone of this repo plus the heavy local-only files.
   GitHub and that folder must always match: pull before you start, and after every change commit, push, and pull the folder.
   Fetch and rebase before editing: Jafar, ChatGPT and Claude all push here.
+- Preview link: https://yallarideapp.github.io/jec-aljallad/ — `.github/workflows/pages.yml` publishes the runtime files of `Source/`
+  to GitHub Pages on every push to `main` (adds a `noindex` meta tag, since Pages ignores `_headers`). Cloudflare stays the planned host.
 - Because the repo is public, never commit secrets, tokens, `.env` files, customer data, prices or agreements.
 - Commit as `yallarideapp <227899290+yallarideapp@users.noreply.github.com>`. No tool or assistant names in commits, code or guides.
 - The repo holds the site, agent files, guides, scripts and the photoreal stills. The heavy files (Blender scene, textures, renders,
