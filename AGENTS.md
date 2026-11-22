@@ -100,6 +100,12 @@ the behaviours to keep, open requests, and the change log shared by Claude and C
 10. Link preview (Jafar, 2026-11-22): the `og:*` and `twitter:*` tags in the head of index.html give the shared link a picture
    (`Source/assets/og.jpg`, 1200×630, from the hero still with the logo and the company name) and a title. Crawlers need full
    addresses, so they point to the GitHub Pages preview; change `og:url`, `og:image` and `twitter:image` when the domain is attached.
+11. Splash (Jafar, 2026-11-22): `#splash`, the first element in `<body>`: a gold line drawing of a concrete frame rising floor by
+   floor on the ground line, then «JEC», «شركة الجلاد للمقاولات» and ALJALLAD CONTRACTING. It leaves 0.15 s after its last line
+   of text has finished and the hero still has loaded (about 2 s), at most 4.5 s after the page opens, or at once on a tap,
+   scroll or key. Not shown with reduced motion or when the page opens on a section link (`#privacy`, `#fin`...). It stores
+   nothing. Without the script it fades out by itself after 5 s. The SVG paths use `pathLength="1"`; do not add
+   `vector-effect: non-scaling-stroke` (Chrome then draws the hidden part of each line as dots).
 
 ## Media and 3D
 - Re-encode the film: `Production/higgsfield/README.md`. `venc.py` with `jobs_v5.json` reproduces `Source/v` and `Source/vi` byte for byte.
