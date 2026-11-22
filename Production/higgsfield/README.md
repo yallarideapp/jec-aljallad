@@ -38,7 +38,9 @@ python3 venc.py "$(cat jobs_v5.json)"
 ```
 Settings: H.264 CRF 20, GOP 6, no B-frames, `ipratio=1.1`, `aq-mode=3`, 30 fps, no audio. The player seeks to exact frames while
 scrolling, so every frame must decode fast and look as good as a keyframe. Clips of 150 frames are split in two (75 + 75) to keep
-each file under 20 MiB. With the same clips, this reproduces the published files byte for byte.
+each file under 20 MiB. The very first clip is cut shorter (`a01a` = frames 0–19 of `v1c`, 2.5 MB; `a01a2` = 20–74) so the film
+starts moving within a few seconds on a slow connection; add those two names to `FILM.Ad` if you change it. With the same clips,
+this reproduces the published files byte for byte.
 `JEC_FILM_OUT=/some/dir/ python3 venc.py ...` writes somewhere else for a test.
 
 ## 3. Phone frames → `Source/tiles/m`, `Source/tiles/im`

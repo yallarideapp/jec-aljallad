@@ -6,6 +6,24 @@
 <title>JEC | AlJallad Contracting</title>
 <meta name="theme-color" content="#0B0B0C">
 <meta name="description" content="شركة الجلاد للمقاولات JEC — هندسة مدنية وإنشاءات: سكني، تجاري، تشطيبات وترميم. عمّان، الأردن.">
+<!-- link preview (WhatsApp, Facebook, Telegram, X): their crawlers need full addresses. They point to the GitHub Pages preview
+     for now; when the real domain is attached, change og:url, og:image and twitter:image to it (see Cloudflare-guide.md) -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="JEC | AlJallad Contracting">
+<meta property="og:title" content="شركة الجلاد للمقاولات | JEC AlJallad Contracting">
+<meta property="og:description" content="هندسة مدنية وإنشاءات: سكني، تجاري، تشطيبات وترميم. عمّان، الأردن.">
+<meta property="og:url" content="https://yallarideapp.github.io/jec-aljallad/">
+<meta property="og:image" content="https://yallarideapp.github.io/jec-aljallad/assets/og.jpg">
+<meta property="og:image:type" content="image/jpeg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="JEC — شركة الجلاد للمقاولات">
+<meta property="og:locale" content="ar_JO">
+<meta property="og:locale:alternate" content="en_US">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="شركة الجلاد للمقاولات | JEC AlJallad Contracting">
+<meta name="twitter:description" content="هندسة مدنية وإنشاءات: سكني، تجاري، تشطيبات وترميم. عمّان، الأردن.">
+<meta name="twitter:image" content="https://yallarideapp.github.io/jec-aljallad/assets/og.jpg">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 64 64%27%3E%3Crect width=%2764%27 height=%2764%27 fill=%27%230B0B0C%27/%3E%3Ctext x=%2732%27 y=%2742%27 font-family=%27Arial%27 font-size=%2722%27 fill=%27%23E3CDA0%27 text-anchor=%27middle%27 letter-spacing=%272%27%3EJEC%3C/text%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -110,8 +128,14 @@ html[lang="ar"] .hero h1{font-size:clamp(2.8rem,7vw,6.2rem)}
 .vwrap img,.vwrap video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
 .vwrap video{opacity:0}
 .vwrap video.on{opacity:1}
-.vwrap.wait::after{content:"LOADING";position:absolute;inset-inline-end:var(--gut);top:92px;z-index:3;font:500 .62rem/1 var(--f-en);letter-spacing:.28em;color:rgba(238,233,225,.8);background:rgba(11,11,12,.5);padding:8px 12px;animation:pulse 1.2s ease-in-out infinite alternate}
-@keyframes pulse{from{opacity:.45}to{opacity:1}}
+/* on a slow connection: a small notice on the film while the part on screen is still downloading (never shown when it arrives quickly) */
+.ld{position:absolute;top:92px;inset-inline-end:var(--gut);z-index:4;display:flex;align-items:center;gap:9px;padding:8px 13px;border-radius:999px;background:rgba(11,11,12,.66);color:rgba(238,233,225,.92);font-size:.74rem;line-height:1;opacity:0;transition:opacity .35s;pointer-events:none}
+.ld.on{opacity:1}
+.ld i{flex:none;width:11px;height:11px;border-radius:50%;border:1.5px solid rgba(238,233,225,.28);border-top-color:var(--gold-2);animation:spin .9s linear infinite}
+.ld b{font:500 .72rem/1 var(--f-en);font-variant-numeric:tabular-nums;color:var(--gold-2)}
+.ld b:empty{display:none}
+@keyframes spin{to{transform:rotate(360deg)}}
+@media (prefers-reduced-motion: reduce){.ld i{animation:none}}
 .hud .track u{position:absolute;inset-block:0;inset-inline-start:0;width:0;background:rgba(238,233,225,.26);transition:width .4s}
 .dbg{position:absolute;inset-inline-start:var(--gut);top:92px;z-index:40;font:12px/1.5 ui-monospace,Menlo,monospace;color:#eee9e1;background:rgba(11,11,12,.7);padding:6px 10px;display:none;direction:ltr}
 .film .veil{position:absolute;inset:0;pointer-events:none;background:linear-gradient(0deg,rgba(11,11,12,.88),rgba(11,11,12,.5) 22%,rgba(11,11,12,0) 48%)}
@@ -218,6 +242,7 @@ html[lang="ar"] .tag span{direction:rtl}
 @media (max-aspect-ratio: 13/10){
   :root{--fh:56.25vw;--ft:max(64px,calc((100svh - var(--fh) - 290px) / 2))}
   .film .frame,.pin .frame{inset:auto 0;top:var(--ft);height:auto;aspect-ratio:16/9}
+  .ld{top:auto;bottom:10px;inset-inline-end:10px;padding:7px 11px;font-size:.7rem}
   .film .veil,.shade-r,.shade-b{display:none}
   .cap,.fin .side,.reveal .side-b{top:calc(var(--ft) + var(--fh) + 24px);bottom:auto}
   .hero,.end{height:auto;min-height:100vh;min-height:100svh;display:flex;flex-direction:column;justify-content:center;padding:76px 0 86px}
@@ -503,7 +528,8 @@ html[lang="ar"] .fgrid h4{font-family:var(--f-body);letter-spacing:.06em}
 <section class="film" id="filmSec" aria-label="Construction film">
   <div class="stage">
     <div class="frame"><canvas id="film" role="img" aria-label="On a city plot the ground is excavated, foundations are poured, columns and slabs rise floor by floor, the stone facade and glazing are installed, the finished building stands on its street, then the camera walks through the entrance into the lobby"></canvas>
-    <div class="vwrap" id="filmV" aria-hidden="true" hidden></div></div>
+    <div class="vwrap" id="filmV" aria-hidden="true" hidden></div>
+    <div class="ld" id="ldA" aria-hidden="true"><i></i><span data-lang="ar">جارٍ تحميل هذا المشهد</span><span data-lang="en">Loading this scene</span><b></b></div></div>
     <div class="veil"></div>
     <span class="dbg" id="dbg"></span>
     <div id="caps"></div>
@@ -550,7 +576,8 @@ html[lang="ar"] .fgrid h4{font-family:var(--f-body);letter-spacing:.06em}
 <section class="pin fin" id="fin" aria-label="From raw structure to finished interior">
   <div class="stage">
     <div class="frame"><canvas id="finCv" role="img" aria-label="The same room from one fixed camera: raw concrete, blockwork partitions, services, plaster, suspended ceiling, floor and wall finishes, paint doors and lighting, cleaning, then furniture"></canvas>
-    <div class="vwrap" id="finV" aria-hidden="true" hidden></div></div>
+    <div class="vwrap" id="finV" aria-hidden="true" hidden></div>
+    <div class="ld" id="ldI" aria-hidden="true"><i></i><span data-lang="ar">جارٍ تحميل هذا المشهد</span><span data-lang="en">Loading this scene</span><b></b></div></div>
     <div class="shade-r"></div>
     <div class="side">
       <span class="kick"><span data-lang="ar">من العظم إلى السكن</span><span data-lang="en">From shell to home</span></span>
@@ -767,13 +794,13 @@ const CFG = {
    Desktop (Ad, Id): every frame Higgsfield produced, 30 per second of source, as short H.264 clips (1920×1080, at most 90 frames each); the clip under the scroll position is seeked while you scroll.
    Phone (Am, Im): every third frame as 960×540 WebP tiles, cross-faded between frames.
    seg = last frame of each shot; anchors = frame of each interior stage. */
-const FILM = /*FILM*/{ Ad:{ total: 1068, seg:[150,300,390,480,498,648,738,828,978,1068], clips:[{f:"a01a",n:75},{f:"a01b",n:75},{f:"a02a",n:75},{f:"a02b",n:75},{f:"a03",n:90},{f:"a04",n:90},{f:"a05",n:18},{f:"a06a",n:75},{f:"a06b",n:75},{f:"a07",n:90},{f:"a08",n:90},{f:"a09a",n:75},{f:"a09b",n:75},{f:"a10",n:90}] },
+const FILM = /*FILM*/{ Ad:{ total: 1068, seg:[150,300,390,480,498,648,738,828,978,1068], clips:[{f:"a01a",n:20},{f:"a01a2",n:55},{f:"a01b",n:75},{f:"a02a",n:75},{f:"a02b",n:75},{f:"a03",n:90},{f:"a04",n:90},{f:"a05",n:18},{f:"a06a",n:75},{f:"a06b",n:75},{f:"a07",n:90},{f:"a08",n:90},{f:"a09a",n:75},{f:"a09b",n:75},{f:"a10",n:90}] },
   Am:{ total: 350, seg:[50,99,128,157,163,213,242,271,320,350] },
   Id:{ total: 690, anchors:[1,90,180,270,360,450,540,597,690], clips:[{f:"i01",n:90},{f:"i02",n:90},{f:"i03",n:90},{f:"i04",n:90},{f:"i05",n:90},{f:"i06",n:90},{f:"i07a",n:75},{f:"i07b",n:75}] },
   Im:{ total: 224, anchors:[1,30,59,88,117,146,175,194,224] } }/*FILM*/;
 /* browsers keep the film's files for a while under the same name: change this stamp whenever a file in v/, vi/ or tiles/ changes,
    so that a refresh shows the new film at once */
-const MV = "?v=20261121-8";
+const MV = "?v=20261122-1";
 const FA = lite ? FILM.Am : FILM.Ad, FI = lite ? FILM.Im : FILM.Id, U = lite ? 1 : 3;
 const S = FA.seg, segA = i => (i ? S[i-1] + 1 : 1), segB = i => S[i];
 /* shot index → caption (shot 4 is the cut from inside the plot to the street) */
@@ -965,9 +992,11 @@ $("#drawerLang").addEventListener("click", () => { lang = lang === "ar" ? "en" :
 })();
 
 /* ---------------- 00 hero video ---------------- */
+/* Chrome, Edge and Android report a slow or data-saving connection: the hero then plays its lighter video, leaving the line to the film */
+const slowNet = (() => { const c = navigator.connection; return !!(c && (c.saveData || /2g|3g/.test(c.effectiveType || "") || (c.downlink && c.downlink < 5))); })();
 const heroVid = $("#heroVid");
 if (!reduce){
-  heroVid.src = small ? "media/hero_540.mp4" : "media/hero_1080.mp4";
+  heroVid.src = (small || slowNet) ? "media/hero_540.mp4" : "media/hero_1080.mp4";
   heroVid.addEventListener("playing", () => { $("#heroPoster").style.opacity = 0; }, {once:true});
   heroVid.play().catch(() => {});
   new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) heroVid.play().catch(()=>{}); else heroVid.pause(); })).observe($("#hero"));
@@ -975,6 +1004,17 @@ if (!reduce){
 
 /* ---------------- scroll films ----------------
    Both players share one interface: target (scroll progress 0–1), cur (current frame), map (optional progress → frame), start(). */
+
+/* the notice on a film while the part on screen is still downloading; it waits a moment, so a fast connection never sees it */
+function loadNote(el){
+  let t = 0, on = false; const num = el.querySelector("b");
+  return (show, q) => {
+    if (show){
+      num.textContent = q == null ? "" : Math.min(99, Math.round(q * 100)) + "%";
+      if (!on && !t) t = setTimeout(() => { t = 0; on = true; el.classList.add("on"); }, 400);
+    } else { clearTimeout(t); t = 0; if (on){ on = false; el.classList.remove("on"); } }
+  };
+}
 
 /* phone: frames drawn on a canvas from WebP tiles (four 960×540 frames per tile, 2×2), cross-faded between neighbours */
 class Scrub {
@@ -1090,6 +1130,7 @@ class Scrub {
   size(){ const dpr = Math.min(devicePixelRatio || 1, 2), w = Math.round(this.cv.clientWidth * dpr), h = Math.round(this.cv.clientHeight * dpr); if (!w || !h) return; if (this.cv.width !== w || this.cv.height !== h){ this.cv.width = w; this.cv.height = h; } this.key = ""; this.draw(); }
   blit(fr){ const W = this.cv.width, H = this.cv.height, s = Math.max(W / fr.sw, H / fr.sh), w = fr.sw * s, h = fr.sh * s; this.cx.drawImage(fr.im, fr.sx, fr.sy, fr.sw, fr.sh, (W - w) / 2, (H - h) / 2, w, h); }
   draw(){
+    if (this.note) this.note(this.live && !this.frames[Math.round(this.pos)], null);
     const a = Math.floor(this.pos), t = reduce ? 0 : Math.round((this.pos - a) * 16) / 16;
     const A = this.frames[a] || this.near(a), B = t > 0 ? this.frames[a + 1] : null; if (!A) return;
     const key = a + ":" + (B ? t : 0) + ":" + (this.frames[a] ? 1 : 0); if (key === this.key) return; this.key = key;
@@ -1106,7 +1147,9 @@ class Scrub {
 }
 
 /* desktop: one H.264 clip per shot, every frame kept; the clip under the scroll position is seeked to the exact frame.
-   Clips are fetched whole (so a seek never waits for the network) and only the current shot and its two neighbours hold a decoder. */
+   Clips are fetched whole (so a seek never waits for the network) and only the current shot and its two neighbours hold a decoder.
+   The clip on screen downloads first and alone; once it is in, two at a time in story order. When the viewer stops on a shot
+   that is still missing, downloads far from it that are not yet half done are dropped so it gets the whole connection. */
 class VScrub {
   constructor(wrap, dir, clips, onFrame){
     this.wrap = wrap; this.dir = dir; this.onFrame = onFrame; this.fps = 30; wrap.hidden = false;
@@ -1142,7 +1185,7 @@ class VScrub {
   settle(c){
     const v = c.v; if (!c.att || v.seeking) return;
     if (this.at(v) !== c.wk){ c.t0 = performance.now(); v.currentTime = (c.wk + 0.5) / this.fps; return; }
-    c.painted = true; if (this.clips[this.active] === c) this.show(c);
+    c.painted = true; if (this.clips[this.active] === c){ this.show(c); this.status(); }
   }
   show(c){ for (const o of this.clips) o.v.classList.toggle("on", o === c); }
   attach(i){ const c = this.clips[i]; if (!c || c.att || !c.url) return; c.att = true; c.painted = false; c.v.src = c.url; }
@@ -1152,6 +1195,7 @@ class VScrub {
     const [i, k] = this.locate(g), c = this.clips[i];
     if (i !== this.active){
       this.active = i;
+      clearTimeout(this.ft); this.ft = setTimeout(() => this.focus(), 400);
       for (let j = 0; j < this.clips.length; j++){ if (Math.abs(j - i) <= 1) this.attach(j); else this.detach(j); }
       /* the neighbours wait on the frame they share with this shot, so crossing a cut never shows a stale picture */
       const pv = this.clips[i - 1], nx = this.clips[i + 1];
@@ -1159,9 +1203,21 @@ class VScrub {
       if (c.painted) this.show(c);
       else { this.poster.src = `${this.dir}/${c.f}.webp${MV}`; if (!c.url) this.show(null); }
     }
-    this.wrap.classList.toggle("wait", !c.url);
-    this.seek(c, k);
+    this.seek(c, k); this.status();
     if (this.onFrame) this.onFrame(this.cur);
+  }
+  status(){ const c = this.clips[this.active]; if (this.note && c) this.note(this.started && !c.url, c.prog || 0); }
+  focus(){
+    const a = this.active, c = this.clips[a]; if (!c || c.url) return;
+    this.clips.forEach((o, j) => { if (j !== a && o.busy && o.ac && (o.prog || 0) < 0.5) o.ac.abort(); });
+    this.pump();
+  }
+  pump(){
+    if (!this.started) return;
+    const ai = Math.max(0, this.active), a = this.clips[ai];
+    if (a && !a.url && !a.busy) this.grab(ai);
+    const lim = a && !a.url ? 1 : 2;
+    for (let busy = this.clips.filter(o => o.busy).length; busy < lim; busy++){ const i = this.pick(); if (i < 0) break; this.grab(i); }
   }
   /* what to fetch next: the shot on screen first, then the ones after it, then the ones before */
   pick(){
@@ -1170,29 +1226,33 @@ class VScrub {
     for (let i = a - 1; i >= 0; i--) if (!this.clips[i].url && !this.clips[i].busy) return i;
     return -1;
   }
-  async grab(i, onProg){
-    const c = this.clips[i]; c.busy = true;
+  async grab(i){
+    const c = this.clips[i]; c.busy = true; c.prog = 0; const ac = c.ac = window.AbortController ? new AbortController() : null;
     try {
-      const r = await fetch(`${this.dir}/${c.f}.mp4${MV}`); if (!r.ok) throw new Error(r.status);
+      const r = await fetch(`${this.dir}/${c.f}.mp4${MV}`, ac ? { signal: ac.signal } : {}); if (!r.ok) throw new Error(r.status);
       const len = +r.headers.get("content-length") || 0;
-      if (onProg && r.body && len){
+      if (r.body && r.body.getReader && len){
         const rd = r.body.getReader(), parts = []; let n = 0;
-        for (;;){ const { done, value } = await rd.read(); if (done) break; parts.push(value); n += value.length; onProg(n / len); }
+        for (;;){ const { done, value } = await rd.read(); if (done) break; parts.push(value); n += value.length; c.prog = n / len; if (this.clips[this.active] === c) this.status(); }
         c.url = URL.createObjectURL(new Blob(parts, { type: "video/mp4" }));
       } else c.url = URL.createObjectURL(await r.blob());
-    } catch (e){ c.url = `${this.dir}/${c.f}.mp4${MV}`; }
+    } catch (e){
+      if (ac && ac.signal.aborted){ c.busy = false; c.ac = null; c.prog = 0; this.pump(); return; }   /* dropped for the shot on screen; fetched again later */
+      c.url = `${this.dir}/${c.f}.mp4${MV}`;
+    }
+    c.busy = false; c.ac = null;
     this.got += c.n; if (this.onLoad) this.onLoad(this.got / this.total);
+    if (!this.stills.length) this.stills = this.clips.map(o => { const im = new Image(); im.src = `${this.dir}/${o.f}.webp${MV}`; return im; });
     if (c.url && this.active >= 0 && Math.abs(i - this.active) <= 1){ this.active = -9; this.set(this.cur); }
+    this.status(); this.pump();
   }
-  /* the first still shows at once; the clips arrive behind it in story order, two at a time */
+  /* the first still shows at once; the clip on screen comes next (alone), then the rest; the other stills wait for the first clip */
   async start(onFirst){
     if (this.started) return; this.started = true;
     await new Promise(r => { this.poster.onload = this.poster.onerror = r; this.poster.src = `${this.dir}/${this.clips[0].f}.webp${MV}`; });
     this.poster.onload = this.poster.onerror = null;
     if (onFirst) onFirst(2);
-    this.stills = this.clips.map(c => { const im = new Image(); im.src = `${this.dir}/${c.f}.webp${MV}`; return im; });
-    const next = async () => { for (let i; (i = this.pick()) >= 0; ) await this.grab(i); };
-    await Promise.all([next(), next()]);
+    this.pump();
   }
 }
 /* Shift+D shows how long seeks take on this machine */
@@ -1222,6 +1282,7 @@ function hudA(f){
   });
 }
 const filmA = lite ? new Scrub($("#film"), "m", FA.total, hudA) : new VScrub($("#filmV"), "v", FA.clips, hudA);
+filmA.note = loadNote($("#ldA"));
 filmA.onLoad = q => { $("#fbuf").style.width = (q * 100).toFixed(1) + "%"; if (q >= 1) setTimeout(() => { $("#fbuf").style.opacity = 0; }, 1200); };
 filmA.start(p => { $("#lbar").style.width = Math.min(100, p * 100) + "%"; if (p > 1){ const l = $("#loader"); if (l){ l.style.opacity = 0; setTimeout(() => l.remove(), 900); } filmA.set(filmA.cur); } });
 
@@ -1237,6 +1298,7 @@ function hudI(f){
   $("#stageText").textContent = lang === "ar" ? STAGES[now].dAr : STAGES[now].dEn;
 }
 const filmI = lite ? new Scrub($("#finCv"), "im", FI.total, hudI) : new VScrub($("#finV"), "vi", FI.clips, hudI);
+filmI.note = loadNote($("#ldI"));
 /* scroll progress → frame, resting a little on every stage before moving to the next */
 filmI.map = p => {
   const n = AN.length - 1, t = Math.min(n, Math.max(0, p * 1.04) * n), i = Math.min(n - 1, Math.floor(t));

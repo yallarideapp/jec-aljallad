@@ -82,6 +82,12 @@ the behaviours to keep, open requests, and the change log shared by Claude and C
    same name (GitHub Pages: 10 minutes), so change `MV` whenever a file in `v/`, `vi/` or `tiles/` changes; a refresh then shows
    the new film at once.
    Clips must stay GOP 6, no B-frames, each file under 20 MiB (see `Production/higgsfield/README.md`).
+   Slow connections (Jafar, 2026-11-22): on desktop the clip on screen downloads first and alone, then two at a time; when the
+   viewer stops on a shot that is still missing, downloads far from it that are not half done are dropped so it gets the whole
+   line; the other stills wait for the first clip. The first clip is short (`a01a` = 20 frames, 2.5 MB; `a01a2` = the rest of
+   that shot) so the film moves within a few seconds. While the part on screen is still downloading, a small notice
+   (`.ld`, «جارٍ تحميل هذا المشهد» with a percentage on desktop) shows on the film after 0.4 s; a fast connection never sees it.
+   When Chrome/Edge/Android report a slow or data-saving connection, the hero plays its 540p video.
 7a. Whole pictures on phones (Jafar, 2026-11-21): every full-screen picture (hero, both films, the ceiling reveal, the end shot)
    sits in a `.frame`. On wide screens the frame fills the screen as before. On upright screens (`max-aspect-ratio: 13/10`:
    phones, iPad held upright) the frame is the whole 16:9 picture at full width and the text sits under it; landscape phones
@@ -91,6 +97,9 @@ the behaviours to keep, open requests, and the change log shared by Claude and C
 8. Construction order on screen: glass only after structure, blockwork and stone. Interior order is fixed:
    raw → partitions → MEP → plaster → ceiling → floor/wall finishes → paint/doors/lighting → cleaning → furniture last.
 9. No secrets, `.env` files or customer data in `Source/`.
+10. Link preview (Jafar, 2026-11-22): the `og:*` and `twitter:*` tags in the head of index.html give the shared link a picture
+   (`Source/assets/og.jpg`, 1200×630, from the hero still with the logo and the company name) and a title. Crawlers need full
+   addresses, so they point to the GitHub Pages preview; change `og:url`, `og:image` and `twitter:image` when the domain is attached.
 
 ## Media and 3D
 - Re-encode the film: `Production/higgsfield/README.md`. `venc.py` with `jobs_v5.json` reproduces `Source/v` and `Source/vi` byte for byte.
