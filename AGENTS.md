@@ -78,13 +78,22 @@ the behaviours to keep, open requests, and the change log shared by Claude and C
    backdrop blur (bar, menu button, stage list).
    `ScrollTrigger.config({ignoreMobileResize:true})` stops the iPhone address bar from re-measuring the pinned sections.
    The `FILM` constant in index.html holds clip names, frame counts and stage boundaries. Change it together with the media.
-   `MV` (next to `FILM`) is a stamp added to every film file's address (`?v=...`): browsers keep those files for a while under the
-   same name (GitHub Pages: 10 minutes), so change `MV` whenever a file in `v/`, `vi/` or `tiles/` changes; a refresh then shows
-   the new film at once.
+   Every film file's address carries a version stamp (`?v=...`), so a changed file is fetched again at once while an unchanged one
+   stays in the visitor's browser cache. Most files carry the base stamp `MV` (next to `FILM`); `FV` lists the files whose stamp
+   differs. After changing any file in `v/`, `vi/`, `tiles/` or `assets/tiles-worker.js`, run
+   `python3 Production/higgsfield/stamps.py`: it gives only the changed files a new stamp and writes `FV`. Do not change `MV` by hand
+   (Jafar, 2026-11-22: after each update his computer re-downloaded the whole 127 MB film and the film froze on every scene).
    Clips must stay GOP 6, no B-frames, each file under 20 MiB (see `Production/higgsfield/README.md`).
    Slow connections (Jafar, 2026-11-22): on desktop the clip on screen downloads first and alone, then two at a time; when the
-   viewer stops on a shot that is still missing, downloads far from it that are not half done are dropped so it gets the whole
-   line; the other stills wait for the first clip. The first clip is short (`a01a` = 20 frames, 2.5 MB; `a01a2` = the rest of
+   viewer has stopped (not while scrolling on) on a shot that is still missing, downloads far from it that are not half done are
+   dropped so it gets the whole line; while scrolling on, a shot passed on the way starts no download beyond two at a time.
+   Stand-in on desktop: while the video of the scene on screen is still downloading, `VScrub` draws the phone's tiles on a canvas
+   in the film (`pv`, a driven `Scrub` with `all: false`: the worker fetches only the tiles asked for, ahead of a fast scroll,
+   every other one when the scroll is fast, cancelling tiles already passed; once the viewer stops, the tile on screen comes
+   first and alone). A stand-in frame is drawn only within 6 phone frames of the right moment of the same shot; otherwise the
+   scene's still, which is hidden until it has loaded so a slow line never shows another scene. The stand-in closes for good
+   once every video is in. Measured on a first visit at 20 Mbit/s, scrolling through the film in 30 s: picture frozen 0.2% of
+   the time (91% before); at 8 Mbit/s 9% (about 99% before). With a stand-in there is no bulk load of every scene's still. The first clip is short (`a01a` = 20 frames, 2.5 MB; `a01a2` = the rest of
    that shot) so the film moves within a few seconds. While the part on screen is still downloading, a small notice
    (`.ld`, «جارٍ تحميل هذا المشهد» with a percentage on desktop) shows on the film after 0.4 s; a fast connection never sees it.
    When Chrome/Edge/Android report a slow or data-saving connection, the hero plays its 540p video.

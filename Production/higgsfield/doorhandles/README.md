@@ -59,6 +59,6 @@ ffmpeg -y -framerate 30 -i /tmp/hf2/w1/s%03d.png -c:v libx264 -preset fast -crf 
 ffmpeg -y -framerate 30 -i /tmp/hf2/w2/s%03d.png -c:v libx264 -preset fast -crf 10 -pix_fmt yuv420p -an ../clips/w2h.mp4
 ```
 Then from `Production/higgsfield`: `venc.py` for `a09a`, `a09b`, `a10`; `assemble.py A` and `tiles_m.py A` (see `../README.md`);
-and change `MV` in `Source/index.html`.
+and run `python3 Production/higgsfield/stamps.py` (it stamps the changed film files).
 
 Jafar checks the door glass closely: look at every changed frame at 3x before uploading, and send him a before/after.

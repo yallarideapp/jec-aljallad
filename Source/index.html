@@ -125,7 +125,9 @@ html[lang="ar"] .hero h1{font-size:clamp(2.8rem,7vw,6.2rem)}
 .film canvas,.fin canvas{position:absolute;inset:0;width:100%;height:100%}
 /* desktop: one short video per shot, seeked on scroll; the poster shows until its video has a frame */
 .vwrap{position:absolute;inset:0;overflow:hidden;background:#0b0b0c}
-.vwrap img,.vwrap video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
+.vwrap img,.vwrap video,.vwrap canvas{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
+.vwrap canvas{opacity:0}
+.vwrap canvas.on{opacity:1}
 .vwrap video{opacity:0}
 .vwrap video.on{opacity:1}
 /* splash: shown while the first picture loads. It leaves a moment after its name has appeared, once the hero still is in
@@ -819,9 +821,13 @@ const FILM = /*FILM*/{ Ad:{ total: 1068, seg:[150,300,390,480,498,648,738,828,97
   Am:{ total: 350, seg:[50,99,128,157,163,213,242,271,320,350] },
   Id:{ total: 690, anchors:[1,90,180,270,360,450,540,597,690], clips:[{f:"i01",n:90},{f:"i02",n:90},{f:"i03",n:90},{f:"i04",n:90},{f:"i05",n:90},{f:"i06",n:90},{f:"i07a",n:75},{f:"i07b",n:75}] },
   Im:{ total: 224, anchors:[1,30,59,88,117,146,175,194,224] } }/*FILM*/;
-/* browsers keep the film's files for a while under the same name: change this stamp whenever a file in v/, vi/ or tiles/ changes,
-   so that a refresh shows the new film at once */
+/* browsers keep the film's files for a while under their address, so each address carries a stamp (?v=...). Most files carry
+   the base stamp MV; FV lists the files whose stamp differs from it. A changed file gets a new stamp and is fetched again at once;
+   the others keep theirs, so a returning visitor does not download the whole film again after an update.
+   Production/higgsfield/stamps.py keeps FV up to date: run it after changing any file in v/, vi/, tiles/ or the tiles worker. */
 const MV = "?v=20261122-2";
+const FV = /*FV*/{"assets/tiles-worker.js":"20261122-5"}/*FV*/;
+const ver = p => (FV[p] ? "?v=" + FV[p] : MV);
 const FA = lite ? FILM.Am : FILM.Ad, FI = lite ? FILM.Im : FILM.Id, U = lite ? 1 : 3;
 const S = FA.seg, segA = i => (i ? S[i-1] + 1 : 1), segB = i => S[i];
 /* shot index → caption (shot 4 is the cut from inside the plot to the street) */
@@ -1051,9 +1057,11 @@ function loadNote(el){
   };
 }
 
-/* phone: frames drawn on a canvas from WebP tiles (four 960×540 frames per tile, 2×2), cross-faded between neighbours */
+/* phone: frames drawn on a canvas from WebP tiles (four 960×540 frames per tile, 2×2), cross-faded between neighbours.
+   On a computer the same tiles stand in while a scene's video is still downloading (see VScrub): there the film drives it
+   (`driven`), it fetches only the tiles it asks for (`all: false`), and it keeps fewer tiles. */
 class Scrub {
-  constructor(cv, dir, total, onFrame){
+  constructor(cv, dir, total, onFrame, o = {}){
     this.cv = cv; this.cx = cv.getContext("2d"); this.dir = dir; this.total = total;
     this.frames = new Array(total + 2); this.ims = {}; this.busy = {}; this.cur = 1; this.pos = 1; this.key = ""; this.onFrame = onFrame;
     this.target = 0; this.p = 0; this.last = -1; this.started = false; this.live = false; this.pumping = false;
@@ -1061,8 +1069,8 @@ class Scrub {
     /* phones (iPhone above all) close a tab that holds too many decoded images: only a few anchor tiles spread over the film
        stay in memory, plus a window of tiles around the frame on screen (8 ahead in the scroll direction, 3 behind),
        and only while the film is near the screen */
-    this.anchors = new Set(); for (let k = 1; k <= this.nT; k += 10) this.anchors.add(k); this.anchors.add(this.nT);
-    this.win = 8; this.back = 3;
+    this.anchors = new Set(); for (let k = 1; k <= this.nT; k += (o.step || 10)) this.anchors.add(k); if (o.ends !== false) this.anchors.add(this.nT);
+    this.win = o.win || 8; this.back = o.back || 3; this.all = o.all !== false; this.driven = !!o.driven; this.shown = !this.driven;
     addEventListener("resize", () => { this.size(); if (this.w) this.w.postMessage({ tw: this.tw() }); });
     /* the film glides to the scroll position with the same feel at 60 or 120 frames a second, and keeps pace when a frame is dropped */
     let lt = 0;
@@ -1074,7 +1082,16 @@ class Scrub {
       if (Math.abs(f - this.last) > 0.01){ this.last = f; this.set(f); }
       requestAnimationFrame(glide);
     };
-    glide();
+    if (!this.driven) glide();
+  }
+  tile(k){ const p = `tiles/${this.dir}/t${String(k).padStart(3, "0")}.webp`; return p + ver(p); }
+  /* a frame is in memory within r frames of frame i, between frames lo and hi */
+  has(i, r, lo, hi){ for (let d = 0; d <= r; d++){ if (i - d >= lo && this.frames[i - d]) return true; if (i + d <= hi && this.frames[i + d]) return true; } return false; }
+  vis(on){ if (on === this.shown) return; this.shown = on; this.cv.classList.toggle("on", on); if (on){ this.key = ""; this.draw(); } }
+  close(){
+    this.dead = true; this.live = false; if (this.io) this.io.disconnect();
+    if (this.w){ this.w.terminate(); this.w = null; }
+    for (const k of Object.keys(this.ims).map(Number)) this.drop(k);
   }
   tileOf(i){ const n = i - 1; return { k: Math.floor(n / 4) + 1, j: n % 4 }; }
   /* decoded tiles are ImageBitmaps from the worker (possibly scaled down to the canvas) or, without a worker, images */
@@ -1082,18 +1099,32 @@ class Scrub {
     this.ims[k] = im;
     const hw = im.width / 2, hh = im.height / 2;
     for (let i = (k - 1) * 4 + 1; i <= Math.min(this.total, k * 4); i++){ const j = (i - 1) % 4; this.frames[i] = { im, sx: (j % 2) * hw, sy: Math.floor(j / 2) * hh, sw: hw, sh: hh }; }
-    this.key = ""; this.draw();
+    this.key = ""; this.draw(); if (this.onPut) this.onPut();
   }
-  keep(k){ return this.anchors.has(k) || (this.live && Math.abs(k - this.tileOf(this.cur).k) <= this.win); }
+  keep(k){
+    if (this.anchors.has(k)) return true; if (!this.live) return false;
+    const d = (k - this.tileOf(this.cur).k) * (this.driven ? this.way : 1);
+    return this.driven ? d >= -this.back - 1 && d <= 20 : Math.abs(d) <= this.win;     /* a stand-in keeps the tiles ahead it asked for */
+  }
   drop(k){
     const im = this.ims[k]; if (!im) return; delete this.ims[k];
     for (let i = (k - 1) * 4 + 1; i <= Math.min(this.total, k * 4); i++) if (this.frames[i] && this.frames[i].im === im) this.frames[i] = undefined;
     if (im.close) im.close();
   }
-  /* the tile on screen first, then the next ones in the scroll direction, with a few behind */
+  /* the tile on screen first, then the next ones in the scroll direction, with a few behind.
+     As a stand-in on a computer, when the viewer scrolls faster than tiles come in, it asks for the tiles where the viewer
+     will be by the time they arrive, every other one when the scroll is fast (a nearby frame of the same shot is shown) */
   wanted(){
     const kc = this.tileOf(this.cur).k, f = this.way, out = [kc];
-    for (let d = 1; d <= this.win; d++){ out.push(kc + f * d); if (d <= this.back) out.push(kc - f * d); }
+    const spd = this.driven && performance.now() - (this.tc || 0) < 600 ? this.spd || 0 : 0;
+    if (spd >= 1){
+      const lead = Math.min(8, Math.ceil(spd * 1.2)), step = spd >= 2 ? 2 : 1;
+      let k = kc + f * lead; if (step === 2 && k % 2) k += f;            /* the same tiles from one step to the next */
+      out.length = 0;
+      for (let n = 0; n < this.win; n++, k += f * step) out.push(k);
+      out.push(kc);
+    }
+    else for (let d = 1; d <= this.win; d++){ out.push(kc + f * d); if (d <= this.back) out.push(kc - f * d); }
     return out.filter(k => k >= 1 && k <= this.nT);
   }
   trim(){ for (const k of Object.keys(this.ims).map(Number)) if (!this.keep(k)) this.drop(k); }
@@ -1102,7 +1133,7 @@ class Scrub {
   worker(){
     return new Promise(res => {
       if (!window.Worker || !window.createImageBitmap || location.protocol === "file:") return res(false);
-      let w; try { w = new Worker("assets/tiles-worker.js" + MV); } catch (e){ return res(false); }
+      let w; try { w = new Worker("assets/tiles-worker.js" + ver("assets/tiles-worker.js")); } catch (e){ return res(false); }
       const fail = () => { clearTimeout(t); w.terminate(); res(false); };
       const t = setTimeout(fail, 5000);
       w.onerror = fail;
@@ -1112,12 +1143,14 @@ class Scrub {
         if (!e.data.ready) return fail();
         this.w = w; w.onerror = null; w.onmessage = ev => this.got(ev.data); res(true);
       };
-      w.postMessage({ init: { base: new URL(`tiles/${this.dir}/`, location.href).href, q: MV, n: this.nT, tw: this.tw() } });
+      const qs = {}, pre = `tiles/${this.dir}/t`;
+      for (const p in FV) if (p.startsWith(pre)) qs[+p.slice(pre.length, -5)] = "?v=" + FV[p];
+      w.postMessage({ init: { base: new URL(`tiles/${this.dir}/`, location.href).href, q: MV, qs, all: this.all, n: this.nT, tw: this.tw() } });
     });
   }
   got(m){
     this.pend.delete(m.k);
-    if (m.bm){ if (this.ims[m.k] || !this.keep(m.k)) m.bm.close(); else this.put(m.k, m.bm); }
+    if (m.bm){ if (this.dead || this.ims[m.k] || !this.keep(m.k)) m.bm.close(); else this.put(m.k, m.bm); }
     if (this.onAnchor && this.anchors.has(m.k)) this.onAnchor();
   }
   /* without a worker: plain images, decoded before use so the scroll never waits on a decode */
@@ -1126,15 +1159,15 @@ class Scrub {
     if (this.busy[k]) return this.busy[k];
     return this.busy[k] = new Promise(res => {
       const im = new Image(); im.decoding = "async";
-      const done = () => { delete this.busy[k]; if (!this.ims[k] && this.keep(k)) this.put(k, im); res(); };
+      const done = () => { delete this.busy[k]; if (!this.dead && !this.ims[k] && this.keep(k)) this.put(k, im); res(); };
       im.onload = () => { if (im.decode) im.decode().then(done, done); else done(); };
       im.onerror = () => { delete this.busy[k]; res(); };
-      im.src = `tiles/${this.dir}/t${String(k).padStart(3, "0")}.webp${MV}`;
+      im.src = this.tile(k);
     });
   }
-  request(){
-    if (!this.live) return;
-    if (this.w){ const need = this.wanted().filter(k => !this.ims[k]); this.pend = new Set(need); this.w.postMessage({ need }); }
+  request(alone){
+    if (!this.live || this.dead || (this.gate && !this.gate())) return;
+    if (this.w){ const need = this.wanted().filter(k => !this.ims[k]); this.pend = new Set(need); this.w.postMessage({ need, cur: this.tileOf(this.cur).k, way: this.way, alone: !!alone }); }
     else this.pump();
   }
   async pump(){
@@ -1142,7 +1175,7 @@ class Scrub {
     try {
       for (let guard = 0; guard < 200; guard++){
         const need = this.wanted().filter(k => !this.ims[k]);
-        if (!need.length || !this.live) break;
+        if (!need.length || !this.live || this.dead || (this.gate && !this.gate())) break;
         await Promise.all(need.slice(0, 3).map(k => this.loadTile(k)));
         this.trim(); this.draw();
       }
@@ -1158,13 +1191,16 @@ class Scrub {
       this.onAnchor = null;
     } else await Promise.all(first.map(k => this.loadTile(k).then(tick)));
     this.size(); if (onFirst) onFirst(2); if (this.onLoad) this.onLoad(1);
+    if (this.dead) return;
     this.live = true; this.request();
-    new IntersectionObserver(es => es.forEach(e => { this.live = e.isIntersecting; if (this.live) this.request(); else this.trim(); }), {rootMargin: "100% 0px"}).observe(this.cv.closest("section"));
+    this.io = new IntersectionObserver(es => es.forEach(e => { if (this.dead) return; this.live = e.isIntersecting; if (this.live) this.request(); else this.trim(); }), {rootMargin: "100% 0px"});
+    this.io.observe(this.cv.closest("section"));
   }
   near(i){ for (let d = 0; d < this.total; d++){ if (this.frames[i-d]) return this.frames[i-d]; if (this.frames[i+d]) return this.frames[i+d]; } return null; }
   size(){ const dpr = Math.min(devicePixelRatio || 1, 2), w = Math.round(this.cv.clientWidth * dpr), h = Math.round(this.cv.clientHeight * dpr); if (!w || !h) return; if (this.cv.width !== w || this.cv.height !== h){ this.cv.width = w; this.cv.height = h; } this.key = ""; this.draw(); }
   blit(fr){ const W = this.cv.width, H = this.cv.height, s = Math.max(W / fr.sw, H / fr.sh), w = fr.sw * s, h = fr.sh * s; this.cx.drawImage(fr.im, fr.sx, fr.sy, fr.sw, fr.sh, (W - w) / 2, (H - h) / 2, w, h); }
   draw(){
+    if (this.driven && !this.shown) return;
     if (this.note) this.note(this.live && !this.frames[Math.round(this.pos)], null);
     const a = Math.floor(this.pos), t = reduce ? 0 : Math.round((this.pos - a) * 16) / 16;
     const A = this.frames[a] || this.near(a), B = t > 0 ? this.frames[a + 1] : null; if (!A) return;
@@ -1177,30 +1213,49 @@ class Scrub {
     this.pos = Math.max(1, Math.min(this.total, f)); this.cur = Math.round(this.pos);
     if (this.cur !== was) this.way = this.cur > was ? 1 : -1;
     this.draw(); if (this.onFrame) this.onFrame(this.cur);
-    if (this.live && this.tileOf(was).k !== this.tileOf(this.cur).k){ this.trim(); this.request(); }
+    if (this.tileOf(was).k !== this.tileOf(this.cur).k){
+      const now = performance.now(), dt = Math.max(30, now - (this.tc || 0)), n = Math.abs(this.tileOf(this.cur).k - this.tileOf(was).k);
+      this.spd = now - (this.tc || 0) > 600 ? n * 1000 / dt : 0.6 * (this.spd || 0) + 0.4 * n * 1000 / dt; this.tc = now;   /* tiles a second */
+      if (this.live){ this.trim(); this.request(); }
+      if (this.driven){                                                   /* stopped: the tile on screen first */
+        const rest = () => { if (this.atRest && !this.atRest()){ this.rt = setTimeout(rest, 150); return; } this.spd = 0; this.request(true); };
+        clearTimeout(this.rt); this.rt = setTimeout(rest, 400);
+      }
+    }
   }
 }
 
 /* desktop: one H.264 clip per shot, every frame kept; the clip under the scroll position is seeked to the exact frame.
    Clips are fetched whole (so a seek never waits for the network) and only the current shot and its two neighbours hold a decoder.
    The clip on screen downloads first and alone; once it is in, two at a time in story order. When the viewer stops on a shot
-   that is still missing, downloads far from it that are not yet half done are dropped so it gets the whole connection. */
+   that is still missing, downloads far from it that are not yet half done are dropped so it gets the whole connection.
+   While the video of the scene on screen is still on its way, the film keeps moving on the phone's frames (`pv`: one tile of
+   four 960×540 frames weighs about a fiftieth of a scene's video); they are drawn only where they show the same moment of
+   the same shot, and they go away for good once every video is in. */
 class VScrub {
-  constructor(wrap, dir, clips, onFrame){
+  constructor(wrap, dir, clips, onFrame, pv){
     this.wrap = wrap; this.dir = dir; this.onFrame = onFrame; this.fps = 30; wrap.hidden = false;
     let off = 0;
     this.clips = clips.map(c => { const o = { f: c.f, n: c.n, start: off, url: null, att: false, painted: false, wk: 0, v: null }; off += c.n; return o; });
     this.total = off; this.cur = 1; this.active = -1; this.target = 0; this.p = 0; this.last = -1; this.started = false; this.got = 0;
     this.seeks = 0; this.seekMs = 0;
     this.poster = new Image(); this.poster.alt = ""; this.poster.decoding = "async"; wrap.appendChild(this.poster); this.stills = [];
+    if (pv && window.createImageBitmap){
+      const cv = document.createElement("canvas"); wrap.appendChild(cv);
+      this.pv = new Scrub(cv, pv.dir, pv.total, null, { driven: true, all: false, step: 1e4, ends: false, win: 5, back: 2 });
+      this.toPv = pv.map; this.pv.gate = () => this.pvNeed(); this.pv.onPut = () => this.pvVis();
+      this.pv.atRest = () => performance.now() - this.tt >= 350;
+    }
     for (const c of this.clips){
       const v = document.createElement("video"); v.muted = true; v.playsInline = true; v.preload = "auto"; v.disablePictureInPicture = true;
       v.addEventListener("seeked", () => { if (c.t0){ this.seekMs += performance.now() - c.t0; this.seeks++; c.t0 = 0; } this.settle(c); });
       v.addEventListener("loadeddata", () => this.settle(c));
-      v.addEventListener("error", () => { if (c.att && c.url && c.url.startsWith("blob:")){ c.url = `${this.dir}/${c.f}.mp4${MV}`; v.src = c.url; } });
+      v.addEventListener("error", () => { if (c.att && c.url && c.url.startsWith("blob:")){ c.url = this.u(c.f + ".mp4"); v.src = c.url; } });
       wrap.appendChild(v); c.v = v;
     }
+    this.tt = 0; this.lt = -1;
     const glide = () => {
+      if (this.target !== this.lt){ this.lt = this.target; this.tt = performance.now(); }
       const d = this.target - this.p;
       this.p = (reduce || Math.abs(d) < 0.0003) ? this.target : this.p + d * 0.14;
       const f = this.map ? this.map(this.p) : 1 + this.p * (this.total - 1);
@@ -1208,6 +1263,32 @@ class VScrub {
       requestAnimationFrame(glide);
     };
     glide();
+  }
+  u(n){ const p = `${this.dir}/${n}`; return p + ver(p); }
+  /* the scene's still; the one of the scene before is hidden until it has come, so a slow line never shows another scene */
+  still(c){
+    const im = this.poster, src = new URL(this.u(c.f + ".webp"), location.href).href;
+    if (im.src === src) return;
+    im.style.visibility = "hidden"; im.onload = () => { if (im.src === src) im.style.visibility = ""; };
+    im.src = src; if (im.complete && im.naturalWidth) im.style.visibility = "";
+  }
+  /* the phone's frames stand in only while a video around the scene on screen is missing */
+  pvNeed(){ const a = this.active; return this.clips.some((c, j) => Math.abs(j - a) <= 1 && !c.url); }
+  pvSet(f){
+    const pv = this.pv; if (!pv) return;
+    const m = this.toPv(f); this.pvAt = m; pv.set(m.f); this.pvVis();
+    const c = this.clips[this.active];
+    if (!pv.started && c && !c.url) pv.start();
+  }
+  pvVis(){
+    const pv = this.pv, m = this.pvAt; if (!pv || !m) return;
+    const c = this.clips[this.active], hd = c && c.painted && c.v.classList.contains("on");
+    pv.vis(!hd && pv.has(Math.round(m.f), 6, m.lo, m.hi));
+  }
+  pvDone(){
+    const pv = this.pv, c = this.clips[this.active];
+    if (!pv || !this.clips.every(o => o.url) || !(c && c.painted)) return;
+    pv.close(); pv.cv.remove(); this.pv = null;
   }
   locate(g){ for (let i = 0; i < this.clips.length; i++){ const c = this.clips[i]; if (g < c.start + c.n) return [i, g - c.start]; } const l = this.clips.length - 1; return [l, this.clips[l].n - 1]; }
   at(v){ return Math.floor(v.currentTime * this.fps + 0.01); }
@@ -1222,7 +1303,7 @@ class VScrub {
     if (this.at(v) !== c.wk){ c.t0 = performance.now(); v.currentTime = (c.wk + 0.5) / this.fps; return; }
     c.painted = true; if (this.clips[this.active] === c){ this.show(c); this.status(); }
   }
-  show(c){ for (const o of this.clips) o.v.classList.toggle("on", o === c); }
+  show(c){ for (const o of this.clips) o.v.classList.toggle("on", o === c); this.pvVis(); if (c) this.pvDone(); }
   attach(i){ const c = this.clips[i]; if (!c || c.att || !c.url) return; c.att = true; c.painted = false; c.v.src = c.url; }
   detach(i){ const c = this.clips[i]; if (!c || !c.att) return; c.att = false; c.painted = false; c.v.classList.remove("on"); c.v.removeAttribute("src"); c.v.load(); }
   set(f){
@@ -1236,21 +1317,26 @@ class VScrub {
       const pv = this.clips[i - 1], nx = this.clips[i + 1];
       if (pv) this.seek(pv, pv.n - 1); if (nx) this.seek(nx, 0);
       if (c.painted) this.show(c);
-      else { this.poster.src = `${this.dir}/${c.f}.webp${MV}`; if (!c.url) this.show(null); }
+      else { this.still(c); if (!c.url) this.show(null); }
     }
-    this.seek(c, k); this.status();
+    this.seek(c, k); this.status(); this.pvSet(f);
     if (this.onFrame) this.onFrame(this.cur);
   }
   status(){ const c = this.clips[this.active]; if (this.note && c) this.note(this.started && !c.url, c.prog || 0); }
+  /* only once the viewer has stopped scrolling: while the scroll moves on, the downloads under way are kept */
   focus(){
     const a = this.active, c = this.clips[a]; if (!c || c.url) return;
+    if (performance.now() - this.tt < 350){ clearTimeout(this.ft); this.ft = setTimeout(() => this.focus(), 400); return; }
     this.clips.forEach((o, j) => { if (j !== a && o.busy && o.ac && (o.prog || 0) < 0.5) o.ac.abort(); });
     this.pump();
   }
+  /* while the viewer scrolls on, a scene passed on the way does not start a download of its own beyond two at a time:
+     the phone's frames carry the film meanwhile, and the downloads under way keep the line */
   pump(){
     if (!this.started) return;
     const ai = Math.max(0, this.active), a = this.clips[ai];
-    if (a && !a.url && !a.busy) this.grab(ai);
+    const rest = !this.pv || performance.now() - this.tt >= 350;
+    if (a && !a.url && !a.busy && (rest || this.clips.filter(o => o.busy).length < 2)) this.grab(ai);
     const lim = a && !a.url ? 1 : 2;
     for (let busy = this.clips.filter(o => o.busy).length; busy < lim; busy++){ const i = this.pick(); if (i < 0) break; this.grab(i); }
   }
@@ -1264,7 +1350,7 @@ class VScrub {
   async grab(i){
     const c = this.clips[i]; c.busy = true; c.prog = 0; const ac = c.ac = window.AbortController ? new AbortController() : null;
     try {
-      const r = await fetch(`${this.dir}/${c.f}.mp4${MV}`, ac ? { signal: ac.signal } : {}); if (!r.ok) throw new Error(r.status);
+      const r = await fetch(this.u(c.f + ".mp4"), ac ? { signal: ac.signal } : {}); if (!r.ok) throw new Error(r.status);
       const len = +r.headers.get("content-length") || 0;
       if (r.body && r.body.getReader && len){
         const rd = r.body.getReader(), parts = []; let n = 0;
@@ -1273,18 +1359,19 @@ class VScrub {
       } else c.url = URL.createObjectURL(await r.blob());
     } catch (e){
       if (ac && ac.signal.aborted){ c.busy = false; c.ac = null; c.prog = 0; this.pump(); return; }   /* dropped for the shot on screen; fetched again later */
-      c.url = `${this.dir}/${c.f}.mp4${MV}`;
+      c.url = this.u(c.f + ".mp4");
     }
     c.busy = false; c.ac = null;
     this.got += c.n; if (this.onLoad) this.onLoad(this.got / this.total);
-    if (!this.stills.length) this.stills = this.clips.map(o => { const im = new Image(); im.src = `${this.dir}/${o.f}.webp${MV}`; return im; });
+    /* the stills of all scenes (about 4 MB) only where there are no stand-in frames: they would hold up the frames on a slow line */
+    if (!this.stills.length && !this.pv) this.stills = this.clips.map(o => { const im = new Image(); im.src = this.u(o.f + ".webp"); return im; });
     if (c.url && this.active >= 0 && Math.abs(i - this.active) <= 1){ this.active = -9; this.set(this.cur); }
     this.status(); this.pump();
   }
-  /* the first still shows at once; the clip on screen comes next (alone), then the rest; the other stills wait for the first clip */
+  /* the first still shows at once; the clip on screen comes next (alone), then the rest */
   async start(onFirst){
     if (this.started) return; this.started = true;
-    await new Promise(r => { this.poster.onload = this.poster.onerror = r; this.poster.src = `${this.dir}/${this.clips[0].f}.webp${MV}`; });
+    await new Promise(r => { this.poster.onload = this.poster.onerror = r; this.poster.src = this.u(this.clips[0].f + ".webp"); });
     this.poster.onload = this.poster.onerror = null;
     if (onFirst) onFirst(2);
     this.pump();
@@ -1316,7 +1403,15 @@ function hudA(f){
     el.style.setProperty("--ty", ((1 - Math.max(0,o)) * 16).toFixed(1) + "px");
   });
 }
-const filmA = lite ? new Scrub($("#film"), "m", FA.total, hudA) : new VScrub($("#filmV"), "v", FA.clips, hudA);
+/* a computer's frame → the phone's frame (the phone keeps every third frame): shot by shot for the construction film,
+   stage by stage for the finishing film; lo and hi bound the shot, so a stand-in never shows another shot */
+function bySeg(d, m){ return f => { let i = d.findIndex(e => f <= e); if (i < 0) i = d.length - 1;
+  const a0 = i ? d[i-1] + 1 : 1, m0 = i ? m[i-1] + 1 : 1, u = d[i] > a0 ? (f - a0) / (d[i] - a0) : 0;
+  return { f: m0 + Math.max(0, Math.min(1, u)) * (m[i] - m0), lo: m0, hi: m[i] }; }; }
+function byAnchors(d, m){ return f => { let k = 0; while (k < d.length - 2 && f > d[k+1]) k++;
+  const u = (f - d[k]) / (d[k+1] - d[k]);
+  return { f: m[k] + Math.max(0, Math.min(1, u)) * (m[k+1] - m[k]), lo: 1, hi: m[m.length - 1] }; }; }
+const filmA = lite ? new Scrub($("#film"), "m", FA.total, hudA) : new VScrub($("#filmV"), "v", FA.clips, hudA, { dir: "m", total: FILM.Am.total, map: bySeg(FILM.Ad.seg, FILM.Am.seg) });
 filmA.note = loadNote($("#ldA"));
 filmA.onLoad = q => { $("#fbuf").style.width = (q * 100).toFixed(1) + "%"; if (q >= 1) setTimeout(() => { $("#fbuf").style.opacity = 0; }, 1200); };
 filmA.start(p => { $("#lbar").style.width = Math.min(100, p * 100) + "%"; if (p > 1){ const l = $("#loader"); if (l){ l.style.opacity = 0; setTimeout(() => l.remove(), 900); } filmA.set(filmA.cur); } });
@@ -1332,7 +1427,7 @@ function hudI(f){
   document.querySelectorAll("#steps li").forEach((li,k) => { li.classList.toggle("on", k === now); li.classList.toggle("done", k < now); });
   $("#stageText").textContent = lang === "ar" ? STAGES[now].dAr : STAGES[now].dEn;
 }
-const filmI = lite ? new Scrub($("#finCv"), "im", FI.total, hudI) : new VScrub($("#finV"), "vi", FI.clips, hudI);
+const filmI = lite ? new Scrub($("#finCv"), "im", FI.total, hudI) : new VScrub($("#finV"), "vi", FI.clips, hudI, { dir: "im", total: FILM.Im.total, map: byAnchors(FILM.Id.anchors, FILM.Im.anchors) });
 filmI.note = loadNote($("#ldI"));
 /* scroll progress → frame, resting a little on every stage before moving to the next */
 filmI.map = p => {

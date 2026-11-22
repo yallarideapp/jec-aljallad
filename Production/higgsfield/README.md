@@ -53,7 +53,9 @@ python3 tiles_m.py I ../../Source/tiles/im 60
 `assemble.py` prints the frame total and stage boundaries.
 
 ## 4. Keep the page in step
-Always change the stamp `MV` in `Source/index.html` when a film file changes (browsers keep the old file under the same name).
+After a film file changes, run `python3 Production/higgsfield/stamps.py` (from the project folder): it gives only the changed files
+a new version stamp in `FV` in `Source/index.html`, so visitors download those again and keep the rest. Do not change `MV` by hand:
+that would make every visitor download the whole film (127 MB on a computer) again.
 If frame counts change, update `FILM` in `Source/index.html`: `Ad.clips` (name, frames), `Ad.seg`, `Id.anchors`, and the phone totals
 and boundaries `Am`, `Im` printed by `assemble.py`.
 
