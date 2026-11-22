@@ -119,7 +119,12 @@ the behaviours to keep, open requests, and the change log shared by Claude and C
   In `w1` (walk) and `w2f` (lobby) the left handle is removed, the glass behind it filled with the real lobby, and a mirrored copy
   of the right handle placed on the left leaf; both handles are fixed to their leaf by two bronze arms. The site uses the results,
   `clips/w1h.mp4` and `clips/w2h.mp4` (same frame counts); scripts and steps in `Production/higgsfield/doorhandles/README.md`.
-  Jafar checks the door glass closely: show him a before/after before uploading any change to these shots.
+  In the walk the doors are fixed from frame 73, where they first take their shape, although an olive tree stands in front
+  of them until frame 99 (Jafar, 2026-11-22: the old handle still showed there and jumped to its new place afterwards): the
+  old handle is removed only where it shows, and the new one and its arms are hidden where the trunk or the leaves are in
+  front (`early.py`). The tree itself is not touched.
+  Jafar checks the door glass closely and judges a change on the live preview: check every frame at 3x before uploading, and
+  send him a before/after with the link.
 - 3D: `Production/blender/JEC_MASTER.blend` (Blender 5.3, Cycles, texture paths relative to the .blend).
   The scripts find their own folder through `__file__`; inside Blender run
   `import sys; sys.path.insert(0, '<project>/Production/blender'); import jecmaster, jmcity`.

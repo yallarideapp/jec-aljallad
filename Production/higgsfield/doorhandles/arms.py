@@ -2,6 +2,8 @@
 running from the handle to the bronze stile of the leaf it belongs to."""
 import cv2, numpy as np, json, os, sys
 from scipy.signal import savgol_filter
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import early
 H, W = 1080, 1920
 G = json.load(open(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'geo.json')))
 S = json.load(open(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'snap.json')))
@@ -24,9 +26,8 @@ LF = {c: smooth_series(c, 'LF') for c in ('w1', 'w2')}
 
 
 def xfade(clip, t):
-    if clip == 'w2': return 1.0
-    u = np.clip((t - 98) / 6.0, 0, 1)
-    return float(u * u * (3 - 2 * u))
+    if clip == 'w1' and t in early.E: return early.ramp(t)
+    return 1.0
 
 
 def coverage(xa, xb, ya, yb, box, k=4):
@@ -69,7 +70,23 @@ def bar_colour(img, x0, x1, y, th):
     return np.median(r, axis=0)
 
 
+def early_frame(t):
+    """the walk up to the door, behind the olive tree: the same arms, hidden where the tree stands in front of them"""
+    img = cv2.imread(f'{IN["w1"]}/s{t:03d}.png'); orig = cv2.imread(f'{SRC["w1"]}/s{t:03d}.png')
+    g = early.geo(t); x0, x1, y0, y1 = g['RH']; m = g['m']; L = y1 - y0
+    th = float(np.clip(0.42 * (x1 - x0), 2.0, 46))
+    al = early.ramp(t)
+    right = al * (1 - early.occlusion_right(orig, t)); left = al * (1 - early.occlusion(orig, t))
+    lx0 = 2 * m - x1
+    for y in (y0 + 0.1 * L, y1 - 0.1 * L):
+        col = bar_colour(img, x0, x1, y, th)
+        if g['RF'][0] > x1 + 0.5: img = draw_arm(img, x1 - 0.5, g['RF'][0] + 0.5, y, th, col, right)
+        if lx0 > g['LF'][1] + 0.5: img = draw_arm(img, g['LF'][1] - 0.5, lx0 + 0.5, y, th, col, left)
+    return img
+
+
 def frame(clip, t):
+    if clip == 'w1' and t in early.E: return early_frame(t)
     img = cv2.imread(f'{IN[clip]}/s{t:03d}.png')
     rh = G[clip]['RH'].get(str(t)); m = G[clip]['m'].get(str(t))
     if rh is None or m is None: return img

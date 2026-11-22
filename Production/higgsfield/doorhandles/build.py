@@ -3,6 +3,7 @@ from scipy.signal import savgol_filter
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from erase7 import erase
 from overlay import SRC
+import early
 H, W = 1080, 1920
 S = json.load(open(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'snap.json')))
 OUT = {'w1': '/tmp/hf/w1', 'w2': '/tmp/hf/w2'}
@@ -56,11 +57,10 @@ json.dump({c: {k: {str(t): v for t, v in d.items()} for k, d in g.items()} for c
 
 # ---------- when ----------
 def xfade(clip, t):
-    if clip == 'w2': return 1.0
-    u = np.clip((t - 98) / 6.0, 0, 1)     # before frame 99 the old handle is behind the tree trunk
-    return float(u * u * (3 - 2 * u))
+    if clip == 'w1' and t in early.E: return early.ramp(t)       # the door takes its shape here: three frames
+    return 1.0
 
-EDIT = {'w1': range(99, 150), 'w2': range(0, 65)}
+EDIT = {'w1': range(early.T0, 150), 'w2': range(0, 65)}
 ERASE_FSR = {'w1': range(99, 150), 'w2': range(0, 49)}
 GHOST_FIX = range(49, 53)
 ERASE_PROP = {'w1': range(0), 'w2': range(0)}
@@ -129,7 +129,7 @@ def propagate(prev_clean, prev_orig, cur_orig, x0, x1, y0, y1):
     return np.clip(out, 0, 255).astype(np.uint8)
 
 
-def paste(dst, orig, rh, m, alpha, occ_rows=None, lf=None):
+def paste(dst, orig, rh, m, alpha, occ_rows=None, lf=None, occ_map=None):
     x0, x1, y0, y1 = rh
     sa, sb = int(np.floor(x0)) - 3, int(np.ceil(x1)) + 4
     sc, sd = int(np.floor(y0)) - 3, int(np.ceil(y1)) + 4
@@ -151,6 +151,7 @@ def paste(dst, orig, rh, m, alpha, occ_rows=None, lf=None):
         if lf is not None:
             occ[:, int(lf[0]) - 2:int(lf[1]) + 3] = 0
         amap = amap * (1 - occ)
+    if occ_map is not None: amap = amap * (1 - occ_map)          # the tree in front of the handle
     amap = amap * alpha
     out = dst.astype(np.float32) * (1 - amap[..., None]) + layer * amap[..., None]
     return np.clip(out, 0, 255).astype(np.uint8)
@@ -164,6 +165,12 @@ if __name__ == '__main__':
             if t not in EDIT[clip]:
                 cv2.imwrite(f'{OUT[clip]}/s{t:03d}.png', orig); continue
             al = xfade(clip, t)
+            if clip == 'w1' and t in early.E:                    # the walk up to the door, behind the olive tree
+                eg = early.geo(t)
+                clean = early.erase(orig, t)
+                frame = (orig.astype(np.float32) * (1 - al) + clean.astype(np.float32) * al).astype(np.uint8) if al < 1 else clean.copy()
+                frame = paste(frame, orig, eg['RH'], eg['m'], al, occ_map=early.occlusion(orig, t))
+                cv2.imwrite(f'{OUT[clip]}/s{t:03d}.png', frame); continue
             clean = orig
             tg = f'/tmp/doorfix/tclean3/{clip}_{t:03d}.png'
             if clip == 'w2' and t in GHOST_FIX and os.path.exists(tg):   # the handle's top lingering on the glass

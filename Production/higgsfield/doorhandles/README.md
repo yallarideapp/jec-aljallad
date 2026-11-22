@@ -32,6 +32,24 @@ ffmpeg -i ../clips/w2f.mp4 -vsync 0 -start_number 0 /tmp/w2all/s%03d.png
 | 6 | `panel.py` | w2 42–52: redraws the ceiling light panel inside the filled area from its own edges (copies from other frames left a stepped edge). |
 | 7 | `build.py`, then `arms.py` | Final frames with the mirrored handle and its arms → `/tmp/hf2`. |
 
+## The walk behind the olive tree (w1 frames 73–99)
+The doors take their shape at frame 73, but until frame 99 an olive tree stands between the camera and the door: its trunk and
+leaves cross the old handle, the place of the new one and the right handle. These frames have no clean plate; `build.py` and
+`arms.py` hand them to `early.py`:
+
+- the old handle is removed row by row, only where it shows. The wall behind it is flat, so each row is filled with the wall's
+  colour read just right of the handle (or from the slit of glass on its left when the trunk stands on the right). Where the
+  trunk crosses the handle dark on dark, its edge is taken as a straight line across the handle; lit bark is told by its colour;
+- the mirrored handle and the arms are drawn only where the wall shows: a matte of the tree (not flat, or darker than the
+  wall of that row) hides them behind the trunk and the leaves;
+- the edit comes in over frames 73–75.
+
+`early.json` holds the door's bars for these frames (old handle, hinge stile, jamb, the two meeting stiles, right handle).
+To measure them again: `early_geo.py` (seeds read off the frames → `early_raw.json`), `early_fin.py`, `early_pat.py`
+(→ `early_pat.json`), then `early_fin.py` again. Nothing is smoothed over time there: the camera moves unevenly.
+`python3 early_view.py erase out.jpg 80 85 90` shows frames before and after the removal, `occ` shows the tree matte.
+From frame 100 on the clean plates of step 4 are used, at full strength (there is no cross-fade any more).
+
 `erase5.py`, `erase6.py`, `erase7.py` and `erase_shift.py` are the spatial fills `build.py` falls back to when no clean frame
 exists; `tfill.py` holds helpers used by steps 4–6.
 
@@ -43,4 +61,4 @@ ffmpeg -y -framerate 30 -i /tmp/hf2/w2/s%03d.png -c:v libx264 -preset fast -crf 
 Then from `Production/higgsfield`: `venc.py` for `a09a`, `a09b`, `a10`; `assemble.py A` and `tiles_m.py A` (see `../README.md`);
 and change `MV` in `Source/index.html`.
 
-Before uploading a change here, show Jafar a before/after of the door glass: he checks it closely.
+Jafar checks the door glass closely: look at every changed frame at 3x before uploading, and send him a before/after.
