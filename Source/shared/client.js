@@ -1,6 +1,6 @@
 /* How the site (index.html) and the admin panel (admin/) talk to the server: JECAPI.call(method, path, body).
    On Cloudflare the server answers under api/. On the GitHub Pages preview (*.github.io), or a page opened from the file,
-   there is no server: a demo stand-in then keeps the requests, the gallery, the photos and the admin's password in this
+   there is no server: a demo stand-in then keeps the requests, the gallery and the photos in this
    browser only (localStorage), so the panel can be tried and shown. Nothing sent there reaches the company; the pages say so.
    The demo is chosen by the address alone, never because the real server failed to answer (a visitor's request would
    then stay in his browser): on any other host a failure is shown as an error. On this machine (localhost) the server
@@ -8,7 +8,7 @@
    A classic script (sets globalThis.JECAPI). Needs shared/data.js first. */
 globalThis.JECAPI = (() => {
   let base = "", mode = null, modeP = null;
-  const KEY = "jec-demo-v1", PHOTO = "jec-demo-photo-", AUTH = "jec-demo-auth";
+  const KEY = "jec-demo-v1", PHOTO = "jec-demo-photo-";
 
   function setBase(b){ base = b || ""; }
   function detect(){
@@ -53,13 +53,8 @@ globalThis.JECAPI = (() => {
   const load = () => { try { return JSON.parse(localStorage.getItem(KEY)) || {}; } catch (e) { return {}; } };
   const save = s => { try { localStorage.setItem(KEY, JSON.stringify(s)); } catch (e) { err("demo-full", 507); } };
   const now = () => new Date().toISOString();
-  const authed = () => { try { return Number(localStorage.getItem(AUTH) || 0) > Date.now(); } catch (e) { return false; } };
   const hexOf = b => [...new Uint8Array(b)].map(x => x.toString(16).padStart(2, "0")).join("");
   const randHex = n => hexOf(crypto.getRandomValues(new Uint8Array(n)));
-  async function hash(pw, salt){
-    const k = await crypto.subtle.importKey("raw", new TextEncoder().encode(pw), "PBKDF2", false, ["deriveBits"]);
-    return hexOf(await crypto.subtle.deriveBits({ name: "PBKDF2", hash: "SHA-256", salt: new TextEncoder().encode(salt), iterations: 100000 }, k, 256));
-  }
   const STATUSES = ["new", "contacted", "quoted", "won", "closed"];
   function seed(){
     return { projects: JEC.PROJECTS.map((p, i) => ({ id: "s" + (i + 1), img: p.img, video: p.video || "", url: p.url || "", type: p.url ? (p.type === "reel" ? "reel" : "post") : "none",
@@ -106,25 +101,10 @@ globalThis.JECAPI = (() => {
     }
     if (!route.startsWith("admin/")) err("not-found", 404);
     const a = route.slice(6);
-    if (a === "state") return { ok: true, demo: true, hasPassword: !!s.admin, auth: !!s.admin && authed(), setupReady: true };
-    if (a === "setup" || a === "reset"){
-      if (s.admin && a === "setup") err("already-set", 409);
-      const pw = body.password; if (typeof pw !== "string" || pw.length < 10) err("password-short");
-      const salt = randHex(16); s.admin = { salt, hash: await hash(pw, salt) }; save(s);
-      localStorage.setItem(AUTH, String(Date.now() + 30 * 86400e3)); return { ok: true };
-    }
-    if (a === "login"){
-      if (!s.admin) err("no-password", 409);
-      if (await hash(String(body.password || ""), s.admin.salt) !== s.admin.hash) err("bad-password", 403);
-      localStorage.setItem(AUTH, String(Date.now() + 30 * 86400e3)); return { ok: true };
-    }
-    if (a === "logout"){ localStorage.removeItem(AUTH); return { ok: true }; }
-    if (!authed()) err("auth", 401);
-    if (a === "password"){
-      if (await hash(String(body.current || ""), s.admin.salt) !== s.admin.hash) err("bad-password", 403);
-      if (typeof body.next !== "string" || body.next.length < 10) err("password-short");
-      const salt = randHex(16); s.admin = { salt, hash: await hash(body.next, salt) }; save(s); return { ok: true };
-    }
+    /* the demo has no password (Jafar, 2026-11-23): it holds no real data, so the panel opens straight away.
+       The real panel on Cloudflare keeps its password. */
+    if (a === "state") return { ok: true, demo: true, hasPassword: true, auth: true, setupReady: true };
+    if (["setup", "reset", "login", "logout", "password"].includes(a)) return { ok: true, demo: true };
     if (a === "requests" && method === "GET"){
       const st = q.get("status") || "", term = (q.get("q") || "").trim().toLowerCase(), before = Number(q.get("before") || 0);
       let list = s.requests.slice().reverse();

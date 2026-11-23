@@ -244,7 +244,8 @@ const T = {
   save: ["حفظ", "Save"], signIn: ["دخول", "Sign in"], forgot: ["نسيت كلمة السر؟", "Forgot the password?"], backLogin: ["رجوع لتسجيل الدخول", "Back to sign in"],
   demoReset: ["في نسخة العرض لا يوجد رمز إعداد: امسح بيانات العرض من هذا المتصفح وابدأ من جديد.", "The demo has no setup code: clear the demo data in this browser and start again."],
   clearDemo: ["مسح بيانات العرض", "Clear demo data"],
-  clearDemoQ: ["سيُمسح كل ما في نسخة العرض على هذا المتصفح: الطلبات والمعرض وكلمة السر. متابعة؟", "Everything in the demo on this browser is deleted: requests, gallery and password. Continue?"],
+  clearDemoQ: ["سيُمسح كل ما في نسخة العرض على هذا المتصفح: الطلبات والمعرض والإعدادات. متابعة؟", "Everything in the demo on this browser is deleted: requests, gallery and settings. Continue?"],
+  demoNoPw: ["نسخة العرض تفتح بدون كلمة سر لأنها لا تحتوي بيانات حقيقية. النسخة الحقيقية على Cloudflare محمية بكلمة سر.", "The demo opens without a password because it holds no real data. The real version on Cloudflare is protected by a password."],
   all: ["الكل", "All"],
   s_new: ["جديد", "New"], s_contacted: ["تم التواصل", "Contacted"], s_quoted: ["أُرسل عرض سعر", "Quote sent"], s_won: ["تم الاتفاق", "Agreed"], s_closed: ["مغلق", "Closed"],
   search: ["بحث بالاسم أو الهاتف أو رقم الطلب", "Search name, phone or request number"],
@@ -845,16 +846,16 @@ function renderSettings(){
   const inst = `<div class="card"><h2>${esc(t("sInstall"))}</h2><p>${esc(t("sInstallLead"))}</p>
     ${standalone() ? `<p class="ok" style="margin:0">${esc(t("installed"))}</p>` : `${S.installEvt ? `<button class="btn gold" data-act="install">${esc(t("install"))}</button>` : ""}
     <div class="small muted stack" style="margin-top:10px"><div>${esc(t("instIos"))}</div><div>${esc(t("instAnd"))}</div></div>`}</div>`;
-  /* account */
-  const acc = `<div class="card"><h2>${esc(t("sAcc"))}</h2>
+  /* account (the demo has no password) */
+  const acc = isDemo() ? `<div class="card"><h2>${esc(t("sAcc"))}</h2><p>${esc(t("demoNoPw"))}</p>
+    <button class="btn line" data-act="clear-demo">${esc(t("clearDemo"))}</button></div>` : `<div class="card"><h2>${esc(t("sAcc"))}</h2>
     <form id="fPw" class="stack" style="margin-top:12px"><input type="text" name="username" autocomplete="username" value="JEC admin" hidden>
       <label class="field"><span>${esc(t("current"))}</span><input type="password" id="pwCur" autocomplete="current-password" required></label>
       <label class="field"><span>${esc(t("newPassword"))}</span><input type="password" id="pwNew" autocomplete="new-password" minlength="10" required><small>${esc(t("pwHint"))}</small></label>
       <label class="field"><span>${esc(t("confirm"))}</span><input type="password" id="pwNew2" autocomplete="new-password" minlength="10" required></label>
       <p class="err" id="pwErr"></p>
       <div class="row between"><button class="btn" type="submit">${esc(t("changePw"))}</button><button class="btn danger" type="button" data-act="logout">${esc(t("logout"))}</button></div>
-    </form>
-    ${isDemo() ? `<div style="margin-top:14px"><button class="btn line" data-act="clear-demo">${esc(t("clearDemo"))}</button></div>` : ""}</div>`;
+    </form></div>`;
   $("#app").innerHTML = `${isDemo() ? `<div class="note small" style="margin-bottom:12px">${esc(t("demoNote"))}</div>` : ""}
     <h1 style="margin-bottom:14px">${esc(t("tSet"))}</h1><div class="sets"><div class="stack">${recv}${push}${inst}</div><div class="stack">${mail}${acc}</div></div>`;
 }

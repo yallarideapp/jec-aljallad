@@ -29,8 +29,10 @@ the behaviours to keep, open requests, and the change log shared by Claude and C
   built-in project list (`TRADES`, `CATS`, `SUBS`, `SCOPES`, `STARTS`, `DRAW`, `PROJECTS`) live in `Source/shared/data.js`, shared
   by the page, the admin panel and the server; `SKELETON`, `SERVICES`, `FILTERS`, `LEGAL`, `CFG` stay in the script of index.html.
 - `Source/shared/client.js` — how the page and the admin panel call the server (`JECAPI`). On `*.github.io` and pages opened
-  from the file it runs a demo kept in the browser's localStorage (`jec-demo-v1`): requests, gallery, photos and the admin
-  password stay in that browser, and both pages say so. On localhost it asks `api/health` (so `node server.cjs` is the demo and
+  from the file it runs a demo kept in the browser's localStorage (`jec-demo-v1`): requests, gallery and photos stay in that
+  browser, and both pages say so. The demo panel has no password (Jafar, 2026-11-23: "it asks me for a password remove it");
+  it holds no real data. The real panel on Cloudflare keeps its password: removing it there would put customers' names and
+  phones and the site's gallery in anyone's hands, so do that only if Jafar asks for the real version explicitly. On localhost it asks `api/health` (so `node server.cjs` is the demo and
   `wrangler dev` the real thing). On any other host it is always the real thing: a server error shows as an error, never as
   the demo (a visitor's request must not silently stay in his browser).
 - `Source/admin/` — the admin panel (PWA: `index.html`, `manifest.webmanifest`, `sw.js`, icons). Requests inbox, projects gallery
