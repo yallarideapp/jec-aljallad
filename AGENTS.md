@@ -97,7 +97,7 @@ the behaviours to keep, open requests, and the change log shared by Claude and C
    `TEST_PUSH_LOOPBACK` and `TEST_FAKE_BASE` exist only for the tests; never set them on Cloudflare. Run both test scripts after
    changing the server, the form or the panel. Secrets are typed by Jafar in the Cloudflare dashboard, never in the repo or a chat.
 6. Keep: the side menu (`#menuBtn` floats at the top corner and stays visible while the bar hides; `#drawer` lists every section,
-   the quote button, Instagram, language and the legal links; Escape, the backdrop and any link close it).
+   the quote button, Instagram, language, the legal links and the admin panel link; Escape, the backdrop and any link close it).
    Arabic RTL by default with the AR/EN toggle (localStorage key `jec-lang`, wrapped in try/catch; the old key `jec-poc-lang` is only read),
    `prefers-reduced-motion` handling, the slim nav that hides on scroll down, the quote estimator and the Instagram DM link.
 7. Film player: desktop `VScrub` seeks H.264 clips frame by frame; every touch device (phones, iPad, any width) and screens ≤820 px
