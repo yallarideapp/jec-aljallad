@@ -23,7 +23,7 @@ $Root     = [IO.Path]::GetFullPath([IO.Path]::Combine($PSScriptRoot, '..', '..')
 
 # ---------------------------------------------------------------- explicit lists
 $RuntimeFiles   = @('index.html')                                         # relative to Source/
-$RuntimeDirs    = @('v', 'vi', 'tiles', 'media', 'renders', 'real', 'assets')       # relative to Source/
+$RuntimeDirs    = @('v', 'vi', 'tiles', 'media', 'renders', 'real', 'assets', 'shared', 'admin')       # relative to Source/
 $DemoExtras     = @('server.cjs', 'START-DEMO.cmd', 'START-DEMO.command') # relative to Source/
 $RootFiles      = @('README.md', 'README-AR.md', 'Cloudflare-guide.md', 'START-DEMO.cmd', 'START-DEMO.command',
                     'UPDATE-PACKAGE.cmd', 'UPDATE-PACKAGE.command', 'server.cjs', '.gitignore')

@@ -1,6 +1,6 @@
 # تنظيم كود الموقع (Source)
 
-موقع ثابت بملف واحد `index.html` فيه HTML و CSS و JavaScript، بدون أي build.
+الصفحة ملف واحد `index.html` فيه HTML و CSS و JavaScript، بدون أي build. معها خادم صغير على Cloudflare (`worker/`) ولوحة تحكم (`admin/`).
 
 ## المكتبات الخارجية
 - GSAP 3.12.5 و ScrollTrigger من cdnjs.
@@ -16,9 +16,9 @@
 7. قبل وبعد: `renders/p1.webp` و `renders/p9.webp`.
 8. أعمال التشطيب والترميم (`#trades`): `TRADES`، وصورتا الترميم `real/p04.webp` و `real/p03.webp`.
 9. القطاعات (`#sectors`): `CATS` وصور `assets/sectors/` (توضيحية). الضغط على قطاع يعبّئه في الحاسبة.
-10. المشاريع الحقيقية (`#projects`): `PROJECTS` (14) و `FILTERS`، وصور `real/`، ونافذة تفاصيل `#lb`.
+10. المشاريع الحقيقية (`#projects`): القائمة الأساسية `PROJECTS` (14) في `shared/data.js`، وبعد حفظ المعرض من اللوحة تأتي القائمة من `/api/content`؛ `FILTERS`، وصور `real/` والصور المرفوعة `api/photo/...`، ونافذة تفاصيل `#lb`.
 11. الخدمات (`#services`): `SERVICES`.
-12. حاسبة طلب التسعير (`#quote`): `CATS` و `SUBS` و `SCOPES` و `STARTS` و `DRAW`، ورسالة واتساب أو نسخ النص، مع الموافقة الإلزامية.
+12. حاسبة طلب التسعير (`#quote`): `CATS` و `SUBS` و `SCOPES` و `STARTS` و `DRAW` (من `shared/data.js`). «أرسل الطلب للشركة» (`#sendBtn`) يرسل لـ `/api/request`، أو رسالة واتساب أو نسخ النص، مع الموافقة الإلزامية. رقم واتساب وتشغيل الإرسال عبر الموقع من إعدادات اللوحة.
 13. الخاتمة: فيديو النهار إلى الغروب `media/end_daydusk_1080.mp4`.
 14. التذييل وسياسة الخصوصية والشروط (`#privacy`، `#terms`) من `LEGAL`.
 
@@ -31,9 +31,13 @@
 
 ## Cloudflare
 - `wrangler.jsonc`: اسم الـ Worker `jec-aljallad`، والملفات من `dist`.
-- `npm run build` (الملف `tools/build-dist.mjs`) ينسخ `index.html` و `_headers` والمجلدات `v` و `vi` و `tiles` و `media` و `renders` و `real` إلى `dist`، ويرفض أي ملف أكبر من 25 ميجابايت. أي مجلد جديد للموقع يُضاف هنا وفي `tools/package-store.ps1`.
+- `npm run build` (الملف `tools/build-dist.mjs`) ينسخ `index.html` و `_headers` والمجلدات `v` و `vi` و `tiles` و `media` و `renders` و `real` و `assets` و `shared` و `admin` إلى `dist`، ويرفض أي ملف أكبر من 25 ميجابايت. أي مجلد جديد للموقع يُضاف هنا وفي `tools/package-store.ps1`.
 - `_headers`: رؤوس الأمان (CSP وغيرها) و `X-Robots-Tag: noindex` ما دام الموقع تجريبياً.
-- `worker/index.js`: يمر عليه فقط `/media/*` ليرد على طلبات Range، لأن سفاري على الآيفون لا يشغّل الفيديو بدونها.
+- `worker/index.js`: يمر عليه `/api/*` (الخادم) و `/media/*` (يرد على طلبات Range، لأن سفاري على الآيفون لا يشغّل الفيديو بدونها).
+- الخادم (`worker/`): `api.js` كل المسارات، `auth.js` كلمة سر اللوحة والجلسات، `requests.js` فحص الطلبات، `content.js` المعرض، `push.js` الإشعارات (VAPID)، `mail.js` الإيميل (Resend)، `schema.js` الجداول (تنعمل لحالها)، `util.js`. الربط: D1 باسم `DB` و KV باسم `PHOTOS`. الأسرار: `ADMIN_SETUP_CODE` و `RESEND_API_KEY` (في لوحة Cloudflare فقط).
+- `shared/client.js`: الصفحة واللوحة بيكلّموا الخادم من خلاله؛ إذا ما في خادم (GitHub Pages أو `node server.cjs`) بيشتغل وضع عرض محفوظ بالمتصفح (`jec-demo-v1`).
+- `admin/`: لوحة التحكم (تطبيق ويب يتثبّت على التلفون): `index.html`، `sw.js` (الإشعارات)، `manifest.webmanifest`، الأيقونات.
+- الاختبارات: `bash tests/run-api-tests.sh` و `bash tests/run-browser-tests.sh`.
 - `npm run dev` يشغّل نسخة Cloudflare المحلية على http://localhost:8787.
 
 ## التشغيل

@@ -14,7 +14,9 @@
 
 A proof-of-concept website for **JEC | AlJallad Contracting**: a scroll-driven story that follows one building from an empty plot to handover,
 then one room through nine finishing stages, what sits above the ceiling and a before/after slider, together with the company's own content:
-who they are, their process, finishing trades and renovation, sectors, 14 real projects, services, a WhatsApp quote estimator, privacy and terms.
+who they are, their process, finishing trades and renovation, sectors, 14 real projects, services, a quote estimator (sent to the company or
+on WhatsApp), privacy and terms. A small Cloudflare Worker (D1 + KV) stores the requests and the gallery, and an admin panel at `/admin/`
+(installable on a phone, with notifications) manages them.
 The building is an **AI architectural visualization** (Blender model + Higgsfield AI), not a completed project; the site says so.
 
 ## Run it
@@ -28,7 +30,7 @@ npm run dev            # same setup as Cloudflare → http://localhost:8787
 ## What is where
 | Path | Contents |
 |---|---|
-| `Source/` | The site: `index.html` (one file), film clips `v/` `vi/`, phone frames `tiles/`, `media/`, `renders/`, `real/`, `assets/`; Cloudflare setup (`wrangler.jsonc`, `_headers`, `worker/`, `tools/build-dist.mjs`) |
+| `Source/` | The site: `index.html` (one file), film clips `v/` `vi/`, phone frames `tiles/`, `media/`, `renders/`, `real/`, `assets/`; shared data and API client `shared/`; admin panel `admin/`; the server `worker/`; Cloudflare setup (`wrangler.jsonc`, `_headers`, `tools/build-dist.mjs`); tests `tests/` |
 | `Cloudflare-guide.md` | Connecting this repo to Cloudflare (Arabic) |
 | `Documents/` | Sources of every fact and image, photoreal stills |
 | `Production/` | Blender scripts and the pipeline that turns the AI clips into the site's film |

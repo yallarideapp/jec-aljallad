@@ -24,14 +24,27 @@ the behaviours to keep, open requests, and the change log shared by Claude and C
   `assets/` (company logo, sector images).
 - One page, in this order: hero → construction film → who we are + stats → process (9 structural steps, exterior finishing) →
   finishing film → behind the ceiling → before/after → finishing trades + renovation → sectors → real projects (filters, lightbox) →
-  services → quote estimator (WhatsApp, consent) → end → footer. `#privacy` and `#terms` open the legal overlay.
-  The company sections come from the first JEC site (2026-11-18), restyled into this design; their data (`SKELETON`, `TRADES`,
-  `SERVICES`, `CATS`, `SUBS`, `SCOPES`, `PROJECTS`, `FILTERS`, `LEGAL`, `CFG`) lives in the script of index.html.
+  services → quote estimator (send to the company or WhatsApp, consent) → end → footer. `#privacy` and `#terms` open the legal overlay.
+  The company sections come from the first JEC site (2026-11-18), restyled into this design. The estimator's choices and the
+  built-in project list (`TRADES`, `CATS`, `SUBS`, `SCOPES`, `STARTS`, `DRAW`, `PROJECTS`) live in `Source/shared/data.js`, shared
+  by the page, the admin panel and the server; `SKELETON`, `SERVICES`, `FILTERS`, `LEGAL`, `CFG` stay in the script of index.html.
+- `Source/shared/client.js` — how the page and the admin panel call the server (`JECAPI`). On `*.github.io` and pages opened
+  from the file it runs a demo kept in the browser's localStorage (`jec-demo-v1`): requests, gallery, photos and the admin
+  password stay in that browser, and both pages say so. On localhost it asks `api/health` (so `node server.cjs` is the demo and
+  `wrangler dev` the real thing). On any other host it is always the real thing: a server error shows as an error, never as
+  the demo (a visitor's request must not silently stay in his browser).
+- `Source/admin/` — the admin panel (PWA: `index.html`, `manifest.webmanifest`, `sw.js`, icons). Requests inbox, projects gallery
+  editor, settings (requests on/off, company WhatsApp number, phone notifications, alert email, password). Arabic RTL with EN.
+- `Source/worker/` — the server: `index.js` (routes `/api/*` and `/media/*`), `api.js` (all API routes), `auth.js` (admin password
+  and sessions), `requests.js`, `content.js` (gallery), `push.js` (Web Push, VAPID, RFC 8291), `mail.js` (Resend), `schema.js`
+  (the Worker creates its own D1 tables), `util.js`. Bindings: D1 `DB`, KV `PHOTOS` (no ids: the first deploy creates them).
+- `Source/tests/` — `run-api-tests.sh` (94 server checks with fake email and push services) and `run-browser-tests.sh`
+  (Playwright: the real version on `wrangler dev` and the demo on a static server).
 - `Source/server.cjs` — local preview server with HTTP Range support (the scroll film seeks inside videos).
 - Cloudflare: `Source/wrangler.jsonc` (Worker `jec-aljallad`, assets from `Source/dist`), `Source/package.json` (wrangler pinned, lockfile committed),
   `Source/tools/build-dist.mjs` (`npm run build`: copies the runtime files and `_headers` into `dist/`, refuses files over 25 MiB),
   `Source/_headers` (security headers and `X-Robots-Tag: noindex` while this is a proof of concept),
-  `Source/worker/index.js` (only `/media/*` runs through it: answers byte-range requests so the hero and end videos play on iPhone).
+  `Source/worker/index.js` (`/api/*` and `/media/*` run through it; `/media/*` answers byte-range requests so the hero and end videos play on iPhone).
   When adding a runtime folder, add it to `build-dist.mjs` and to `$RuntimeDirs` in `package-store.ps1`.
 - `Source/tools/package-store.ps1` — builds `Demo/`, both ZIPs, the delivery folder and the complete ZIP.
 - Generated, never edited by hand: `Source/dist/`, `Demo/`, `JEC-AlJallad-complete-with-demo/`, `JEC-AlJallad-complete-with-demo.zip`.
@@ -56,13 +69,33 @@ the behaviours to keep, open requests, and the change log shared by Claude and C
    AI-made or a visualization (badges, captions, credits, "illustrative" chips). Do not add them back unless he asks. Still: never write
    that JEC built this building or invent statistics, awards, years, clients or quotes. The Terms ("Images & films") keep one plain line
    that the films' building and the sector images are illustrative scenes, not specific completed projects.
-5. The real-projects section (`PROJECTS` in index.html) lists 14 posts of @jallad.contracting with names and links exactly as published.
-   Do not add, rename or invent projects. Brand names shown there feed the trademark notice in the footer and the Terms (`LEGAL.notice()`).
+5. The real-projects section starts from `PROJECTS` in `shared/data.js`: 14 posts of @jallad.contracting with names and links exactly
+   as published. Do not add, rename or invent projects in code. Once the company saves the gallery in the admin panel, the site shows
+   the saved list (from `/api/content`) instead; that list is the company's to edit. Brand names shown there feed the trademark notice
+   in the footer and the Terms (`LEGAL.notice()`). Every project string is escaped before it goes into the page.
    The stats in "who we are" are counts of that real data (projects, sectors, steps, trades, services); never add invented figures.
 6a. Legal: `LEGAL` is the single source for the Privacy Policy, Terms, footer notice and the estimator consent. It must describe what the
-   code does (estimator data goes nowhere except the WhatsApp/Instagram message the visitor sends; only the language key is stored).
-   Update `LAST_UPDATED` when you change it. Jordan PDPL No. 24 of 2023. `CFG.WHATSAPP_NUMBER` stays empty until JEC gives a number
-   (the button then opens WhatsApp's chat picker); `CFG.RATES` stays null unless JEC confirms JOD/m² ranges.
+   code does: «أرسل الطلب للشركة» stores the request in D1 on Cloudflare, seen only in the admin panel; alerts go encrypted through the
+   devices' push services and, if set, by email through Resend; a salted hash of the IP with the time is kept two days for rate limits;
+   «أرسل عبر واتساب» sends nothing to a server; visitors get no cookies (only the admin's session cookie); the preview keeps test
+   requests in the browser. Update `LAST_UPDATED` when you change it. Jordan PDPL No. 24 of 2023. The company's WhatsApp number is set
+   in the admin panel (`CFG.WHATSAPP_NUMBER` is only the fallback and stays empty; empty opens WhatsApp's chat picker);
+   `CFG.RATES` stays null unless JEC confirms JOD/m² ranges.
+6b. Server and admin (Jafar, 2026-11-23): requests reach the company through the site (saved, with a number `JEC-0001`) or WhatsApp,
+   the visitor's choice; the admin turns the site route off in Settings. Alerts: email (Resend, `RESEND_API_KEY`) and Web Push to
+   the admin panel installed on phones. The Worker checks everything the page sends against `shared/data.js` (never trust the page),
+   requires `consent: true` (stored with the time and the policy date), same origin on every non-GET, an idempotency key, the
+   honeypot `hp` empty. Rate limits (5/hour, 20/day per salted IP hash; 120/hour, 600/day for the site, then `busy`) and the
+   login lockout are counted and recorded in the same D1 batch as the action, so parallel requests cannot slip past them
+   (the reviewer proved 60 parallel guesses got through the first version). Admin: one password (PBKDF2-SHA-256, 20,000 rounds
+   because of the free plan's 10 ms CPU, at least 10 characters), first set and reset only with the `ADMIN_SETUP_CODE` secret;
+   session cookie HttpOnly, Secure, SameSite=Strict, Path=/api/admin; 8 tries per address in 15 minutes (60 in all for the
+   password; the setup code has no total, so the owner can always reset from his own connection). Gallery saves use a version
+   check (409 on conflict). Photos: PNG/JPEG/WebP by their first bytes, at most 1.5 MB, in KV. Push only to the known push
+   services (Apple, Google, Mozilla, Microsoft), at most 5 devices (each costs about 1 ms of CPU per alert), and no push while
+   more than 20 requests arrived in the last hour. A nightly cron (`triggers` in wrangler.jsonc) deletes hashes older than two days.
+   `TEST_PUSH_LOOPBACK` and `TEST_FAKE_BASE` exist only for the tests; never set them on Cloudflare. Run both test scripts after
+   changing the server, the form or the panel. Secrets are typed by Jafar in the Cloudflare dashboard, never in the repo or a chat.
 6. Keep: the side menu (`#menuBtn` floats at the top corner and stays visible while the bar hides; `#drawer` lists every section,
    the quote button, Instagram, language and the legal links; Escape, the backdrop and any link close it).
    Arabic RTL by default with the AR/EN toggle (localStorage key `jec-lang`, wrapped in try/catch; the old key `jec-poc-lang` is only read),
@@ -143,5 +176,7 @@ the behaviours to keep, open requests, and the change log shared by Claude and C
 - The city behind the building is not the same in every exterior shot (each anchor still was made photoreal separately).
 - Video is native 1920×1080 at 30 fps; no 2K/4K version exists.
 - Privacy Policy and Terms exist (`#privacy`, `#terms`) but need the owner's review (not legal advice). The company WhatsApp number is still missing.
-- Cloudflare is not connected yet: Jafar connects the repo himself (`Cloudflare-guide.md`). Tested locally with `wrangler dev` only.
+- Cloudflare is not connected yet: Jafar connects the repo himself (`Cloudflare-guide.md`), adds D1 Edit to the build token if the
+  first build fails, and sets `ADMIN_SETUP_CODE` (and optionally `RESEND_API_KEY`). Tested locally with `wrangler dev` only:
+  no real push service, no real email and no real iPhone have been tried yet.
 - Native master films on disk are the v4 cut (`Documents/Archives/films_v4`); the v5 film exists as the clips in `Source/v`, `Source/vi`.

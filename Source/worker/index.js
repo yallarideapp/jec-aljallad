@@ -1,9 +1,17 @@
-// The site is static: every file in dist/ is served directly.
-// Only /media/* reaches this code first (see run_worker_first in wrangler.jsonc): the hero and end videos are played
-// by <video> elements, and iPhone Safari plays a video only when the server answers byte-range requests with 206.
-// If the asset already comes back as 206 it is passed through; otherwise the requested bytes are cut here.
+// The site's files in dist/ are served directly. Two paths reach this code first (run_worker_first in wrangler.jsonc):
+// /api/* is the server: the request form, the projects gallery, photos and the admin panel (api.js);
+// /media/* are the hero and end videos, played by <video> elements: iPhone Safari plays a video only when the server
+// answers byte-range requests with 206. If the asset already comes back as 206 it is passed through; otherwise the
+// requested bytes are cut here.
+import { api, cleanup } from './api.js';
+
 export default {
-  async fetch(request, env) {
+  /* every night (wrangler.jsonc "triggers"): old rate-limit hashes and expired sessions are deleted */
+  async scheduled(event, env, ctx) { ctx.waitUntil(cleanup(env)); },
+
+  async fetch(request, env, ctx) {
+    const url = new URL(request.url);
+    if (url.pathname.startsWith('/api/')) return api(request, env, ctx, url);
     const range = request.headers.get('Range');
     const res = await env.ASSETS.fetch(request);
     if (res.status !== 200 || (request.method !== 'GET' && request.method !== 'HEAD')) return res;

@@ -8,8 +8,21 @@
     // npm run build copies the site's runtime files here (tools/build-dist.mjs)
     "directory": "./dist",
     "binding": "ASSETS",
-    // only the videos played by <video> pass through the Worker, for byte-range answers
-    "run_worker_first": ["/media/*"]
+    // the server (/api) and the videos played by <video> (byte-range answers) pass through the Worker
+    "run_worker_first": ["/api/*", "/media/*"]
   },
+  // The database (requests, gallery, admin) and the photo store. No ids here: the first deploy creates both on the
+  // account and keeps them linked to this Worker. The Worker makes its own tables.
+  "d1_databases": [{ "binding": "DB", "database_name": "jec-aljallad" }],
+  "kv_namespaces": [{ "binding": "PHOTOS" }],
+  "vars": {
+    // the sender of the alert emails; change it once the company's domain is verified at Resend
+    "MAIL_FROM": "JEC Website <onboarding@resend.dev>"
+  },
+  // Secrets, set in the dashboard (Settings → Variables and Secrets), never here:
+  //   ADMIN_SETUP_CODE  sets the first admin password and resets a forgotten one
+  //   RESEND_API_KEY    sends the alert emails (optional)
+  // nightly clean-up of old rate-limit hashes and expired sessions (worker/index.js "scheduled")
+  "triggers": { "crons": ["23 1 * * *"] },
   "observability": { "enabled": true }
 }

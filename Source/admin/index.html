@@ -1,0 +1,997 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<meta name="referrer" content="no-referrer">
+<meta name="theme-color" content="#0B0B0C">
+<meta name="color-scheme" content="dark">
+<title>JEC Admin — لوحة التحكم</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="JEC Admin">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Alexandria:wght@200;300;400&family=IBM+Plex+Sans+Arabic:wght@300;400;500&family=Jost:wght@200;300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#0B0B0C; --char:#141415; --char-2:#1C1C1E; --char-3:#242427;
+  --bone:#EEE9E1; --mute:#A39E96; --line:rgba(238,233,225,.12); --line-2:rgba(238,233,225,.22);
+  --gold:#CDB27E; --gold-2:#E3CDA0; --red:#E07B6A; --green:#8FBF8A; --blue:#8FB0D6;
+  --f-ar:"Alexandria","IBM Plex Sans Arabic",system-ui,sans-serif;
+  --f-en:"Jost","Helvetica Neue",Arial,sans-serif;
+  --f-body:"IBM Plex Sans Arabic","Jost",system-ui,sans-serif;
+  --safe-b:env(safe-area-inset-bottom,0px); --safe-t:env(safe-area-inset-top,0px);
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%;background:var(--ink)}
+body{margin:0;min-height:100vh;background:var(--ink);color:var(--bone);font:400 15px/1.6 var(--f-body);-webkit-tap-highlight-color:transparent}
+html[lang=en] body{font-family:var(--f-en),var(--f-body)}
+button,input,select,textarea{font:inherit;color:inherit}
+[hidden]{display:none!important}
+a{color:var(--gold-2)}
+.num,.ltr{direction:ltr;unicode-bidi:isolate;font-family:var(--f-en);font-variant-numeric:tabular-nums}
+svg.i{width:18px;height:18px;flex:none;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+
+/* top bar */
+.top{position:sticky;top:0;z-index:30;display:flex;align-items:center;gap:12px;padding:calc(10px + var(--safe-t)) 16px 10px;background:rgba(11,11,12,.92);border-bottom:1px solid var(--line);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
+.brand{display:flex;align-items:center;gap:10px;min-width:0}
+.brand b{font:300 20px/1 var(--f-en);letter-spacing:.18em;color:var(--gold-2)}
+.brand span{font:300 13px/1.2 var(--f-ar);color:var(--mute);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.top .sp{flex:1}
+.pill{display:inline-flex;align-items:center;gap:6px;padding:3px 10px;border-radius:99px;border:1px solid var(--line-2);font-size:12px;color:var(--mute);white-space:nowrap}
+.pill.demo{border-color:rgba(205,178,126,.5);color:var(--gold-2)}
+.icon-btn{display:inline-grid;place-items:center;width:38px;height:38px;border-radius:10px;border:1px solid var(--line);background:transparent;cursor:pointer;color:var(--bone)}
+.icon-btn:hover{border-color:var(--line-2)}
+.lang-btn{font:400 13px var(--f-en);width:auto;padding:0 12px}
+
+/* tabs: bottom on phones, under the bar on wide screens */
+.tabs{position:fixed;inset:auto 0 0 0;z-index:30;display:flex;background:rgba(20,20,21,.96);border-top:1px solid var(--line);padding-bottom:var(--safe-b);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
+.tabs button{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;padding:9px 4px 8px;background:none;border:0;color:var(--mute);font-size:12px;cursor:pointer;position:relative}
+.tabs button[aria-current=page]{color:var(--gold-2)}
+.tabs button svg.i{width:22px;height:22px}
+.tabs .dot{position:absolute;top:5px;inset-inline-start:calc(50% + 6px);min-width:18px;height:18px;padding:0 5px;border-radius:9px;background:var(--gold);color:var(--ink);font:500 11px/18px var(--f-en)}
+@media (min-width:900px){
+  .tabs{position:sticky;top:59px;inset:auto;border-top:0;border-bottom:1px solid var(--line);padding:0 16px;justify-content:flex-start;gap:4px;background:rgba(11,11,12,.92)}
+  .tabs button{flex:none;flex-direction:row;gap:8px;padding:12px 16px;font-size:14px;border-bottom:2px solid transparent}
+  .tabs button[aria-current=page]{border-bottom-color:var(--gold)}
+  .tabs button svg.i{width:18px;height:18px}
+  .tabs .dot{position:static}
+}
+
+main{max-width:1180px;margin:0 auto;padding:16px 16px calc(96px + var(--safe-b))}
+@media (min-width:900px){main{padding:24px 24px 120px}}
+h1,h2,h3{font-family:var(--f-ar);font-weight:300;margin:0}
+html[lang=en] h1,html[lang=en] h2,html[lang=en] h3{font-family:var(--f-en)}
+h1{font-size:22px}
+h2{font-size:17px}
+.muted{color:var(--mute)}
+.small{font-size:13px}
+.row{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.row.between{justify-content:space-between}
+.stack>*+*{margin-top:12px}
+.card{background:var(--char);border:1px solid var(--line);border-radius:14px;padding:16px}
+.note{border:1px solid rgba(205,178,126,.35);background:rgba(205,178,126,.07);border-radius:12px;padding:12px 14px;font-size:14px}
+.note.warn{border-color:rgba(224,123,106,.45);background:rgba(224,123,106,.08)}
+
+/* buttons and fields */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:42px;padding:0 16px;border-radius:10px;border:1px solid var(--line-2);background:var(--char-2);cursor:pointer;text-decoration:none;color:var(--bone);font-size:14px;white-space:nowrap}
+.btn:hover{border-color:rgba(205,178,126,.6)}
+.btn.gold{background:var(--gold);border-color:var(--gold);color:var(--ink);font-weight:500}
+.btn.gold:hover{background:var(--gold-2)}
+.btn.line{background:transparent}
+.btn.danger{color:var(--red);border-color:rgba(224,123,106,.4);background:transparent}
+.btn.block{width:100%}
+.btn:disabled{opacity:.45;cursor:default}
+.field{display:block}
+.field>span{display:block;font-size:13px;color:var(--mute);margin-bottom:6px}
+.field small{display:block;color:var(--mute);font-size:12px;margin-top:5px}
+input[type=text],input[type=password],input[type=email],input[type=tel],input[type=url],input[type=search],select,textarea{width:100%;min-height:44px;padding:10px 12px;border-radius:10px;border:1px solid var(--line-2);background:var(--ink);outline:none;font-size:16px}
+textarea{min-height:88px;resize:vertical;line-height:1.55}
+input:focus,select:focus,textarea:focus{border-color:var(--gold)}
+.err{color:var(--red);font-size:13px;min-height:0;margin:6px 0 0}
+.err:empty{display:none}
+.check{display:flex;align-items:center;gap:10px;cursor:pointer;min-height:40px}
+.check input{width:20px;height:20px;accent-color:var(--gold);flex:none}
+.switch{position:relative;display:inline-flex;align-items:center;gap:12px;cursor:pointer}
+.switch input{appearance:none;-webkit-appearance:none;width:46px;height:28px;border-radius:14px;background:var(--char-3);border:1px solid var(--line-2);position:relative;flex:none;cursor:pointer;margin:0}
+.switch input::after{content:"";position:absolute;top:3px;inset-inline-start:3px;width:20px;height:20px;border-radius:50%;background:var(--mute);transition:inset-inline-start .2s}
+.switch input:checked{background:rgba(205,178,126,.35);border-color:var(--gold)}
+.switch input:checked::after{inset-inline-start:21px;background:var(--gold-2)}
+.grid2{display:grid;gap:12px}
+@media (min-width:640px){.grid2{grid-template-columns:1fr 1fr}}
+
+/* sign-in */
+.auth{min-height:calc(100vh - 140px);display:grid;place-items:center;padding:20px 0}
+.auth .card{width:min(420px,100%);padding:24px}
+.auth .logo{display:block;width:72px;height:72px;border-radius:16px;margin:0 auto 14px}
+.auth h1{text-align:center;margin-bottom:6px}
+.auth p.lead{text-align:center;color:var(--mute);margin:0 0 18px;font-size:14px}
+
+/* requests */
+.chips{display:flex;gap:8px;overflow-x:auto;padding-bottom:4px;scrollbar-width:none}
+.chips::-webkit-scrollbar{display:none}
+.chip{flex:none;display:inline-flex;align-items:center;gap:6px;padding:7px 13px;border-radius:99px;border:1px solid var(--line-2);background:transparent;cursor:pointer;font-size:13px;color:var(--bone)}
+.chip b{font:500 12px var(--f-en);color:var(--mute)}
+.chip[aria-pressed=true]{background:var(--gold);border-color:var(--gold);color:var(--ink)}
+.chip[aria-pressed=true] b{color:var(--ink)}
+.split{display:grid;gap:16px;margin-top:14px}
+@media (min-width:900px){.split{grid-template-columns:minmax(320px,400px) 1fr;align-items:start}}
+.list{display:flex;flex-direction:column;gap:8px}
+.req{display:block;width:100%;text-align:start;background:var(--char);border:1px solid var(--line);border-radius:12px;padding:12px 14px;cursor:pointer;color:var(--bone)}
+.req:hover{border-color:var(--line-2)}
+.req[aria-current=true]{border-color:var(--gold)}
+.req .l1{display:flex;align-items:center;gap:8px}
+.req .l1 b{font-weight:500;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.req .l2{display:flex;gap:8px;color:var(--mute);font-size:13px;margin-top:3px;flex-wrap:wrap}
+.st{display:inline-flex;align-items:center;gap:6px;font-size:12px;padding:2px 9px;border-radius:99px;border:1px solid currentColor;white-space:nowrap}
+.st::before{content:"";width:6px;height:6px;border-radius:50%;background:currentColor}
+.st.new{color:var(--gold-2)} .st.contacted{color:var(--blue)} .st.quoted{color:#C9A5E0} .st.won{color:var(--green)} .st.closed{color:var(--mute)}
+.empty{text-align:center;color:var(--mute);padding:40px 16px;border:1px dashed var(--line-2);border-radius:14px}
+.detail{background:var(--char);border:1px solid var(--line);border-radius:14px;padding:18px}
+.detail .hd{display:flex;align-items:flex-start;gap:10px}
+.detail .hd h2{font-size:20px}
+.statuses{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:8px;margin:14px 0}
+.statuses button{min-height:40px;border-radius:10px;border:1px solid var(--line-2);background:transparent;cursor:pointer;font-size:13px;color:var(--bone)}
+.statuses button[aria-pressed=true]{background:var(--gold);border-color:var(--gold);color:var(--ink);font-weight:500}
+dl.kv{display:grid;grid-template-columns:auto 1fr;gap:8px 16px;margin:14px 0;font-size:14px}
+dl.kv dt{color:var(--mute)}
+dl.kv dd{margin:0;white-space:pre-wrap;overflow-wrap:anywhere}
+.actions{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:8px}
+.back{display:none}
+@media (max-width:899px){
+  .detail-wrap{position:fixed;inset:0;z-index:40;background:var(--ink);overflow:auto;padding:calc(12px + var(--safe-t)) 14px calc(24px + var(--safe-b))}
+  .detail-wrap .detail{border:0;background:none;padding:6px 2px}
+  .back{display:inline-flex}
+  body.lock{overflow:hidden}
+}
+
+/* projects */
+.plist{display:flex;flex-direction:column;gap:8px;margin-top:14px}
+.proj{display:grid;grid-template-columns:76px 1fr auto;gap:12px;align-items:center;background:var(--char);border:1px solid var(--line);border-radius:12px;padding:8px}
+.proj.off{opacity:.55}
+.proj img,.thumb-empty{width:76px;height:56px;object-fit:cover;border-radius:8px;background:var(--char-3);display:block}
+.proj .t b{display:block;font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.proj .t span{font-size:12px;color:var(--mute)}
+.proj .t{min-width:0}
+.proj .ctl{display:flex;gap:4px}
+.proj .ctl .icon-btn{width:34px;height:34px}
+@media (max-width:520px){.proj{grid-template-columns:64px 1fr}.proj img,.proj .thumb-empty{width:64px;height:50px}.proj .ctl{grid-column:1/-1;justify-content:flex-end}}
+.savebar{position:fixed;inset-inline:0;bottom:calc(58px + var(--safe-b));z-index:35;display:flex;justify-content:center;padding:0 12px;pointer-events:none}
+.savebar>div{pointer-events:auto;display:flex;align-items:center;gap:10px;flex-wrap:wrap;justify-content:center;background:var(--char-2);border:1px solid rgba(205,178,126,.55);border-radius:14px;padding:10px 12px;box-shadow:0 10px 30px rgba(0,0,0,.5);max-width:640px;width:100%}
+.savebar span{flex:1;min-width:160px;font-size:14px}
+@media (min-width:900px){.savebar{bottom:20px}}
+
+/* sheet (editor and confirm) */
+.sheet{position:fixed;inset:0;z-index:60;display:grid;place-items:end center;background:rgba(0,0,0,.6)}
+.sheet>.panel{width:min(640px,100%);max-height:92vh;overflow:auto;background:var(--char);border:1px solid var(--line-2);border-radius:18px 18px 0 0;padding:18px 16px calc(18px + var(--safe-b))}
+@media (min-width:700px){.sheet{place-items:center}.sheet>.panel{border-radius:18px;padding:22px}}
+.photo-pick{display:grid;grid-template-columns:140px 1fr;gap:12px;align-items:center}
+.photo-pick img,.photo-pick .thumb-empty{width:140px;height:96px;border-radius:10px;object-fit:cover}
+.seg{display:inline-flex;border:1px solid var(--line-2);border-radius:10px;overflow:hidden}
+.seg button{border:0;background:transparent;padding:9px 14px;cursor:pointer;font-size:14px;color:var(--bone)}
+.seg button[aria-pressed=true]{background:var(--gold);color:var(--ink)}
+
+/* settings */
+.sets{display:grid;gap:14px}
+@media (min-width:900px){.sets{grid-template-columns:1fr 1fr;align-items:start}}
+.sets .card h2{margin-bottom:4px}
+.sets .card>p{margin:0 0 12px;color:var(--mute);font-size:14px}
+.devs{list-style:none;margin:10px 0 0;padding:0;display:flex;flex-direction:column;gap:6px}
+.devs li{display:flex;align-items:center;gap:8px;border:1px solid var(--line);border-radius:10px;padding:8px 10px;font-size:14px}
+.devs li span{flex:1;min-width:0}
+.ok{color:var(--green)} .bad{color:var(--red)}
+
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(80px + var(--safe-b));z-index:80;max-width:min(520px,92vw);padding:11px 16px;border-radius:12px;background:var(--char-2);border:1px solid var(--line-2);font-size:14px;box-shadow:0 10px 30px rgba(0,0,0,.5);opacity:0;pointer-events:none;transition:opacity .25s}
+.toast.on{opacity:1}
+.toast.bad{border-color:rgba(224,123,106,.6)}
+.boot{min-height:100vh;display:grid;place-items:center;color:var(--mute)}
+.spin{width:22px;height:22px;border-radius:50%;border:2px solid var(--line-2);border-top-color:var(--gold);animation:sp 1s linear infinite;display:inline-block;vertical-align:middle}
+@keyframes sp{to{transform:rotate(360deg)}}
+@media (prefers-reduced-motion:reduce){.spin{animation-duration:3s}}
+</style>
+</head>
+<body>
+<div class="boot" id="boot"><span class="spin" aria-label="…"></span></div>
+<header class="top" id="top" hidden>
+  <div class="brand"><b>JEC</b><span id="brandSub"></span></div>
+  <span class="pill demo" id="demoPill" hidden></span>
+  <span class="sp"></span>
+  <button class="icon-btn lang-btn" id="langBtn" type="button"></button>
+</header>
+<nav class="tabs" id="tabs" hidden></nav>
+<main id="app"></main>
+<div class="savebar" id="savebar" hidden></div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<div id="sheetHost"></div>
+
+<script src="../shared/data.js?v=1"></script>
+<script src="../shared/client.js?v=1"></script>
+<script>
+"use strict";
+/* JEC admin panel: requests sent from the site, the projects gallery and the alerts. Talks to the server through
+   JECAPI (shared/client.js); without the server (GitHub Pages preview) it runs as a demo kept in this browser only. */
+const API = JECAPI; API.setBase("../");
+const $ = (s, el = document) => el.querySelector(s);
+const esc = v => String(v == null ? "" : v).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const store = { get(k){ try { return localStorage.getItem(k); } catch (e) { return null; } }, set(k, v){ try { localStorage.setItem(k, v); } catch (e) {} }, del(k){ try { localStorage.removeItem(k); } catch (e) {} } };
+let lang = store.get("jec-admin-lang") === "en" ? "en" : "ar";
+
+/* ---------------- words ---------------- */
+const T = {
+  sub: ["لوحة التحكم", "Admin panel"],
+  demo: ["نسخة عرض", "Demo"],
+  demoNote: ["نسخة عرض: كل شي هنا محفوظ في هذا المتصفح فقط، والطلبات المرسلة من صفحة العرض لا تصل للشركة. النسخة الحقيقية تعمل بعد ربط الموقع بـ Cloudflare.", "Demo: everything here is kept in this browser only, and requests sent from the preview page do not reach the company. The real version works once the site is connected to Cloudflare."],
+  tReq: ["الطلبات", "Requests"], tProj: ["المشاريع", "Projects"], tSet: ["الإعدادات", "Settings"],
+  setupTitle: ["إعداد كلمة السر", "Set the password"],
+  setupLead: ["أول مرة: اختر كلمة سر للوحة التحكم.", "First time: choose a password for the admin panel."],
+  loginTitle: ["تسجيل الدخول", "Sign in"],
+  loginLead: ["لوحة تحكم موقع شركة الجلاد للمقاولات", "AlJallad Contracting website admin"],
+  resetTitle: ["تغيير كلمة سر منسية", "Reset a forgotten password"],
+  resetLead: ["أدخل رمز الإعداد (ADMIN_SETUP_CODE) الموجود في إعدادات Cloudflare، ثم كلمة سر جديدة. كل الأجهزة المسجّلة ستخرج.", "Enter the setup code (ADMIN_SETUP_CODE) from the Cloudflare settings, then a new password. Every signed-in device is signed out."],
+  code: ["رمز الإعداد", "Setup code"],
+  codeHint: ["الرمز الذي أضفته في Cloudflare باسم ADMIN_SETUP_CODE.", "The value you added in Cloudflare as ADMIN_SETUP_CODE."],
+  noCode: ["لم يُضف رمز الإعداد في Cloudflare بعد (ADMIN_SETUP_CODE). أضفه من إعدادات الـ Worker ثم حدّث هذه الصفحة — الخطوات في دليل الربط.", "The setup code is not in Cloudflare yet (ADMIN_SETUP_CODE). Add it in the Worker's settings, then reload this page — see the connection guide."],
+  password: ["كلمة السر", "Password"], newPassword: ["كلمة السر الجديدة", "New password"], confirm: ["أعد كتابة كلمة السر", "Repeat the password"],
+  current: ["كلمة السر الحالية", "Current password"],
+  pwHint: ["10 أحرف على الأقل.", "At least 10 characters."],
+  mismatch: ["كلمتا السر غير متطابقتين.", "The two passwords don't match."],
+  save: ["حفظ", "Save"], signIn: ["دخول", "Sign in"], forgot: ["نسيت كلمة السر؟", "Forgot the password?"], backLogin: ["رجوع لتسجيل الدخول", "Back to sign in"],
+  demoReset: ["في نسخة العرض لا يوجد رمز إعداد: امسح بيانات العرض من هذا المتصفح وابدأ من جديد.", "The demo has no setup code: clear the demo data in this browser and start again."],
+  clearDemo: ["مسح بيانات العرض", "Clear demo data"],
+  clearDemoQ: ["سيُمسح كل ما في نسخة العرض على هذا المتصفح: الطلبات والمعرض وكلمة السر. متابعة؟", "Everything in the demo on this browser is deleted: requests, gallery and password. Continue?"],
+  all: ["الكل", "All"],
+  s_new: ["جديد", "New"], s_contacted: ["تم التواصل", "Contacted"], s_quoted: ["أُرسل عرض سعر", "Quote sent"], s_won: ["تم الاتفاق", "Agreed"], s_closed: ["مغلق", "Closed"],
+  search: ["بحث بالاسم أو الهاتف أو رقم الطلب", "Search name, phone or request number"],
+  refresh: ["تحديث", "Refresh"], more: ["عرض المزيد", "Show more"],
+  emptyAll: ["لا توجد طلبات بعد. الطلبات المرسلة من نموذج الموقع ستظهر هنا.", "No requests yet. Requests sent from the site's form appear here."],
+  emptyF: ["لا توجد طلبات هنا.", "Nothing here."],
+  pick: ["اختر طلبًا من القائمة لعرض تفاصيله.", "Pick a request to see its details."],
+  back: ["رجوع", "Back"],
+  call: ["اتصال", "Call"], wa: ["واتساب", "WhatsApp"], copy: ["نسخ الطلب", "Copy request"], del: ["حذف", "Delete"],
+  copied: ["تم النسخ.", "Copied."], copyFail: ["تعذّر النسخ.", "Couldn't copy."],
+  delQ: ["حذف هذا الطلب نهائيًا؟ لا يمكن التراجع.", "Delete this request for good? This can't be undone."],
+  deleted: ["تم حذف الطلب.", "Request deleted."],
+  note: ["ملاحظة داخلية", "Internal note"], noteHint: ["لا يراها العميل.", "The customer never sees it."], noteSave: ["حفظ الملاحظة", "Save note"], noteSaved: ["تم حفظ الملاحظة.", "Note saved."],
+  status: ["الحالة", "Status"], statusSaved: ["تم تغيير الحالة.", "Status changed."],
+  f_name: ["الاسم", "Name"], f_phone: ["الهاتف", "Phone"], f_cat: ["القطاع", "Sector"], f_scope: ["نطاق العمل", "Scope"], f_trades: ["أعمال التشطيب", "Finishing trades"],
+  f_area: ["المساحة", "Area"], f_loc: ["الموقع", "Location"], f_start: ["موعد البدء", "Start"], f_draw: ["المخططات", "Drawings"], f_notes: ["ملاحظات العميل", "Customer's notes"],
+  f_lang: ["لغة الموقع", "Site language"], f_date: ["وصل", "Received"], f_upd: ["آخر تعديل", "Updated"],
+  f_consent: ["الموافقة على السياسة", "Policy consent"], policyV: ["نسخة", "version"],
+  m2: ["م²", "m²"], floors: ["طوابق", "floors"],
+  waHi: (n, no) => lang === "ar" ? `مرحبًا ${n}، معك شركة الجلاد للمقاولات بخصوص طلبك ${no} على موقعنا.` : `Hello ${n}, this is AlJallad Contracting about your request ${no} on our website.`,
+  pTitle: ["معرض المشاريع", "Projects gallery"],
+  pLead: ["هذه المشاريع تظهر في قسم «مشاريعنا» على الموقع بنفس الترتيب. المخفي لا يظهر للزوار.", "These projects show in the site's projects section in this order. Hidden ones are not shown to visitors."],
+  seeded: ["هذه القائمة الأساسية الموجودة في الموقع. أول حفظ يجعلها القائمة التي يعرضها الموقع.", "This is the site's built-in list. The first save makes it the list the site shows."],
+  add: ["إضافة مشروع", "Add project"], edit: ["تعديل", "Edit"], hide: ["إخفاء", "Hide"], show: ["إظهار", "Show"], up: ["أعلى", "Up"], down: ["أسفل", "Down"],
+  hiddenTag: ["مخفي", "Hidden"], live: ["قيد التنفيذ", "In progress"], done: ["منجز", "Completed"], reno: ["ترميم", "Renovation"],
+  pDelQ: ["حذف هذا المشروع من المعرض؟ (يُحذف من الموقع بعد الحفظ)", "Remove this project from the gallery? (It leaves the site after you save.)"],
+  unsaved: ["عندك تغييرات غير محفوظة.", "You have unsaved changes."], undo: ["تراجع", "Undo"], publish: ["حفظ التغييرات", "Save changes"],
+  savedC: ["تم الحفظ. الموقع يعرض التغييرات الآن.", "Saved. The site shows the changes now."],
+  savedDemo: ["تم الحفظ في نسخة العرض (على هذا المتصفح فقط).", "Saved in the demo (this browser only)."],
+  conflict: ["تغيّرت البيانات من جهاز آخر بعد فتحك للصفحة. حمّل النسخة الأحدث ثم أعد تعديلاتك.", "Someone changed this from another device after you opened it. Load the latest copy, then redo your changes."],
+  loadLatest: ["تحميل الأحدث", "Load latest"],
+  leaveQ: ["عندك تغييرات غير محفوظة. تتركها؟", "You have unsaved changes. Leave them?"],
+  pEdit: ["تعديل مشروع", "Edit project"], pNew: ["مشروع جديد", "New project"],
+  photo: ["الصورة", "Photo"], choosePhoto: ["اختيار صورة", "Choose photo"], uploading: ["جارٍ رفع الصورة…", "Uploading…"],
+  photoHint: ["تُصغَّر تلقائيًا قبل الرفع. الأفضل صورة عرضية.", "Resized before upload. A landscape photo works best."],
+  needPhoto: ["اختر صورة للمشروع.", "Choose a photo for the project."], needTitle: ["اكتب اسم المشروع (بالعربي أو الإنجليزي).", "Enter the project's name (Arabic or English)."],
+  badLink: ["الرابط يجب أن يبدأ بـ https://", "The link must start with https://"],
+  titleAr: ["الاسم بالعربي", "Name in Arabic"], titleEn: ["الاسم بالإنجليزي", "Name in English"],
+  descAr: ["وصف قصير بالعربي", "Short description (Arabic)"], descEn: ["وصف قصير بالإنجليزي", "Short description (English)"],
+  tagsAr: ["الوسوم بالعربي", "Tags (Arabic)"], tagsEn: ["الوسوم بالإنجليزي", "Tags (English)"], tagsHint: ["افصل بينها بفاصلة.", "Separate with commas."],
+  category: ["القطاع", "Sector"], state: ["الحالة", "Status"], renoChk: ["مشروع ترميم", "Renovation project"], wide: ["بطاقة عريضة في المعرض", "Wide card in the gallery"],
+  brand: ["العلامة التجارية (إن وجدت)", "Brand name (if any)"], brandHint: ["تظهر في ملاحظة العلامات التجارية أسفل الموقع.", "Listed in the site's trademark notice."],
+  link: ["رابط المنشور على إنستغرام", "Instagram post link"], linkHint: ["اختياري. رابط ريل يُعرض كفيديو على إنستغرام.", "Optional. A reel link opens as a video on Instagram."],
+  apply: ["تم", "Done"], cancel: ["إلغاء", "Cancel"], yes: ["نعم", "Yes"],
+  max: ["الحد الأعلى 60 مشروعًا.", "The maximum is 60 projects."],
+  sReq: ["استقبال الطلبات", "Receiving requests"],
+  sReqLead: ["كيف يرسل الزوار طلب المشروع من الموقع.", "How visitors send a project request from the site."],
+  reqOn: ["استقبال الطلبات على الموقع (تُحفظ هنا ويصلك تنبيه)", "Take requests on the site (saved here, with an alert)"],
+  waNum: ["رقم واتساب الشركة", "Company WhatsApp number"],
+  waHint: ["بالصيغة الدولية، مثل 9627XXXXXXXX. إذا تُرك فارغًا يفتح زر واتساب قائمة المحادثات ليختار الزائر.", "International format, e.g. 9627XXXXXXXX. Left empty, the WhatsApp button opens the chat picker."],
+  saveHint: ["يُحفظ مع زر «حفظ التغييرات».", "Saved with the “Save changes” button."],
+  sPush: ["الإشعارات على هذا الجهاز", "Notifications on this device"],
+  sPushLead: ["يصلك إشعار على هذا الجهاز عند وصول طلب جديد.", "Get a notification on this device when a new request arrives."],
+  pushOn: ["الإشعارات مفعّلة على هذا الجهاز.", "Notifications are on for this device."],
+  pushOff: ["الإشعارات غير مفعّلة على هذا الجهاز.", "Notifications are off for this device."],
+  pushEnable: ["تفعيل الإشعارات", "Turn on notifications"], pushTest: ["إرسال إشعار تجربة", "Send a test"], pushDisable: ["إيقاف على هذا الجهاز", "Turn off on this device"],
+  pushDenied: ["الإشعارات محظورة لهذا الموقع في المتصفح. فعّلها من إعدادات المتصفح أو الجهاز ثم حاول مجددًا.", "Notifications are blocked for this site. Allow them in the browser or device settings, then try again."],
+  pushNo: ["هذا المتصفح لا يدعم الإشعارات.", "This browser doesn't support notifications."],
+  pushIos: ["على iPhone: افتح هذه الصفحة في Safari، اضغط زر المشاركة ← «إضافة إلى الشاشة الرئيسية»، ثم افتح JEC Admin من أيقونته وفعّل الإشعارات من هنا (iOS 16.4 أو أحدث).", "On iPhone: open this page in Safari, tap Share → “Add to Home Screen”, then open JEC Admin from its icon and turn notifications on here (iOS 16.4 or later)."],
+  pushSent: ["أُرسل إشعار التجربة.", "Test sent."], pushFailed: ["لم يصل الإشعار. جرّب الإيقاف ثم التفعيل من جديد.", "The test didn't go through. Turn it off and on again."],
+  pushDone: ["تم تفعيل الإشعارات.", "Notifications on."], pushStopped: ["تم إيقاف الإشعارات على هذا الجهاز.", "Notifications off for this device."],
+  devices: ["الأجهزة المسجّلة", "Registered devices"], thisDev: ["هذا الجهاز", "This device"], remove: ["إزالة", "Remove"],
+  lastPush: ["آخر إشعار", "Last notification"], lastMail: ["آخر إيميل", "Last email"], okW: ["وصل للخدمة", "accepted"], failW: ["فشل", "failed"],
+  demoPush: ["في نسخة العرض يظهر الإشعار على هذا الجهاز فقط عند إرسال طلب من صفحة العرض على نفس المتصفح.", "In the demo the notification shows on this device only, when a request is sent from the preview page in the same browser."],
+  sMail: ["تنبيهات الإيميل", "Email alerts"],
+  sMailLead: ["نسخة من كل طلب جديد تصل إلى هذا الإيميل.", "A copy of every new request goes to this email."],
+  mail: ["الإيميل", "Email"], mailOn: ["إرسال إيميل عند كل طلب جديد", "Email me on every new request"], mailTest: ["إرسال إيميل تجربة", "Send a test email"],
+  mailNotReady: ["خدمة الإيميل غير مربوطة بعد: أضف RESEND_API_KEY في إعدادات Cloudflare (الخطوات في دليل الربط). حتى ذلك تصلك الطلبات هنا وبالإشعارات.", "Email isn't connected yet: add RESEND_API_KEY in the Cloudflare settings (see the guide). Until then requests reach you here and by notification."],
+  mailReady: ["خدمة الإيميل مربوطة.", "Email is connected."],
+  mailNote: ["بدون دومين موثّق في Resend، يصل الإيميل فقط إلى إيميل حساب Resend نفسه.", "Without a verified domain at Resend, email only reaches the Resend account's own address."],
+  mailSaved: ["تم حفظ إعدادات الإيميل.", "Email settings saved."], mailSent: ["أُرسل إيميل التجربة. تأكد من وصوله (وافحص الرسائل غير المرغوبة).", "Test email sent. Check it arrived (and the spam folder)."],
+  demoMail: ["الإيميل لا يعمل في نسخة العرض.", "Email doesn't work in the demo."],
+  sInstall: ["تثبيت اللوحة على التلفون", "Install on your phone"],
+  sInstallLead: ["تفتح كتطبيق من أيقونة على الشاشة الرئيسية.", "Opens like an app from a home-screen icon."],
+  install: ["تثبيت", "Install"], installed: ["اللوحة مفتوحة كتطبيق مثبّت.", "Running as an installed app."],
+  instIos: ["iPhone / iPad: افتح الصفحة في Safari ← زر المشاركة ← «إضافة إلى الشاشة الرئيسية».", "iPhone / iPad: open in Safari → Share → “Add to Home Screen”."],
+  instAnd: ["Android: من قائمة Chrome (⋮) ← «تثبيت التطبيق» أو «إضافة إلى الشاشة الرئيسية».", "Android: Chrome menu (⋮) → “Install app” or “Add to Home screen”."],
+  sAcc: ["الحساب", "Account"], changePw: ["تغيير كلمة السر", "Change password"], pwChanged: ["تم تغيير كلمة السر. الأجهزة الأخرى خرجت.", "Password changed. Other devices were signed out."],
+  logout: ["تسجيل الخروج", "Sign out"],
+  newReq: ["وصل طلب جديد.", "A new request arrived."],
+};
+const t = k => { const v = T[k]; return Array.isArray(v) ? v[lang === "ar" ? 0 : 1] : (v || k); };
+const ERR = {
+  network: ["تعذّر الاتصال بالخادم. تأكد من الإنترنت وحاول مرة أخرى.", "Couldn't reach the server. Check the connection and try again."],
+  server: ["حدث خطأ في الخادم. حاول بعد قليل.", "Server error. Try again shortly."],
+  auth: ["انتهت الجلسة. سجّل الدخول من جديد.", "Your session ended. Sign in again."],
+  "bad-password": ["كلمة السر غير صحيحة.", "Wrong password."],
+  "bad-code": ["رمز الإعداد غير صحيح.", "Wrong setup code."],
+  locked: ["محاولات خاطئة كثيرة. انتظر ربع ساعة ثم حاول.", "Too many wrong tries. Wait 15 minutes and try again."],
+  "password-short": ["كلمة السر قصيرة: 10 أحرف على الأقل.", "Password too short: at least 10 characters."],
+  "password-long": ["كلمة السر طويلة جدًا.", "Password too long."],
+  "no-setup-code": ["لم يُضف رمز الإعداد في Cloudflare بعد.", "The setup code isn't set in Cloudflare yet."],
+  "already-set": ["كلمة السر مضبوطة مسبقًا. سجّل الدخول.", "A password is already set. Sign in."],
+  "no-password": ["لم تُضبط كلمة سر بعد.", "No password set yet."],
+  conflict: T.conflict,
+  "bad-image": ["الصورة غير مقبولة. استخدم JPG أو PNG أو WebP.", "Photo not accepted. Use JPG, PNG or WebP."],
+  "bad-type": ["نوع الملف غير مقبول.", "File type not accepted."],
+  "too-large": ["الملف كبير جدًا.", "File too large."],
+  "too-many-photos": ["امتلأت مساحة الصور (500 صورة).", "Photo storage is full (500 photos)."],
+  "bad-url": T.badLink, "bad-whatsapp": ["رقم واتساب غير صحيح (8 إلى 15 رقمًا).", "Invalid WhatsApp number (8 to 15 digits)."],
+  "bad-title": T.needTitle, "bad-projects": T.max,
+  "bad-email": ["الإيميل غير صحيح.", "Invalid email."], "no-email": ["أدخل الإيميل واحفظه أولًا.", "Enter and save the email first."],
+  "mail-not-set": T.mailNotReady, "mail-budget": ["وصلت حد الإيميلات اليومي (60).", "Daily email limit reached (60)."],
+  "mail-refused": ["رفضت خدمة الإيميل الإرسال. تأكد من المفتاح ومن أن الإيميل هو إيميل حساب Resend.", "The email service refused. Check the key, and that the address is the Resend account's email."],
+  "mail-key": ["مفتاح Resend غير صحيح.", "The Resend key is wrong."],
+  "too-many-devices": ["وصلت الحد (5 أجهزة). أزل جهازًا قديمًا من القائمة.", "Device limit reached (5). Remove an old one from the list."],
+  "bad-push-service": ["خدمة الإشعارات في هذا المتصفح غير مدعومة.", "This browser's push service isn't supported."],
+  "demo-full": ["امتلأت مساحة نسخة العرض في المتصفح. احذف بعض الصور.", "The demo's browser storage is full. Remove some photos."],
+  "demo-only": T.demoMail, "not-found": ["غير موجود (ربما حُذف).", "Not found (maybe deleted)."],
+  "no-database": ["قاعدة البيانات غير مربوطة في Cloudflare.", "The database isn't bound in Cloudflare."],
+  origin: ["طلب مرفوض.", "Request refused."],
+};
+const errText = c => { const v = ERR[c]; return v ? v[lang === "ar" ? 0 : 1] : (lang === "ar" ? "حدث خطأ" : "Something went wrong") + (c ? ` (${c})` : ""); };
+
+const ICON = {
+  inbox: '<path d="M3 13l2.5-7h13L21 13v6H3z"/><path d="M3 13h5l1.5 2.5h5L16 13h5"/>',
+  grid: '<rect x="3" y="3" width="7.5" height="7.5" rx="1"/><rect x="13.5" y="3" width="7.5" height="7.5" rx="1"/><rect x="3" y="13.5" width="7.5" height="7.5" rx="1"/><rect x="13.5" y="13.5" width="7.5" height="7.5" rx="1"/>',
+  gear: '<circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/>',
+  phone: '<path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8 9.8a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2z"/>',
+  chat: '<path d="M21 11.5a8.4 8.4 0 0 1-12.3 7.4L3 21l2.1-5.6A8.4 8.4 0 1 1 21 11.5z"/>',
+  copy: '<rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>',
+  trash: '<path d="M3 6h18M8 6V4h8v2M19 6l-1 14H6L5 6"/>',
+  back: '<path d="M15 18l-6-6 6-6"/>',
+  refresh: '<path d="M21 12a9 9 0 1 1-2.6-6.4L21 8"/><path d="M21 3v5h-5"/>',
+  eye: '<path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7S1 12 1 12z"/><circle cx="12" cy="12" r="3"/>',
+  eyeOff: '<path d="M17.9 17.9A10.6 10.6 0 0 1 12 19c-7 0-11-7-11-7a19 19 0 0 1 5.1-5.9M9.9 5.2A9.6 9.6 0 0 1 12 5c7 0 11 7 11 7a19 19 0 0 1-2.2 3.2M1 1l22 22"/>',
+  up: '<path d="M18 15l-6-6-6 6"/>', down: '<path d="M6 9l6 6 6-6"/>',
+  edit: '<path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/>',
+  plus: '<path d="M12 5v14M5 12h14"/>',
+  bell: '<path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/>',
+};
+const ic = n => `<svg class="i" viewBox="0 0 24 24" aria-hidden="true">${ICON[n]}</svg>`;
+
+/* ---------------- state ---------------- */
+const S = {
+  mode: null, view: "requests", authed: false, stateInfo: null, authView: null,
+  status: "", q: "", items: [], more: false, counts: {}, sel: null, loadingList: false,
+  base: null, draft: null, dirty: false, settings: null, installEvt: null, pushInfo: null,
+};
+const STATUSES = ["new", "contacted", "quoted", "won", "closed"];
+const isDemo = () => S.mode === "demo";
+const L = (ar, en) => lang === "ar" ? (ar || en || "") : (en || ar || "");
+const fmtDate = iso => { if (!iso) return ""; try { return new Intl.DateTimeFormat(lang === "ar" ? "ar-JO-u-nu-latn" : "en-GB", { dateStyle: "medium", timeStyle: "short", timeZone: "Asia/Amman" }).format(new Date(iso)); } catch (e) { return iso; } };
+const ago = iso => {
+  const s = (Date.parse(iso) - Date.now()) / 1000, rtf = new Intl.RelativeTimeFormat(lang === "ar" ? "ar-u-nu-latn" : "en", { numeric: "auto" });
+  const a = Math.abs(s);
+  if (a < 60) return rtf.format(Math.round(s), "second");
+  if (a < 3600) return rtf.format(Math.round(s / 60), "minute");
+  if (a < 86400) return rtf.format(Math.round(s / 3600), "hour");
+  if (a < 86400 * 30) return rtf.format(Math.round(s / 86400), "day");
+  return fmtDate(iso);
+};
+
+/* ---------------- helpers ---------------- */
+let toastT = 0;
+function toast(msg, bad){ const el = $("#toast"); el.textContent = msg; el.className = "toast on" + (bad ? " bad" : ""); clearTimeout(toastT); toastT = setTimeout(() => el.className = "toast", bad ? 5200 : 2600); }
+async function call(method, path, body, opts = {}){
+  const r = await API.call(method, path, body);
+  if (r && r.ok) return r;
+  if (r && r.error === "auth" && path.startsWith("admin/") && !opts.authOk){ S.authed = false; await showAuth(); toast(errText("auth"), true); return null; }
+  if (opts.quiet) return r || { ok: false, error: "network" };
+  toast(errText(r && r.error), true);
+  return null;
+}
+function sheet(html, onClose){
+  const host = $("#sheetHost");
+  host.innerHTML = `<div class="sheet" role="dialog" aria-modal="true"><div class="panel">${html}</div></div>`;
+  const el = host.firstElementChild;
+  el.addEventListener("click", e => { if (e.target === el){ closeSheet(); onClose && onClose(); } });
+  document.body.classList.add("lock");
+  const f = el.querySelector("[autofocus]"); if (f) setTimeout(() => f.focus(), 50);
+  return el;
+}
+function closeSheet(){ $("#sheetHost").innerHTML = ""; if (!(S.view === "requests" && S.sel && matchMedia("(max-width:899px)").matches)) document.body.classList.remove("lock"); }
+function ask(msg, yes = t("yes"), danger = true){
+  return new Promise(res => {
+    const el = sheet(`<p style="margin:4px 0 18px;font-size:16px">${esc(msg)}</p><div class="row" style="justify-content:flex-end"><button class="btn line" data-r="0">${esc(t("cancel"))}</button><button class="btn ${danger ? "danger" : "gold"}" data-r="1" autofocus>${esc(yes)}</button></div>`, () => res(false));
+    el.addEventListener("click", e => { const b = e.target.closest("[data-r]"); if (b){ closeSheet(); res(b.dataset.r === "1"); } });
+  });
+}
+/* a Jordanian number as WhatsApp wants it: 07X... → 9627X... */
+function waNumber(p){
+  let d = String(p || "").replace(/\D/g, "");
+  if (d.startsWith("00")) d = d.slice(2);
+  if (/^07\d{8}$/.test(d)) d = "962" + d.slice(1);
+  else if (/^7\d{8}$/.test(d)) d = "962" + d;
+  return d;
+}
+const telHref = p => "tel:" + String(p || "").replace(/[^\d+]/g, "");
+const isIOS = () => /iPhone|iPad|iPod/.test(navigator.userAgent) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+const standalone = () => matchMedia("(display-mode: standalone)").matches || navigator.standalone === true;
+
+/* ---------------- frame ---------------- */
+function applyLang(){
+  document.documentElement.lang = lang; document.documentElement.dir = lang === "ar" ? "rtl" : "ltr";
+  $("#langBtn").textContent = lang === "ar" ? "EN" : "ع"; $("#langBtn").setAttribute("aria-label", lang === "ar" ? "English" : "العربية");
+  $("#brandSub").textContent = t("sub"); $("#demoPill").textContent = t("demo"); $("#demoPill").hidden = !isDemo();
+  document.title = "JEC Admin — " + t("sub");
+}
+function renderTabs(){
+  const n = S.counts.new || 0;
+  $("#tabs").innerHTML = [["requests", "inbox", "tReq"], ["projects", "grid", "tProj"], ["settings", "gear", "tSet"]].map(([v, i, k]) =>
+    `<button type="button" data-tab="${v}" ${S.view === v ? 'aria-current="page"' : ""}>${ic(i)}<span>${esc(t(k))}</span>${v === "requests" && n ? `<span class="dot num">${n > 99 ? "99+" : n}</span>` : ""}</button>`).join("");
+}
+function frame(on){ $("#top").hidden = false; $("#tabs").hidden = !on; $("#boot").hidden = true; applyLang(); if (on) renderTabs(); }
+function setBadge(){ try { const n = S.counts.new || 0; if (navigator.setAppBadge){ n ? navigator.setAppBadge(n) : navigator.clearAppBadge(); } } catch (e) {} }
+
+/* ---------------- sign-in ---------------- */
+async function showAuth(view){
+  S.view = "auth"; $("#savebar").hidden = true; S.sel = null; document.body.classList.remove("lock");
+  const st = S.stateInfo = (await call("GET", "admin/state", undefined, { quiet: true })) || {};
+  if (!st.ok){ frame(false); $("#app").innerHTML = `<div class="auth"><div class="card stack"><p class="err">${esc(errText(st.error))}</p><button class="btn gold block" data-act="retry">${esc(t("refresh"))}</button></div></div>`; return; }
+  if (st.auth){ S.authed = true; return start(); }
+  S.authView = view || (st.hasPassword ? "login" : "setup");
+  frame(false);
+  const demoNote = isDemo() ? `<div class="note small">${esc(t("demoNote"))}</div>` : "";
+  const user = `<input type="text" name="username" autocomplete="username" value="JEC admin" hidden>`;
+  let body = "";
+  if (S.authView === "login"){
+    body = `<h1>${esc(t("loginTitle"))}</h1><p class="lead">${esc(t("loginLead"))}</p>
+      <form id="fLogin" class="stack">${user}
+        <label class="field"><span>${esc(t("password"))}</span><input type="password" id="pw" autocomplete="current-password" required autofocus></label>
+        <p class="err" id="aErr"></p>
+        <button class="btn gold block" type="submit">${esc(t("signIn"))}</button>
+        <button class="btn line block" type="button" data-act="auth-reset">${esc(t("forgot"))}</button>
+      </form>`;
+  } else {
+    const reset = S.authView === "reset";
+    if (reset && isDemo()){
+      body = `<h1>${esc(t("resetTitle"))}</h1><p class="lead">${esc(t("demoReset"))}</p><div class="stack"><button class="btn danger block" data-act="clear-demo">${esc(t("clearDemo"))}</button><button class="btn line block" data-act="auth-login">${esc(t("backLogin"))}</button></div>`;
+    } else {
+      const noCode = !isDemo() && !st.setupReady;
+      body = `<h1>${esc(t(reset ? "resetTitle" : "setupTitle"))}</h1><p class="lead">${esc(t(reset ? "resetLead" : "setupLead"))}</p>
+        ${noCode ? `<div class="note warn small" style="margin-bottom:12px">${esc(t("noCode"))}</div>` : ""}
+        <form id="fSetup" class="stack">${user}
+          ${isDemo() ? "" : `<label class="field"><span>${esc(t("code"))}</span><input type="password" id="code" autocomplete="off" required ${noCode ? "disabled" : "autofocus"}><small>${esc(t("codeHint"))}</small></label>`}
+          <label class="field"><span>${esc(t(reset ? "newPassword" : "password"))}</span><input type="password" id="pw" autocomplete="new-password" minlength="10" required ${noCode ? "disabled" : ""} ${isDemo() ? "autofocus" : ""}><small>${esc(t("pwHint"))}</small></label>
+          <label class="field"><span>${esc(t("confirm"))}</span><input type="password" id="pw2" autocomplete="new-password" minlength="10" required ${noCode ? "disabled" : ""}></label>
+          <p class="err" id="aErr"></p>
+          <button class="btn gold block" type="submit" ${noCode ? "disabled" : ""}>${esc(t("save"))}</button>
+          ${reset ? `<button class="btn line block" type="button" data-act="auth-login">${esc(t("backLogin"))}</button>` : ""}
+        </form>`;
+    }
+  }
+  $("#app").innerHTML = `<div class="auth"><div class="card"><img class="logo" src="icon-192.png" alt="">${body}${demoNote ? `<div style="margin-top:16px">${demoNote}</div>` : ""}</div></div>`;
+  const f = $("[autofocus]", $("#app")); if (f) f.focus();
+}
+async function submitAuth(form){
+  const err = $("#aErr"), btn = form.querySelector("[type=submit]"); err.textContent = "";
+  const pw = $("#pw").value;
+  if (form.id === "fLogin"){
+    btn.disabled = true; const r = await call("POST", "admin/login", { password: pw }, { quiet: true }); btn.disabled = false;
+    if (!r.ok){ err.textContent = errText(r.error); return; }
+  } else {
+    if (pw.length < 10){ err.textContent = errText("password-short"); return; }
+    if (pw !== $("#pw2").value){ err.textContent = t("mismatch"); return; }
+    btn.disabled = true;
+    const r = await call("POST", S.authView === "reset" ? "admin/reset" : "admin/setup", { code: $("#code") ? $("#code").value : "", password: pw }, { quiet: true });
+    btn.disabled = false;
+    if (!r.ok){ err.textContent = errText(r.error); return; }
+  }
+  S.authed = true; start();
+}
+
+/* ---------------- start and routing ---------------- */
+async function start(){
+  frame(true);
+  const h = location.hash;
+  const m = /^#r=(\d{1,9})$/.exec(h);
+  if (m){ S.view = "requests"; await openView("requests"); openRequest(Number(m[1])); return; }
+  const v = ["requests", "projects", "settings"].includes(h.slice(1)) ? h.slice(1) : (S.view !== "auth" ? S.view : "requests");
+  openView(v);
+}
+async function openView(v){
+  S.view = v; renderTabs(); document.body.classList.remove("lock");
+  if (location.hash !== "#" + v && !/^#r=/.test(location.hash)) history.replaceState(null, "", "#" + v);
+  window.scrollTo(0, 0);
+  if (v === "requests"){ renderRequests(); await loadRequests(); }
+  else if (v === "projects"){ if (!S.draft) { $("#app").innerHTML = `<div class="boot" style="min-height:40vh"><span class="spin"></span></div>`; await loadContent(); } renderProjects(); }
+  else if (v === "settings"){ renderSettings(); if (!S.draft) await loadContent(); await loadSettings(); renderSettings(); }
+  renderSaveBar();
+}
+
+/* ---------------- requests ---------------- */
+async function loadRequests(append){
+  if (S.loadingList) return; S.loadingList = true;
+  const qs = new URLSearchParams();
+  if (S.status) qs.set("status", S.status);
+  if (S.q) qs.set("q", S.q);
+  if (append && S.items.length) qs.set("before", S.items[S.items.length - 1].id);
+  const r = await call("GET", "admin/requests" + (qs.toString() ? "?" + qs : ""));
+  S.loadingList = false;
+  if (!r) return;
+  S.items = append ? S.items.concat(r.items) : r.items; S.more = r.more; S.counts = r.counts || {};
+  setBadge(); renderTabs();
+  if (S.view === "requests") renderRequests();
+}
+function reqLine(r){
+  const d = r.data || {};
+  return `<button type="button" class="req" data-req="${r.id}" ${S.sel && S.sel.id === r.id ? 'aria-current="true"' : ""}>
+    <span class="l1"><b>${esc(r.name)}</b><span class="st ${esc(r.status)}">${esc(t("s_" + r.status))}</span></span>
+    <span class="l2"><span class="num">${esc(r.no)}</span><span>${esc(L(d.catAr, d.catEn))}${d.total ? ` · <span class="num">${esc(d.total)}</span> ${esc(t("m2"))}` : ""}</span><span>${esc(ago(r.created))}</span></span>
+  </button>`;
+}
+function renderRequests(){
+  if (S.view !== "requests") return;
+  const total = STATUSES.reduce((a, s) => a + (S.counts[s] || 0), 0);
+  const chips = [["", t("all"), total]].concat(STATUSES.map(s => [s, t("s_" + s), S.counts[s] || 0]))
+    .map(([s, l, n]) => `<button type="button" class="chip" data-status="${s}" aria-pressed="${S.status === s}">${esc(l)} <b>${n}</b></button>`).join("");
+  const list = S.items.length ? S.items.map(reqLine).join("") + (S.more ? `<button class="btn line block" data-act="more">${esc(t("more"))}</button>` : "")
+    : `<div class="empty">${esc(t(S.q || S.status ? "emptyF" : "emptyAll"))}</div>`;
+  const keep = document.activeElement && document.activeElement.id === "q";
+  $("#app").innerHTML = `${isDemo() ? `<div class="note small" style="margin-bottom:12px">${esc(t("demoNote"))}</div>` : ""}
+    <div class="row between"><h1>${esc(t("tReq"))}</h1><button class="icon-btn" data-act="reload" aria-label="${esc(t("refresh"))}" title="${esc(t("refresh"))}">${ic("refresh")}</button></div>
+    <div class="chips" style="margin-top:12px">${chips}</div>
+    <div style="margin-top:10px"><input type="search" id="q" value="${esc(S.q)}" placeholder="${esc(t("search"))}" enterkeyhint="search"></div>
+    <div class="split"><div class="list">${list}</div><div id="detailHost">${detailHtml()}</div></div>`;
+  if (keep){ const q = $("#q"); q.focus(); q.setSelectionRange(q.value.length, q.value.length); }
+  document.body.classList.toggle("lock", !!S.sel && matchMedia("(max-width:899px)").matches);
+}
+function summaryText(r){
+  const d = r.data || {}, ar = lang === "ar";
+  return [
+    `${ar ? "طلب" : "Request"} ${r.no}`,
+    `${t("f_name")}: ${r.name}`, `${t("f_phone")}: ${r.phone}`,
+    `${t("f_cat")}: ${L(d.catAr, d.catEn)}${L(d.subAr, d.subEn) ? " — " + L(d.subAr, d.subEn) : ""}`,
+    `${t("f_scope")}: ${(ar ? d.scopeAr : d.scopeEn || []).join(" + ")}`,
+    (d.tradesAr || []).length ? `${t("f_trades")}: ${(ar ? d.tradesAr : d.tradesEn).join(ar ? "، " : ", ")}` : null,
+    `${t("f_area")}: ${d.area} ${t("m2")} × ${d.floors} = ${d.total} ${t("m2")}`,
+    d.loc ? `${t("f_loc")}: ${d.loc}` : null,
+    `${t("f_start")}: ${L(d.startAr, d.startEn)}`, `${t("f_draw")}: ${L(d.drawAr, d.drawEn)}`,
+    d.notes ? `${t("f_notes")}: ${d.notes}` : null,
+  ].filter(Boolean).join("\n");
+}
+function detailHtml(){
+  const r = S.sel;
+  if (!r) return matchMedia("(min-width:900px)").matches ? `<div class="empty">${esc(t("pick"))}</div>` : "";
+  const d = r.data || {}, ar = lang === "ar";
+  const wa = waNumber(r.phone);
+  const kv = [
+    ["f_phone", `<span class="num">${esc(r.phone)}</span>`],
+    ["f_cat", esc(L(d.catAr, d.catEn)) + (L(d.subAr, d.subEn) ? " — " + esc(L(d.subAr, d.subEn)) : "")],
+    ["f_scope", esc((ar ? d.scopeAr : d.scopeEn || []).join(" + "))],
+    (d.tradesAr || []).length ? ["f_trades", esc((ar ? d.tradesAr : d.tradesEn).join(ar ? "، " : ", "))] : null,
+    ["f_area", `<span class="num">${esc(d.area)} × ${esc(d.floors)} = ${esc(d.total)}</span> ${esc(t("m2"))}`],
+    d.loc ? ["f_loc", esc(d.loc)] : null,
+    ["f_start", esc(L(d.startAr, d.startEn))], ["f_draw", esc(L(d.drawAr, d.drawEn))],
+    d.notes ? ["f_notes", esc(d.notes)] : null,
+    ["f_lang", d.lang === "en" ? "English" : "العربية"],
+    d.consent && d.consent.at ? ["f_consent", esc(fmtDate(d.consent.at)) + (d.consent.policy ? ` · ${esc(t("policyV"))} <span class="num">${esc(d.consent.policy)}</span>` : "")] : null,
+    ["f_date", esc(fmtDate(r.created))],
+    r.updated && r.updated !== r.created ? ["f_upd", esc(fmtDate(r.updated))] : null,
+  ].filter(Boolean).map(([k, v]) => `<dt>${esc(t(k))}</dt><dd>${v}</dd>`).join("");
+  return `<div class="detail-wrap"><div class="detail">
+    <div class="hd"><button class="btn line back" data-act="close-req">${ic("back")}<span>${esc(t("back"))}</span></button></div>
+    <div class="hd" style="margin-top:6px"><div style="flex:1;min-width:0"><h2>${esc(r.name)}</h2><div class="muted small num">${esc(r.no)}</div></div><span class="st ${esc(r.status)}">${esc(t("s_" + r.status))}</span></div>
+    <div class="actions" style="margin-top:14px">
+      <a class="btn gold" href="${esc(telHref(r.phone))}">${ic("phone")}<span>${esc(t("call"))}</span></a>
+      ${wa.length >= 8 ? `<a class="btn" href="https://wa.me/${esc(wa)}?text=${esc(encodeURIComponent(T.waHi(r.name, r.no)))}" target="_blank" rel="noopener noreferrer">${ic("chat")}<span>${esc(t("wa"))}</span></a>` : ""}
+      <button class="btn" data-act="copy-req">${ic("copy")}<span>${esc(t("copy"))}</span></button>
+    </div>
+    <div class="muted small" style="margin-top:16px">${esc(t("status"))}</div>
+    <div class="statuses">${STATUSES.map(s => `<button type="button" data-set-status="${s}" aria-pressed="${r.status === s}">${esc(t("s_" + s))}</button>`).join("")}</div>
+    <dl class="kv">${kv}</dl>
+    <label class="field"><span>${esc(t("note"))}</span><textarea id="rNote" maxlength="2000">${esc(r.note || "")}</textarea><small>${esc(t("noteHint"))}</small></label>
+    <div class="row between" style="margin-top:12px"><button class="btn line" data-act="save-note">${esc(t("noteSave"))}</button><button class="btn danger" data-act="del-req">${ic("trash")}<span>${esc(t("del"))}</span></button></div>
+  </div></div>`;
+}
+function renderDetail(){ const h = $("#detailHost"); if (h) h.innerHTML = detailHtml(); document.querySelectorAll(".req").forEach(b => b.setAttribute("aria-current", String(!!S.sel && Number(b.dataset.req) === S.sel.id))); document.body.classList.toggle("lock", !!S.sel && matchMedia("(max-width:899px)").matches); }
+async function openRequest(id){
+  const r = await call("GET", "admin/requests/" + id);
+  if (!r){ if (/^#r=/.test(location.hash)) history.replaceState(null, "", "#requests"); return; }
+  S.sel = r.item; history.replaceState(null, "", "#r=" + id); renderDetail();
+}
+function closeRequest(){ S.sel = null; history.replaceState(null, "", "#requests"); renderDetail(); }
+function updateItem(item){ const i = S.items.findIndex(x => x.id === item.id); if (i >= 0) S.items[i] = item; S.sel = item; }
+
+/* ---------------- projects ---------------- */
+async function loadContent(){
+  const r = await call("GET", "admin/content");
+  if (!r) return;
+  S.base = { version: r.version, seeded: !!r.seeded, updated: r.updated };
+  S.draft = { projects: r.projects.map(p => ({ ...p, tAr: (p.tAr || []).slice(), tEn: (p.tEn || []).slice() })), whatsapp: r.whatsapp || "", requestsOn: r.requestsOn !== false };
+  S.saved = JSON.stringify(S.draft); S.dirty = false;
+}
+function markDirty(){ S.dirty = JSON.stringify(S.draft) !== S.saved; renderSaveBar(); }
+function catName(id){ const c = JEC.CATS.find(x => x.id === id); return c ? L(c.sAr, c.sEn) : id; }
+function renderProjects(){
+  if (S.view !== "projects") return;
+  if (!S.draft){ $("#app").innerHTML = `<div class="empty">${esc(errText("network"))}<div style="margin-top:12px"><button class="btn" data-act="reload-content">${esc(t("refresh"))}</button></div></div>`; return; }
+  const ps = S.draft.projects;
+  const rows = ps.map((p, i) => `<div class="proj ${p.hidden ? "off" : ""}">
+      ${p.img && API.img(p.img) ? `<img src="${esc(API.img(p.img))}" alt="" loading="lazy">` : `<span class="thumb-empty"></span>`}
+      <div class="t"><b>${esc(L(p.ar, p.en))}</b><span>${esc(catName(p.cat))} · ${esc(t(p.st === "live" ? "live" : "done"))}${p.reno ? " · " + esc(t("reno")) : ""}${p.brand ? " · " + esc(p.brand) : ""}${p.hidden ? " · " + esc(t("hiddenTag")) : ""}</span></div>
+      <div class="ctl">
+        <button class="icon-btn" data-p="up" data-i="${i}" aria-label="${esc(t("up"))}" ${i === 0 ? "disabled" : ""}>${ic("up")}</button>
+        <button class="icon-btn" data-p="down" data-i="${i}" aria-label="${esc(t("down"))}" ${i === ps.length - 1 ? "disabled" : ""}>${ic("down")}</button>
+        <button class="icon-btn" data-p="hide" data-i="${i}" aria-label="${esc(t(p.hidden ? "show" : "hide"))}" title="${esc(t(p.hidden ? "show" : "hide"))}">${ic(p.hidden ? "eyeOff" : "eye")}</button>
+        <button class="icon-btn" data-p="edit" data-i="${i}" aria-label="${esc(t("edit"))}">${ic("edit")}</button>
+        <button class="icon-btn" data-p="del" data-i="${i}" aria-label="${esc(t("del"))}">${ic("trash")}</button>
+      </div></div>`).join("");
+  $("#app").innerHTML = `${isDemo() ? `<div class="note small" style="margin-bottom:12px">${esc(t("demoNote"))}</div>` : ""}
+    <div class="row between"><div><h1>${esc(t("pTitle"))} <span class="muted num" style="font-size:15px">(${ps.filter(p => !p.hidden).length}/${ps.length})</span></h1></div>
+      <button class="btn gold" data-act="add-proj" ${ps.length >= 60 ? "disabled" : ""}>${ic("plus")}<span>${esc(t("add"))}</span></button></div>
+    <p class="muted small" style="margin:8px 0 0">${esc(t("pLead"))}</p>
+    ${S.base && S.base.seeded ? `<div class="note small" style="margin-top:12px">${esc(t("seeded"))}</div>` : ""}
+    <div class="plist">${rows}</div>`;
+}
+function renderSaveBar(){
+  const bar = $("#savebar");
+  bar.hidden = !(S.dirty && (S.view === "projects" || S.view === "settings"));
+  if (!bar.hidden) bar.innerHTML = `<div><span>${esc(t("unsaved"))}</span><button class="btn line" data-act="undo">${esc(t("undo"))}</button><button class="btn gold" data-act="publish">${esc(t("publish"))}</button></div>`;
+}
+async function publish(){
+  const btn = $("#savebar .gold"); if (btn) btn.disabled = true;
+  const r = await call("PUT", "admin/content", { version: S.base.version, projects: S.draft.projects, whatsapp: S.draft.whatsapp, requestsOn: S.draft.requestsOn }, { quiet: true });
+  if (btn) btn.disabled = false;
+  if (!r || !r.ok){
+    if (r && r.error === "conflict"){
+      const go = await ask(t("conflict"), t("loadLatest"), false);
+      if (go){ S.draft = null; await loadContent(); openView(S.view); }
+      return;
+    }
+    if (r && r.error === "auth"){ S.authed = false; showAuth(); return; }
+    toast(errText(r && r.error), true); return;
+  }
+  S.base = { version: r.version, seeded: false, updated: r.updated };
+  S.draft = { projects: r.projects, whatsapp: r.whatsapp, requestsOn: r.requestsOn };
+  S.saved = JSON.stringify(S.draft); S.dirty = false;
+  toast(t(isDemo() ? "savedDemo" : "savedC"));
+  renderSaveBar(); if (S.view === "projects") renderProjects(); else renderSettings();
+}
+function newId(){ return "n" + Array.from(crypto.getRandomValues(new Uint8Array(6)), b => b.toString(16).padStart(2, "0")).join(""); }
+let ED = null;   /* the project being edited: { p, index } (index -1 = new) */
+function editProject(index){
+  const src = index >= 0 ? S.draft.projects[index] : { id: newId(), img: "", video: "", url: "", type: "none", cat: "private", st: "done", reno: false, h: false, hidden: false, brand: "", ar: "", en: "", dAr: "", dEn: "", tAr: [], tEn: [] };
+  ED = { p: { ...src, tAr: (src.tAr || []).slice(), tEn: (src.tEn || []).slice() }, index };
+  const p = ED.p;
+  sheet(`<form id="fProj" class="stack">
+    <div class="row between"><h2>${esc(t(index >= 0 ? "pEdit" : "pNew"))}</h2></div>
+    <div class="field"><span>${esc(t("photo"))}</span><div class="photo-pick"><span id="phPrev">${p.img && API.img(p.img) ? `<img src="${esc(API.img(p.img))}" alt="">` : `<span class="thumb-empty"></span>`}</span>
+      <div><label class="btn line" style="cursor:pointer">${esc(t("choosePhoto"))}<input type="file" id="phFile" accept="image/*" hidden></label><small class="muted" id="phMsg" style="display:block;margin-top:6px">${esc(t("photoHint"))}</small></div></div></div>
+    <div class="grid2">
+      <label class="field"><span>${esc(t("titleAr"))}</span><input type="text" id="pAr" maxlength="100" dir="rtl" value="${esc(p.ar)}"></label>
+      <label class="field"><span>${esc(t("titleEn"))}</span><input type="text" id="pEn" maxlength="100" dir="ltr" value="${esc(p.en)}"></label>
+      <label class="field"><span>${esc(t("descAr"))}</span><textarea id="pDAr" maxlength="600" dir="rtl">${esc(p.dAr)}</textarea></label>
+      <label class="field"><span>${esc(t("descEn"))}</span><textarea id="pDEn" maxlength="600" dir="ltr">${esc(p.dEn)}</textarea></label>
+      <label class="field"><span>${esc(t("tagsAr"))}</span><input type="text" id="pTAr" dir="rtl" value="${esc(p.tAr.join("، "))}"><small>${esc(t("tagsHint"))}</small></label>
+      <label class="field"><span>${esc(t("tagsEn"))}</span><input type="text" id="pTEn" dir="ltr" value="${esc(p.tEn.join(", "))}"><small>${esc(t("tagsHint"))}</small></label>
+      <label class="field"><span>${esc(t("category"))}</span><select id="pCat">${JEC.CATS.map(c => `<option value="${esc(c.id)}" ${p.cat === c.id ? "selected" : ""}>${esc(L(c.sAr, c.sEn))}</option>`).join("")}</select></label>
+      <div class="field"><span>${esc(t("state"))}</span><div class="seg" id="pSt"><button type="button" data-v="done" aria-pressed="${p.st !== "live"}">${esc(t("done"))}</button><button type="button" data-v="live" aria-pressed="${p.st === "live"}">${esc(t("live"))}</button></div></div>
+    </div>
+    <label class="check"><input type="checkbox" id="pReno" ${p.reno ? "checked" : ""}><span>${esc(t("renoChk"))}</span></label>
+    <label class="check"><input type="checkbox" id="pH" ${p.h ? "checked" : ""}><span>${esc(t("wide"))}</span></label>
+    <label class="field"><span>${esc(t("brand"))}</span><input type="text" id="pBrand" maxlength="60" dir="auto" value="${esc(p.brand)}"><small>${esc(t("brandHint"))}</small></label>
+    <label class="field"><span>${esc(t("link"))}</span><input type="url" id="pUrl" dir="ltr" maxlength="300" placeholder="https://www.instagram.com/…" value="${esc(p.url)}"><small>${esc(t("linkHint"))}</small></label>
+    <p class="err" id="pErr"></p>
+    <div class="row" style="justify-content:flex-end"><button class="btn line" type="button" data-act="ed-cancel">${esc(t("cancel"))}</button><button class="btn gold" type="submit">${esc(t("apply"))}</button></div>
+  </form>`, () => { ED = null; });
+}
+const splitTags = s => String(s || "").split(/[,،]/).map(x => x.trim().slice(0, 30)).filter(Boolean).slice(0, 8);
+function applyProject(){
+  const p = ED.p, err = $("#pErr");
+  p.ar = $("#pAr").value.trim(); p.en = $("#pEn").value.trim(); p.dAr = $("#pDAr").value.trim(); p.dEn = $("#pDEn").value.trim();
+  p.tAr = splitTags($("#pTAr").value); p.tEn = splitTags($("#pTEn").value);
+  p.cat = $("#pCat").value; p.reno = $("#pReno").checked; p.h = $("#pH").checked; p.brand = $("#pBrand").value.trim();
+  p.st = $("#pSt [aria-pressed=true]").dataset.v;
+  const url = $("#pUrl").value.trim();
+  if (!p.img){ err.textContent = t("needPhoto"); return; }
+  if (!p.ar && !p.en){ err.textContent = t("needTitle"); return; }
+  if (url){ let ok = false; try { const u = new URL(url); ok = u.protocol === "https:" && u.hostname.includes("."); } catch (e) {} if (!ok){ err.textContent = t("badLink"); return; } }
+  p.url = url; p.type = url ? (/\/reels?\//.test(url) ? "reel" : "post") : "none";
+  if (!p.ar) p.ar = p.en; if (!p.en) p.en = p.ar;
+  if (ED.index >= 0) S.draft.projects[ED.index] = p; else S.draft.projects.unshift(p);
+  ED = null; closeSheet(); renderProjects(); markDirty();
+}
+/* a photo resized in the browser before upload: at most 1600 px, WebP (JPEG where the browser can't make WebP), under 1.5 MB */
+async function shrink(file){
+  let src;
+  try { src = await createImageBitmap(file); }
+  catch (e) { src = await new Promise((res, rej) => { const im = new Image(); im.onload = () => res(im); im.onerror = rej; im.src = URL.createObjectURL(file); }); }
+  for (const [max, q] of [[1600, .84], [1400, .74], [1100, .68]]){
+    const w = src.width, h = src.height, k = Math.min(1, max / Math.max(w, h));
+    const c = document.createElement("canvas"); c.width = Math.round(w * k); c.height = Math.round(h * k);
+    c.getContext("2d").drawImage(src, 0, 0, c.width, c.height);
+    let b = await new Promise(r => c.toBlob(r, "image/webp", q));
+    if (!b || b.type !== "image/webp") b = await new Promise(r => c.toBlob(r, "image/jpeg", q));
+    if (b && b.size <= 1.45 * 1024 * 1024) return b;
+  }
+  throw Object.assign(new Error("too-large"), { code: "too-large" });
+}
+async function uploadPhoto(file){
+  const msg = $("#phMsg"); if (!ED) return;
+  msg.textContent = t("uploading"); msg.className = "muted";
+  let blob;
+  try { blob = await shrink(file); } catch (e) { msg.textContent = errText(e.code || "bad-image"); msg.className = "err"; return; }
+  const r = await call("POST", "admin/photo", blob, { quiet: true });
+  if (!r || !r.ok){ if (r && r.error === "auth"){ closeSheet(); S.authed = false; showAuth(); return; } msg.textContent = errText(r && r.error); msg.className = "err"; return; }
+  if (!ED) return;
+  ED.p.img = r.img; $("#phPrev").innerHTML = `<img src="${esc(API.img(r.img))}" alt="">`; msg.textContent = t("photoHint"); msg.className = "muted";
+}
+
+/* ---------------- settings ---------------- */
+async function loadSettings(){ const r = await call("GET", "admin/settings"); if (r) S.settings = r; await pushState(); }
+const pushSupported = () => "serviceWorker" in navigator && "PushManager" in window && "Notification" in window;
+let swReg = null;
+async function sw(){
+  if (!("serviceWorker" in navigator)) return null;
+  if (swReg) return swReg;
+  try { await navigator.serviceWorker.register("sw.js", { scope: "./" }); swReg = await navigator.serviceWorker.ready; } catch (e) { swReg = null; }
+  return swReg;
+}
+async function pushState(){
+  const s = { supported: pushSupported(), perm: "Notification" in window ? Notification.permission : "denied", sub: null };
+  if (s.supported){ const reg = await sw(); if (reg){ try { s.sub = await reg.pushManager.getSubscription(); } catch (e) {} } }
+  s.on = isDemo() ? (store.get("jec-demo-push") === "1" && s.perm === "granted") : !!(s.sub && s.perm === "granted");
+  S.pushInfo = s;
+}
+const b64ToBytes = b => { const s = atob(b.replace(/-/g, "+").replace(/_/g, "/") + "===".slice((b.length + 3) % 4)); return Uint8Array.from(s, c => c.charCodeAt(0)); };
+function deviceLabel(){
+  const u = navigator.userAgent;
+  const os = /iPhone/.test(u) ? "iPhone" : /iPad/.test(u) || isIOS() ? "iPad" : /Android/.test(u) ? "Android" : /Mac OS X/.test(u) ? "Mac" : /Windows/.test(u) ? "Windows" : "Device";
+  const br = /Edg\//.test(u) ? "Edge" : /CriOS|Chrome\//.test(u) ? "Chrome" : /FxiOS|Firefox\//.test(u) ? "Firefox" : /Safari\//.test(u) ? "Safari" : "";
+  return (os + (br ? " · " + br : "") + (standalone() ? " · app" : "")).slice(0, 40);
+}
+async function pushEnable(){
+  if (!pushSupported()){ toast(t("pushNo"), true); return; }
+  let perm = Notification.permission;
+  if (perm !== "granted") perm = await Notification.requestPermission();
+  if (perm !== "granted"){ toast(t("pushDenied"), true); await pushState(); renderSettings(); return; }
+  const reg = await sw(); if (!reg){ toast(t("pushNo"), true); return; }
+  if (isDemo()){ store.set("jec-demo-push", "1"); toast(t("pushDone")); await pushState(); renderSettings(); return; }
+  const k = await call("GET", "admin/push/key"); if (!k) return;
+  let sub = await reg.pushManager.getSubscription();
+  try {
+    if (sub){ const old = sub.options && sub.options.applicationServerKey; if (old && btoa(String.fromCharCode(...new Uint8Array(old))).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "") !== k.key){ await sub.unsubscribe(); sub = null; } }
+    if (!sub) sub = await reg.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: b64ToBytes(k.key) });
+  } catch (e) { toast(t("pushFailed"), true); return; }
+  const r = await call("POST", "admin/push/subscribe", { subscription: sub.toJSON(), label: deviceLabel() });
+  if (!r) return;
+  store.set("jec-push-endpoint", sub.endpoint);
+  toast(t("pushDone")); await loadSettings(); renderSettings();
+}
+async function pushTest(){
+  if (isDemo()){
+    const reg = await sw();
+    if (reg) await reg.showNotification("JEC — تجربة", { body: lang === "ar" ? "الإشعارات تعمل على هذا الجهاز." : "Notifications work on this device.", icon: "icon-192.png", badge: "badge-96.png", tag: "test" });
+    return;
+  }
+  const sub = S.pushInfo && S.pushInfo.sub;
+  const r = await call("POST", "admin/push/test", { endpoint: sub ? sub.endpoint : undefined });
+  if (!r) return;
+  toast(r.sent ? t("pushSent") : t("pushFailed"), !r.sent); await loadSettings(); renderSettings();
+}
+async function pushDisable(){
+  if (isDemo()){ store.del("jec-demo-push"); toast(t("pushStopped")); await pushState(); renderSettings(); return; }
+  const sub = S.pushInfo && S.pushInfo.sub;
+  if (sub){ await call("POST", "admin/push/unsubscribe", { endpoint: sub.endpoint }, { quiet: true }); try { await sub.unsubscribe(); } catch (e) {} }
+  store.del("jec-push-endpoint"); toast(t("pushStopped")); await loadSettings(); renderSettings();
+}
+function lastLine(k, v){
+  if (!v || !v.at) return "";
+  return `<div class="small muted" style="margin-top:8px">${esc(t(k))}: ${esc(fmtDate(v.at))} — <span class="${v.ok ? "ok" : "bad"}">${esc(t(v.ok ? "okW" : "failW"))}${!v.ok && v.err ? " (" + esc(v.err) + ")" : ""}</span></div>`;
+}
+function renderSettings(){
+  if (S.view !== "settings") return;
+  const st = S.settings, d = S.draft, pi = S.pushInfo || {};
+  const mine = (pi.sub && pi.sub.endpoint || "").slice(-12);
+  /* receiving requests */
+  const recv = `<div class="card"><h2>${esc(t("sReq"))}</h2><p>${esc(t("sReqLead"))}</p>
+    ${d ? `<label class="switch"><input type="checkbox" id="sReqOn" ${d.requestsOn ? "checked" : ""}><span>${esc(t("reqOn"))}</span></label>
+    <label class="field" style="margin-top:14px"><span>${esc(t("waNum"))}</span><input type="tel" id="sWa" dir="ltr" inputmode="tel" value="${esc(d.whatsapp)}" placeholder="9627XXXXXXXX"><small>${esc(t("waHint"))}</small></label>
+    <small class="muted" style="display:block;margin-top:10px">${esc(t("saveHint"))}</small>` : `<span class="spin"></span>`}</div>`;
+  /* notifications */
+  let pushBody;
+  if (!pi.supported && isIOS() && !standalone()) pushBody = `<div class="note small">${esc(t("pushIos"))}</div>`;
+  else if (!pi.supported) pushBody = `<div class="note warn small">${esc(t("pushNo"))}</div>`;
+  else {
+    pushBody = `<p class="${pi.on ? "ok" : "muted"}" style="margin:0 0 12px">${esc(t(pi.on ? "pushOn" : "pushOff"))}</p>
+      ${pi.perm === "denied" ? `<div class="note warn small" style="margin-bottom:12px">${esc(t("pushDenied"))}</div>` : ""}
+      <div class="row">${pi.on ? `<button class="btn" data-act="push-test">${ic("bell")}<span>${esc(t("pushTest"))}</span></button><button class="btn line" data-act="push-off">${esc(t("pushDisable"))}</button>`
+        : `<button class="btn gold" data-act="push-on" ${pi.perm === "denied" ? "disabled" : ""}>${ic("bell")}<span>${esc(t("pushEnable"))}</span></button>`}</div>
+      ${isDemo() ? `<div class="note small" style="margin-top:12px">${esc(t("demoPush"))}</div>` : ""}`;
+  }
+  const devs = st && st.devices && st.devices.length ? `<div class="small muted" style="margin-top:16px">${esc(t("devices"))}</div><ul class="devs">${st.devices.map(v =>
+      `<li><span>${esc(v.label || "—")}${v.id === mine ? ` <b class="ok">· ${esc(t("thisDev"))}</b>` : ""}<br><small class="muted">${esc(fmtDate(v.created))}${v.lastErr ? ` · <span class="bad">${esc(v.lastErr)}</span>` : ""}</small></span><button class="btn line" data-dev="${esc(v.id)}">${esc(t("remove"))}</button></li>`).join("")}</ul>` : "";
+  const push = `<div class="card"><h2>${esc(t("sPush"))}</h2><p>${esc(t("sPushLead"))}</p>${pushBody}${devs}${st ? lastLine("lastPush", st.pushLast) : ""}</div>`;
+  /* email */
+  const mail = `<div class="card"><h2>${esc(t("sMail"))}</h2><p>${esc(t("sMailLead"))}</p>
+    ${!st ? `<span class="spin"></span>` : `
+    ${isDemo() ? `<div class="note small" style="margin-bottom:12px">${esc(t("demoMail"))}</div>` : st.mailReady ? `<p class="ok small" style="margin:0 0 10px">${esc(t("mailReady"))}</p>` : `<div class="note warn small" style="margin-bottom:12px">${esc(t("mailNotReady"))}</div>`}
+    <form id="fMail" class="stack">
+      <label class="field"><span>${esc(t("mail"))}</span><input type="email" id="sMailTo" dir="ltr" autocomplete="email" maxlength="200" value="${esc(st.alertEmail)}"><small>${esc(t("mailNote"))}</small></label>
+      <label class="switch"><input type="checkbox" id="sMailOn" ${st.mailOn ? "checked" : ""}><span>${esc(t("mailOn"))}</span></label>
+      <div class="row"><button class="btn gold" type="submit">${esc(t("save"))}</button><button class="btn line" type="button" data-act="mail-test" ${!st.mailReady || !st.alertEmail ? "disabled" : ""}>${esc(t("mailTest"))}</button></div>
+    </form>${lastLine("lastMail", st.mailLast)}`}</div>`;
+  /* install */
+  const inst = `<div class="card"><h2>${esc(t("sInstall"))}</h2><p>${esc(t("sInstallLead"))}</p>
+    ${standalone() ? `<p class="ok" style="margin:0">${esc(t("installed"))}</p>` : `${S.installEvt ? `<button class="btn gold" data-act="install">${esc(t("install"))}</button>` : ""}
+    <div class="small muted stack" style="margin-top:10px"><div>${esc(t("instIos"))}</div><div>${esc(t("instAnd"))}</div></div>`}</div>`;
+  /* account */
+  const acc = `<div class="card"><h2>${esc(t("sAcc"))}</h2>
+    <form id="fPw" class="stack" style="margin-top:12px"><input type="text" name="username" autocomplete="username" value="JEC admin" hidden>
+      <label class="field"><span>${esc(t("current"))}</span><input type="password" id="pwCur" autocomplete="current-password" required></label>
+      <label class="field"><span>${esc(t("newPassword"))}</span><input type="password" id="pwNew" autocomplete="new-password" minlength="10" required><small>${esc(t("pwHint"))}</small></label>
+      <label class="field"><span>${esc(t("confirm"))}</span><input type="password" id="pwNew2" autocomplete="new-password" minlength="10" required></label>
+      <p class="err" id="pwErr"></p>
+      <div class="row between"><button class="btn" type="submit">${esc(t("changePw"))}</button><button class="btn danger" type="button" data-act="logout">${esc(t("logout"))}</button></div>
+    </form>
+    ${isDemo() ? `<div style="margin-top:14px"><button class="btn line" data-act="clear-demo">${esc(t("clearDemo"))}</button></div>` : ""}</div>`;
+  $("#app").innerHTML = `${isDemo() ? `<div class="note small" style="margin-bottom:12px">${esc(t("demoNote"))}</div>` : ""}
+    <h1 style="margin-bottom:14px">${esc(t("tSet"))}</h1><div class="sets"><div class="stack">${recv}${push}${inst}</div><div class="stack">${mail}${acc}</div></div>`;
+}
+
+/* ---------------- events ---------------- */
+document.addEventListener("click", async e => {
+  const tab = e.target.closest("[data-tab]");
+  if (tab){ if (tab.dataset.tab === S.view) return; S.sel = null; openView(tab.dataset.tab); return; }
+  const chip = e.target.closest("[data-status]");
+  if (chip){ S.status = chip.dataset.status; S.items = []; renderRequests(); loadRequests(); return; }
+  const rq = e.target.closest("[data-req]");
+  if (rq){ openRequest(Number(rq.dataset.req)); return; }
+  const ss = e.target.closest("[data-set-status]");
+  if (ss && S.sel){
+    const r = await call("PATCH", "admin/requests/" + S.sel.id, { status: ss.dataset.setStatus });
+    if (r){ updateItem(r.item); toast(t("statusSaved")); renderDetail(); loadRequests(); }
+    return;
+  }
+  const pb = e.target.closest("[data-p]");
+  if (pb){
+    const i = Number(pb.dataset.i), ps = S.draft.projects;
+    if (pb.dataset.p === "up" && i > 0){ [ps[i - 1], ps[i]] = [ps[i], ps[i - 1]]; }
+    else if (pb.dataset.p === "down" && i < ps.length - 1){ [ps[i + 1], ps[i]] = [ps[i], ps[i + 1]]; }
+    else if (pb.dataset.p === "hide"){ ps[i].hidden = !ps[i].hidden; }
+    else if (pb.dataset.p === "edit"){ editProject(i); return; }
+    else if (pb.dataset.p === "del"){ if (!(await ask(t("pDelQ"), t("del")))) return; ps.splice(i, 1); }
+    renderProjects(); markDirty(); return;
+  }
+  const seg = e.target.closest(".seg button");
+  if (seg){ seg.parentElement.querySelectorAll("button").forEach(b => b.setAttribute("aria-pressed", String(b === seg))); return; }
+  const dev = e.target.closest("[data-dev]");
+  if (dev){ const r = await call("POST", "admin/push/unsubscribe", { id: dev.dataset.dev }); if (r){ await loadSettings(); renderSettings(); } return; }
+  const a = e.target.closest("[data-act]"); if (!a) return;
+  const act = a.dataset.act;
+  if (act === "retry") return boot();
+  if (act === "auth-reset") return showAuth("reset");
+  if (act === "auth-login") return showAuth("login");
+  if (act === "clear-demo"){
+    if (!(await ask(t("clearDemoQ"), t("clearDemo")))) return;
+    try { Object.keys(localStorage).filter(k => k.startsWith("jec-demo")).forEach(k => localStorage.removeItem(k)); } catch (err) {}
+    S.draft = null; S.items = []; S.counts = {}; S.dirty = false; return showAuth();
+  }
+  if (act === "reload"){ loadRequests(); if (S.sel) openRequest(S.sel.id); return; }
+  if (act === "more") return loadRequests(true);
+  if (act === "close-req") return closeRequest();
+  if (act === "copy-req" && S.sel){ try { await navigator.clipboard.writeText(summaryText(S.sel)); toast(t("copied")); } catch (err) { toast(t("copyFail"), true); } return; }
+  if (act === "save-note" && S.sel){ const r = await call("PATCH", "admin/requests/" + S.sel.id, { note: $("#rNote").value }); if (r){ updateItem(r.item); toast(t("noteSaved")); } return; }
+  if (act === "del-req" && S.sel){
+    if (!(await ask(t("delQ"), t("del")))) return;
+    const id = S.sel.id, r = await call("DELETE", "admin/requests/" + id);
+    if (r){ S.items = S.items.filter(x => x.id !== id); S.sel = null; history.replaceState(null, "", "#requests"); toast(t("deleted")); renderRequests(); loadRequests(); }
+    return;
+  }
+  if (act === "add-proj") return editProject(-1);
+  if (act === "ed-cancel"){ ED = null; closeSheet(); return; }
+  if (act === "undo"){ S.draft = JSON.parse(S.saved); S.dirty = false; renderSaveBar(); return S.view === "projects" ? renderProjects() : renderSettings(); }
+  if (act === "publish") return publish();
+  if (act === "reload-content"){ await loadContent(); return renderProjects(); }
+  if (act === "push-on") return pushEnable();
+  if (act === "push-test") return pushTest();
+  if (act === "push-off") return pushDisable();
+  if (act === "mail-test"){ const r = await call("POST", "admin/mail/test"); if (r){ toast(t("mailSent")); } await loadSettings(); renderSettings(); return; }
+  if (act === "install" && S.installEvt){ S.installEvt.prompt(); try { await S.installEvt.userChoice; } catch (err) {} S.installEvt = null; renderSettings(); return; }
+  if (act === "logout"){
+    if (S.dirty && !(await ask(t("leaveQ"), t("logout")))) return;
+    await call("POST", "admin/logout", undefined, { quiet: true });
+    S.authed = false; S.draft = null; S.dirty = false; S.items = []; S.sel = null; S.settings = null; showAuth("login"); return;
+  }
+});
+document.addEventListener("submit", async e => {
+  e.preventDefault();
+  const f = e.target;
+  if (f.id === "fLogin" || f.id === "fSetup") return submitAuth(f);
+  if (f.id === "fProj") return applyProject();
+  if (f.id === "fMail"){
+    const r = await call("PUT", "admin/settings", { alertEmail: $("#sMailTo").value.trim(), mailOn: $("#sMailOn").checked });
+    if (r){ S.settings = r; toast(t("mailSaved")); renderSettings(); }
+    return;
+  }
+  if (f.id === "fPw"){
+    const err = $("#pwErr"); err.textContent = "";
+    const next = $("#pwNew").value;
+    if (next.length < 10){ err.textContent = errText("password-short"); return; }
+    if (next !== $("#pwNew2").value){ err.textContent = t("mismatch"); return; }
+    const r = await call("POST", "admin/password", { current: $("#pwCur").value, next }, { quiet: true });
+    if (!r.ok){ if (r.error === "auth"){ S.authed = false; return showAuth(); } err.textContent = errText(r.error); return; }
+    f.reset(); toast(t("pwChanged"));
+  }
+});
+document.addEventListener("change", e => {
+  const el = e.target;
+  if (el.id === "phFile" && el.files && el.files[0]){ uploadPhoto(el.files[0]); el.value = ""; return; }
+  if (el.id === "sReqOn" && S.draft){ S.draft.requestsOn = el.checked; markDirty(); return; }
+  if (el.id === "sWa" && S.draft){ el.value = waNumber(el.value); S.draft.whatsapp = el.value; markDirty(); }
+});
+let qT = 0;
+document.addEventListener("input", e => {
+  if (e.target.id === "q"){ clearTimeout(qT); qT = setTimeout(() => { S.q = e.target.value.trim().slice(0, 60); S.items = []; loadRequests(); }, 300); }
+  if (e.target.id === "sWa" && S.draft){ S.draft.whatsapp = e.target.value.replace(/\D/g, ""); markDirty(); }
+});
+document.addEventListener("keydown", e => {
+  if (e.key !== "Escape") return;
+  if ($("#sheetHost").firstElementChild){ ED = null; closeSheet(); return; }
+  if (S.view === "requests" && S.sel) closeRequest();
+});
+$("#langBtn").addEventListener("click", () => {
+  lang = lang === "ar" ? "en" : "ar"; store.set("jec-admin-lang", lang); applyLang();
+  if (S.view === "auth") return showAuth(S.authView);
+  renderTabs(); renderSaveBar();
+  if (S.view === "requests") renderRequests(); else if (S.view === "projects") renderProjects(); else renderSettings();
+});
+addEventListener("beforeunload", e => { if (S.dirty){ e.preventDefault(); e.returnValue = ""; } });
+addEventListener("hashchange", () => {
+  if (!S.authed) return;
+  const m = /^#r=(\d{1,9})$/.exec(location.hash);
+  if (m){ if (S.view !== "requests") openView("requests").then(() => openRequest(Number(m[1]))); else if (!S.sel || S.sel.id !== Number(m[1])) openRequest(Number(m[1])); return; }
+  const v = location.hash.slice(1);
+  if (["requests", "projects", "settings"].includes(v) && v !== S.view) openView(v);
+});
+document.addEventListener("visibilitychange", () => { if (document.visibilityState === "visible" && S.authed && S.view === "requests") loadRequests(); });
+addEventListener("beforeinstallprompt", e => { e.preventDefault(); S.installEvt = e; if (S.view === "settings") renderSettings(); });
+if ("serviceWorker" in navigator){
+  navigator.serviceWorker.addEventListener("message", e => {
+    const m = e.data || {};
+    if (m.type === "push" && S.authed){ toast(t("newReq")); loadRequests(); }
+    if (m.type === "open" && typeof m.url === "string"){ const u = new URL(m.url); if (u.origin === location.origin) location.hash = u.hash || "#requests"; }
+  });
+}
+
+/* ---------------- boot ---------------- */
+async function boot(){
+  S.mode = await API.detect();
+  applyLang();
+  sw();
+  await showAuth();
+}
+boot();
+</script>
+</body>
+</html>
