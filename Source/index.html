@@ -840,7 +840,7 @@ const FILM = /*FILM*/{ Ad:{ total: 1068, seg:[150,300,390,480,498,648,738,828,97
    the others keep theirs, so a returning visitor does not download the whole film again after an update.
    Production/higgsfield/stamps.py keeps FV up to date: run it after changing any file in v/, vi/, tiles/ or the tiles worker. */
 const MV = "?v=20261122-2";
-const FV = /*FV*/{"assets/tiles-worker.js":"20261122-5"}/*FV*/;
+const FV = /*FV*/{"assets/tiles-worker.js":"20261128-1"}/*FV*/;
 const ver = p => (FV[p] ? "?v=" + FV[p] : MV);
 const FA = lite ? FILM.Am : FILM.Ad, FI = lite ? FILM.Im : FILM.Id, U = lite ? 1 : 3;
 const S = FA.seg, segA = i => (i ? S[i-1] + 1 : 1), segB = i => S[i];
@@ -1051,6 +1051,7 @@ class Scrub {
        and only while the film is near the screen */
     this.anchors = new Set(); for (let k = 1; k <= this.nT; k += (o.step || 10)) this.anchors.add(k); if (o.ends !== false) this.anchors.add(this.nT);
     this.win = o.win || 8; this.back = o.back || 3; this.all = o.all !== false; this.driven = !!o.driven; this.shown = !this.driven;
+    if (!this.driven) Scrub.all.push(this);
     addEventListener("resize", () => { this.size(); if (this.w) this.w.postMessage({ tw: this.tw() }); });
     /* the film glides to the scroll position with the same feel at 60 or 120 frames a second, and keeps pace when a frame is dropped */
     let lt = 0;
@@ -1129,9 +1130,12 @@ class Scrub {
     });
   }
   got(m){
+    if (m.full){ if (this.onFull) this.onFull(); return; }           /* every tile of this film is in */
     this.pend.delete(m.k);
     if (m.bm){ if (this.dead || this.ims[m.k] || !this.keep(m.k)) m.bm.close(); else this.put(m.k, m.bm); }
-    if (this.onAnchor && this.anchors.has(m.k)) this.onAnchor();
+    const i = this.anch ? this.anch.indexOf(m.k) : -1;                /* an anchor is asked for once, whether it came or failed */
+    if (i >= 0){ this.anch.splice(i, 1); if (this.onAnchor) this.onAnchor(); }
+    if (this.onGot) this.onGot();
   }
   /* without a worker: plain images, decoded before use so the scroll never waits on a decode */
   loadTile(k){
@@ -1145,10 +1149,16 @@ class Scrub {
       im.src = this.tile(k);
     });
   }
+  /* what the worker is asked for: the tiles around the viewer first, then the anchors that are still missing */
   request(alone){
-    if (!this.live || this.dead || (this.gate && !this.gate())) return;
-    if (this.w){ const need = this.wanted().filter(k => !this.ims[k]); this.pend = new Set(need); this.w.postMessage({ need, cur: this.tileOf(this.cur).k, way: this.way, alone: !!alone }); }
-    else this.pump();
+    if (this.dead || (this.gate && !this.gate())) return;
+    if (this.w){
+      const need = this.live ? this.wanted().filter(k => !this.ims[k]) : [];
+      for (const k of this.anch || []) if (!this.ims[k] && !need.includes(k)) need.push(k);
+      if (!this.live && !need.length) return;
+      this.pend = new Set(need); this.w.postMessage({ need, cur: this.tileOf(this.cur).k, way: this.way, alone: !!alone });
+    }
+    else if (this.live) this.pump();
   }
   async pump(){
     if (this.pumping || !this.live) return; this.pumping = true;
@@ -1161,20 +1171,32 @@ class Scrub {
       }
     } finally { this.pumping = false; }
   }
-  /* anchors first, so every scroll position has a nearby frame; then the window follows the scroll */
+  /* With the worker, the tiles around the viewer come first and the anchors (a frame near every scroll position) right
+     after them: on a slow line the film used to stand on its few anchor frames until all of them were in, even when the
+     frames under the viewer could have been there. The film opens (`onFirst(2)`) as soon as a frame near the viewer is in.
+     Without a worker: anchors first as before, then the window follows the scroll. */
   async start(onFirst){
     if (this.started) return; this.started = true;
-    const first = [...this.anchors]; let n = 0;
-    const tick = () => { n++; if (onFirst) onFirst(Math.min(1, n / first.length)); };
+    const first = [...this.anchors]; let n = 0, open = false;
+    const tick = () => { n++; if (onFirst && !open) onFirst(Math.min(1, n / first.length)); };
+    const opened = () => { if (open) return; open = true; this.onGot = null; this.size(); if (onFirst) onFirst(2); if (this.onLoad) this.onLoad(1); };
+    const watch = () => {
+      if (this.dead) return;
+      this.io = new IntersectionObserver(es => es.forEach(e => { if (this.dead) return; this.live = e.isIntersecting; Scrub.line(); if (this.live) this.request(); else this.trim(); }), {rootMargin: "100% 0px"});
+      this.io.observe(this.cv.closest("section"));
+    };
     if (await this.worker()){
-      await new Promise(res => { this.onAnchor = () => { tick(); if (n >= first.length) res(); }; this.pend = new Set(first); this.w.postMessage({ need: first }); });
-      this.onAnchor = null;
-    } else await Promise.all(first.map(k => this.loadTile(k).then(tick)));
-    this.size(); if (onFirst) onFirst(2); if (this.onLoad) this.onLoad(1);
+      if (this.dead) return;
+      this.anch = first.slice();
+      this.onAnchor = () => { tick(); if (!this.anch.length){ this.onAnchor = null; opened(); } };
+      this.onGot = () => { if (this.has(this.cur, 4, 1, this.total)) opened(); };
+      this.size(); this.live = true; this.request(); watch();
+      return;
+    }
+    await Promise.all(first.map(k => this.loadTile(k).then(tick)));
+    opened();
     if (this.dead) return;
-    this.live = true; this.request();
-    this.io = new IntersectionObserver(es => es.forEach(e => { if (this.dead) return; this.live = e.isIntersecting; if (this.live) this.request(); else this.trim(); }), {rootMargin: "100% 0px"});
-    this.io.observe(this.cv.closest("section"));
+    this.live = true; this.request(); watch();
   }
   near(i){ for (let d = 0; d < this.total; d++){ if (this.frames[i-d]) return this.frames[i-d]; if (this.frames[i+d]) return this.frames[i+d]; } return null; }
   size(){ const dpr = Math.min(devicePixelRatio || 1, 2), w = Math.round(this.cv.clientWidth * dpr), h = Math.round(this.cv.clientHeight * dpr); if (!w || !h) return; if (this.cv.width !== w || this.cv.height !== h){ this.cv.width = w; this.cv.height = h; } this.key = ""; this.draw(); }
@@ -1205,6 +1227,11 @@ class Scrub {
   }
 }
 
+/* phones: while one film is near the screen, the other film's worker stops fetching its remaining tiles in the background,
+   so the film being watched has the connection */
+Scrub.all = [];
+Scrub.line = () => { for (const f of Scrub.all) if (f.w) f.w.postMessage({ hold: !f.live && Scrub.all.some(o => o !== f && o.live) }); };
+
 /* desktop: one H.264 clip per shot, every frame kept; the clip under the scroll position is seeked to the exact frame.
    Clips are fetched whole (so a seek never waits for the network) and only the current shot and its two neighbours hold a decoder.
    The clip on screen downloads first and alone; once it is in, two at a time in story order. When the viewer stops on a shot
@@ -1234,10 +1261,20 @@ class VScrub {
       wrap.appendChild(v); c.v = v;
     }
     this.tt = 0; this.lt = -1;
-    const glide = () => {
+    /* one film at a time has the connection: see `waits` */
+    this.near = false; VScrub.all.push(this);
+    new IntersectionObserver(es => es.forEach(e => {
+      this.near = e.isIntersecting;
+      /* the viewer has reached this film: the other film's downloads that are not yet half done make room (fetched again later) */
+      if (this.near && this.clips.some(c => !c.url)) for (const f of VScrub.all) if (f !== this && !f.near) f.clips.forEach(o => { if (o.busy && o.ac && (o.prog || 0) < 0.5) o.ac.abort(); });
+      for (const f of VScrub.all) f.pump();
+    }), {rootMargin: "60% 0px"}).observe(wrap.closest("section"));
+    let gt = 0;
+    const glide = now => {
+      now = now || performance.now(); const dt = gt ? Math.min(100, now - gt) : 16.7; gt = now;
       if (this.target !== this.lt){ this.lt = this.target; this.tt = performance.now(); }
       const d = this.target - this.p;
-      this.p = (reduce || Math.abs(d) < 0.0003) ? this.target : this.p + d * 0.14;
+      this.p = (reduce || Math.abs(d) < 0.0003) ? this.target : this.p + d * (1 - Math.exp(-dt / 110));
       const f = this.map ? this.map(this.p) : 1 + this.p * (this.total - 1);
       if (Math.abs(f - this.last) > 0.01){ this.last = f; this.set(f); }
       requestAnimationFrame(glide);
@@ -1307,13 +1344,22 @@ class VScrub {
   focus(){
     const a = this.active, c = this.clips[a]; if (!c || c.url) return;
     if (performance.now() - this.tt < 350){ clearTimeout(this.ft); this.ft = setTimeout(() => this.focus(), 400); return; }
-    this.clips.forEach((o, j) => { if (j !== a && o.busy && o.ac && (o.prog || 0) < 0.5) o.ac.abort(); });
+    for (const f of VScrub.all) f.clips.forEach((o, j) => { if (!(f === this && j === a) && o.busy && o.ac && (o.prog || 0) < 0.5) o.ac.abort(); });
     this.pump();
+  }
+  /* The two films share one connection, so only one of them downloads at a time: the film near the screen; with no film
+     near the screen, the films in page order (the finishing film loads in the background once the construction film is in).
+     Before this, the construction film's remaining scenes kept downloading while the viewer was already in the finishing
+     film, which then stood on its stand-in frames for most of the way. */
+  waits(){
+    if (this.near) return false;
+    const others = VScrub.all.filter(f => f !== this && f.started && f.clips.some(c => !c.url));
+    return others.some(f => f.near) || others.some(f => VScrub.all.indexOf(f) < VScrub.all.indexOf(this));
   }
   /* while the viewer scrolls on, a scene passed on the way does not start a download of its own beyond two at a time:
      the phone's frames carry the film meanwhile, and the downloads under way keep the line */
   pump(){
-    if (!this.started) return;
+    if (!this.started || this.waits()) return;
     const ai = Math.max(0, this.active), a = this.clips[ai];
     const rest = !this.pv || performance.now() - this.tt >= 350;
     if (a && !a.url && !a.busy && (rest || this.clips.filter(o => o.busy).length < 2)) this.grab(ai);
@@ -1347,6 +1393,7 @@ class VScrub {
     if (!this.stills.length && !this.pv) this.stills = this.clips.map(o => { const im = new Image(); im.src = this.u(o.f + ".webp"); return im; });
     if (c.url && this.active >= 0 && Math.abs(i - this.active) <= 1){ this.active = -9; this.set(this.cur); }
     this.status(); this.pump();
+    for (const f of VScrub.all) if (f !== this) f.pump();            /* this film is in: the next one may start */
   }
   /* the first still shows at once; the clip on screen comes next (alone), then the rest */
   async start(onFirst){
@@ -1357,6 +1404,7 @@ class VScrub {
     this.pump();
   }
 }
+VScrub.all = [];
 /* Shift+D shows how long seeks take on this machine */
 addEventListener("keydown", e => {
   if (!(e.shiftKey && e.key === "D") || lite) return;
@@ -1409,13 +1457,13 @@ function hudI(f){
 }
 const filmI = lite ? new Scrub($("#finCv"), "im", FI.total, hudI) : new VScrub($("#finV"), "vi", FI.clips, hudI, { dir: "im", total: FILM.Im.total, map: byAnchors(FILM.Id.anchors, FILM.Im.anchors) });
 filmI.note = loadNote($("#ldI"));
-/* scroll progress → frame, resting a little on every stage before moving to the next */
-filmI.map = p => {
-  const n = AN.length - 1, t = Math.min(n, Math.max(0, p * 1.04) * n), i = Math.min(n - 1, Math.floor(t));
-  let u = Math.max(0, Math.min(1, (t - i - 0.16) / 0.68)); u = u * u * (3 - 2 * u);
-  return AN[i] + (AN[i+1] - AN[i]) * u;
-};
+/* scroll progress → frame at one steady speed, like the construction film (Jafar, 2026-11-28: resting on every stage and
+   then running through the next one made this film feel as if it stuttered); the last frame holds for the final 3% */
+filmI.map = p => 1 + Math.min(1, Math.max(0, p) / 0.97) * (FI.total - 1);
+/* this film loads in the background once the construction film is in (see `waits` and `onFull`), or at once when the
+   viewer gets near it first */
 new IntersectionObserver((es, ob) => es.forEach(e => { if (e.isIntersecting){ ob.disconnect(); filmI.start(); } }), {rootMargin: "200% 0px"}).observe($("#fin"));
+if (lite) filmA.onFull = () => filmI.start(); else filmI.start();
 
 /* ---------------- 03 reveal ---------------- */
 let revP = 0;

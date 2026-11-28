@@ -6,6 +6,7 @@
    downloading: there the page says `all: false`, and only the tiles it asks for are fetched.
    Each tile's address carries its version stamp: `qs` has the tiles whose stamp differs from `q`. */
 let base = "", q = "", qs = {}, all = true, n = 0, tw = 1920, need = [], center = 1, cur = 1, way = 1, alone = false, decoding = false;
+let hold = false, told = false;   /* hold: another film is being watched, so the background fetch waits; told: the page knows every tile is in */
 const blobs = new Map(), loading = new Map(), failed = new Set();
 const name = k => `t${String(k).padStart(3, "0")}.webp`;
 
@@ -18,6 +19,7 @@ function get(k){
     .then(b => {
       if (loading.get(k) !== (ac || true)) return;      /* dropped: no longer needed */
       loading.delete(k); if (b) blobs.set(k, b); else failed.add(k); fill(); decode();
+      if (all && !told && blobs.size >= n){ told = true; postMessage({ full: true }); }
     });
 }
 /* on a computer the viewer can scroll faster than the tiles come in: a tile the viewer has already passed is not fetched to the
@@ -31,7 +33,7 @@ function drop(){
 /* the tiles the page needs first, then the rest of the film outward from where the viewer is */
 function fill(){
   const queue = need.filter(k => !blobs.has(k) && !loading.has(k) && !failed.has(k));
-  if (all && loading.size < 4){
+  if (all && !hold && loading.size < 4){
     const rest = [];
     for (let k = 1; k <= n; k++) if (!blobs.has(k) && !loading.has(k) && !failed.has(k) && !queue.includes(k)) rest.push(k);
     rest.sort((a, b) => Math.abs(a - center) - Math.abs(b - center));
@@ -66,5 +68,6 @@ self.onmessage = e => {
     postMessage({ ready: typeof createImageBitmap === "function" && typeof fetch === "function" });
   }
   if (m.tw) tw = m.tw;
+  if ("hold" in m){ hold = !!m.hold; if (!hold) fill(); }
   if (m.need){ need = m.need.slice(); if (need.length) center = need[0]; if (m.cur) { cur = m.cur; way = m.way || 1; } alone = !!m.alone; drop(); fill(); decode(); }
 };
