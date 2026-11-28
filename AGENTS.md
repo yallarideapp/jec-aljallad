@@ -22,9 +22,23 @@ the behaviours to keep, open requests, and the change log shared by Claude and C
   media in `v/` (exterior film clips), `vi/` (interior film clips), `tiles/` (phone frames), `media/` (hero and end videos),
   `renders/` (before/after, "behind the ceiling", the process still), `real/` (photos of the 14 real JEC projects),
   `assets/` (company logo, sector images).
-- One page, in this order: hero → construction film → who we are + stats → process (9 structural steps, exterior finishing) →
-  finishing film → behind the ceiling → before/after → finishing trades + renovation → sectors → real projects (filters, lightbox) →
-  services → quote estimator (send to the company or WhatsApp, consent) → end → footer. `#privacy` and `#terms` open the legal overlay.
+- One page, in this order (Jafar, 2026-11-28: the owner found the first version too plain, and the films came before anyone
+  knew who the company is): hero (headline, two buttons, a strip of the four scopes) → names of the real projects (`#clients`,
+  taken from `brand` in `PROJECTS`, hidden when there are none) → who we are (`#who`: statement, three points, a navy card of
+  figures counted from the page's own data) → services (`#services`, five cards) → sectors → real projects (filters, lightbox) →
+  construction film → process (9 numbered structural steps beside the picture, then the exterior finishing works) →
+  finishing film → behind the ceiling → before/after → finishing trades + renovation → quote (three steps, then the estimator:
+  send to the company or WhatsApp, consent) → end → footer (four columns). `#privacy` and `#terms` open the legal overlay.
+  The facts come before the films, and each film has a "skip the film" link (`.skip`) to the section after it.
+- Look (2026-11-28), from the company's own logo and posts: navy `--ink`/`--char`/`--char-2` and gold `--gold`, with white
+  (`--paper`) and cool grey (`--mist`) sections in between (`.s`, `.s.alt`, `.s.lt`, `.s.mist`). Headings in Alexandria
+  (Arabic) and Jost (English) 600; body IBM Plex Sans Arabic / Jost. One mark for every section title: the gold slash before
+  it (`.shead::before`). Photos and navy cards have one cut corner (`.cut`). Line icons come from the `<symbol>` set at the
+  top of `<body>` (`icon(name)`; `ic` in `TRADES` and `SERVICES`). Numbers only where the order is real (process steps, quote
+  steps, film stages). No label above every heading, no arrows in buttons, sentence case in English. The figures on the
+  company card are set in `renderProjects()` from `PROJECTS`, `CATS`, `SKELETON`, `TRADES` and `SERVICES`; never type a
+  number there by hand, and never add a figure the data does not hold (years, clients, areas, awards).
+  The admin panel keeps its own older colours.
   The company sections come from the first JEC site (2026-11-18), restyled into this design. The estimator's choices and the
   built-in project list (`TRADES`, `CATS`, `SUBS`, `SCOPES`, `STARTS`, `DRAW`, `PROJECTS`) live in `Source/shared/data.js`, shared
   by the page, the admin panel and the server; `SKELETON`, `SERVICES`, `FILTERS`, `LEGAL`, `CFG` stay in the script of index.html.
@@ -109,8 +123,16 @@ the behaviours to keep, open requests, and the change log shared by Claude and C
    page opened from the file) the tiles load as images decoded before use. Memory stays bounded for iPhone Safari: anchor tiles every
    10 tiles, plus 8 tiles ahead in the scroll direction and 3 behind (up to 8 behind kept), only while the film is near the screen;
    dropped tiles are closed at once. Do not go back to decoding every tile; iOS closes tabs that hold too many decoded images.
-   The glide toward the scroll position is time-based (110 ms), so it feels the same at 60 and 120 Hz. Touch screens get no live
-   backdrop blur (bar, menu button, stage list).
+   The glide toward the scroll position is time-based (110 ms) on phones and on desktop, so it feels the same at 60 and 120 Hz.
+   Touch screens get no live backdrop blur (bar, menu button, stage list).
+   Finishing film (Jafar, 2026-11-28: "the second video still stutters a bit like the first one used to"): it now runs at one
+   steady speed over its scroll (`filmI.map`), as the construction film does; the old map held each stage still and then ran
+   up to three times faster. The two films share the line instead of splitting it: on desktop the film near the screen
+   downloads and the other waits (`VScrub.all`, `near`, `waits()`; a download under half done on the far film is dropped when
+   the near one still misses clips), and the finishing film starts loading in the background once the page is open instead of
+   on arrival. On phones the tiles of the film on screen come first (`Scrub.line()` tells the other film's worker to hold its
+   background fetch), a film goes live at once (window tiles first, anchors after), and the finishing film starts loading when
+   the construction film has all its tiles (`onFull`) or when it comes within two screens.
    `ScrollTrigger.config({ignoreMobileResize:true})` stops the iPhone address bar from re-measuring the pinned sections.
    The `FILM` constant in index.html holds clip names, frame counts and stage boundaries. Change it together with the media.
    Every film file's address carries a version stamp (`?v=...`), so a changed file is fetched again at once while an unchanged one
